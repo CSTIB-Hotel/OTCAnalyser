@@ -3,5 +3,7 @@ An application to search and analyse data from over-the-counter (OTC) trading. B
 
 ## Code style guidelines
 Use the guidelines contained here: https://google-styleguide.googlecode.com/svn/trunk/javaguide.html
+
 All files should be 100 columns wide.
+
 uk.ac.cam.cstibhotel.otcanalyser is our default package.
