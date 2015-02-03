@@ -45,10 +45,10 @@ public class UPI {
 				throw new InvalidTaxonomyException(taxonomy);
 			} 
 			
-		baseProduct = splitTaxonomy[1];
-		subProduct = splitTaxonomy[2];
-		transactionType = splitTaxonomy[3];
-		settlementType = splitTaxonomy[4];
+			baseProduct = splitTaxonomy[1];
+			subProduct = splitTaxonomy[2];
+			transactionType = splitTaxonomy[3];
+			settlementType = splitTaxonomy[4];
 		
 		} catch (ArrayIndexOutOfBoundsException e) {
 			throw new InvalidTaxonomyException(taxonomy);
