@@ -14,7 +14,11 @@ import java.io.IOException;
 
 public class ParseZIP {
 	
-	public void parseCSV(String file, String splitBy){
+	public static void unZip(String zipFile){
+		
+	}
+	
+	public static void parseCSV(String file, String splitBy){
 		String line;
 		
 		try {
@@ -36,7 +40,7 @@ public class ParseZIP {
 	}
 
 	public static void main(String[] args) {
-		
+		ParseZIP.parseCSV("COMMODITIES.csv", ",");
 
 	}
 
