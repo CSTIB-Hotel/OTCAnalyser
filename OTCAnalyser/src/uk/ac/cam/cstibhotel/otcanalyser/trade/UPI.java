@@ -25,15 +25,29 @@ public class UPI {
 		
 		try {
 			
+			// All asset classes have a base product, set this now
+			baseProduct = splitTaxonomy[1];
+			
+			// A foreign exchange or rates taxonomy may not necessarily have a sub-product, so 
+			// check for null before setting this
+			if (splitTaxonomy[2] != null) {
+				subProduct = splitTaxonomy[2];
+			}
+			
+			// Set the other fields dependent on asset class
 			switch (splitTaxonomy[0]) {
 			case "Commodity":
 				assetClass = AssetClass.Commodity;
+				transactionType = splitTaxonomy[3];
+				settlementType = splitTaxonomy[4];
 				break;
 			case "Credit":
 				assetClass = AssetClass.Credit;
+				transactionType = splitTaxonomy[3];
 				break;
 			case "Equity":
 				assetClass = AssetClass.Equity;
+				transactionType = splitTaxonomy[3];
 				break;
 			case "ForeignExhange":
 				assetClass = AssetClass.ForeignExchange;
@@ -44,14 +58,11 @@ public class UPI {
 			default:
 				throw new InvalidTaxonomyException(taxonomy);
 			} 
-			
-			baseProduct = splitTaxonomy[1];
-			subProduct = splitTaxonomy[2];
-			transactionType = splitTaxonomy[3];
-			settlementType = splitTaxonomy[4];
 		
 		} catch (ArrayIndexOutOfBoundsException e) {
 			throw new InvalidTaxonomyException(taxonomy);
+		} catch (InvalidTaxonomyException e) {
+			System.err.println("The taxonomy: " + e.getMessage() + " is invalid.");
 		}
 	}
 	
