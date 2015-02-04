@@ -4,7 +4,8 @@ public class UPI {
 	
 	/* This is a class to represent the UPI/taxonomy of a trade.
 	 * These have the format:
-	 */ [Asset class]:[Base product]:[Sub-product]:[Transaction type]:[Settlement type]
+	 * [Asset class]:[Base product]:[Sub-product]:[Transaction type]:[Settlement type]
+	 */
 	
 	public String fullTaxonomy;
 	public AssetClass assetClass;
