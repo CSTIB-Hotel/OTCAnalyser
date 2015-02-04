@@ -8,7 +8,8 @@ abstract class CSVTradeFile extends File{
 
     public CSVTradeFile(File f, String path){
 	super(path);
-	throw new UnsupportedOperationException("This function has not yet been implemented.");
+	throw new UnsupportedOperationException(
+		"This function has not yet been implemented.");
 	// you can't have abstract constructors
     }
     
