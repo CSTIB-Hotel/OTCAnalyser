@@ -38,7 +38,7 @@ class Database {
 	    while(i.hasNext()){
 		@SuppressWarnings("unchecked")
 		Entry<String, String> mapEntry = (Entry<String, String>) i.next();
-		dataTableCreator.append(mapEntry.getKey() + " " + mapEntry.getValue() + ", ");
+		dataTableCreator.append(mapEntry.getKey()).append(" ").append(mapEntry.getValue()).append(", ");
 	    }
 	    dataTableCreator.setLength(dataTableCreator.length() - 2);
 	    dataTableCreator.append(");");
