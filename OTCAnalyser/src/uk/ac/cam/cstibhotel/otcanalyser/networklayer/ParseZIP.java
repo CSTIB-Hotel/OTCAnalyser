@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.net.URL;
 
 
 /*
@@ -18,18 +19,21 @@ import java.util.zip.ZipInputStream;
 
 public class ParseZIP {
 	
+	//TODO: Translate the csv to Trade objects
 	public static void zipToCsv(String zipFile, String splitBy){
 		String line;
 		try{
-			FileInputStream fis = new FileInputStream(zipFile);
-			ZipInputStream zis = new ZipInputStream(fis);
+			URL url = new URL(zipFile);
+			ZipInputStream zis = new ZipInputStream(url.openStream());
 			zis.getNextEntry();
 			InputStreamReader isr = new InputStreamReader(zis);
 			BufferedReader br = new BufferedReader(isr);
 			while((line = br.readLine()) != null){
 	 			String[] trade = line.split(splitBy);
-	 			
-	 			System.out.println(trade[0]);
+	 			for(String a : trade){
+	 				System.out.print(a+":");
+	 			}
+	 			System.out.println("");
 	 		}
 	 		
 	 		br.close();
@@ -44,7 +48,7 @@ public class ParseZIP {
 	}
 	
 	public static void main(String[] args) {
-		ParseZIP.zipToCsv("SLICE_COMMODITIES_2015_02_05_278.zip",",");
+		ParseZIP.zipToCsv("https://kgc0418-tdw-data-0.s3.amazonaws.com/slices/SLICE_COMMODITIES_2015_02_05_569.zip",",");
 	}
 
 }
