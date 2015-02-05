@@ -1,11 +1,16 @@
 package uk.ac.cam.cstibhotel.otcanalyser.trade;
 
+/* 
+ * This is a class to represent the UPI/taxonomy of a trade.
+ * 
+ * These have the format:
+ * [Asset class]:[Base product]:[Sub-product]:[Transaction type]:[Settlement type]
+ * 
+ * Not every class of asset with have all of these fields filled - see the associated unit test
+ * for more information
+ */
+
 public class UPI {
-	
-	/* This is a class to represent the UPI/taxonomy of a trade.
-	 * These have the format:
-	 * [Asset class]:[Base product]:[Sub-product]:[Transaction type]:[Settlement type]
-	 */
 	
 	public String fullTaxonomy;
 	public AssetClass assetClass;

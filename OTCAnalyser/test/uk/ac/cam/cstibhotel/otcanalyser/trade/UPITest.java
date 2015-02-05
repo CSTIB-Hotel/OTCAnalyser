@@ -104,9 +104,72 @@ public class UPITest {
 	
 	// Test an invalid commodity taxonomy (not enough fields) - expect an exception
 	@Test(expected = InvalidTaxonomyException.class)
-	public void testInvalidCommodityTaxonomy() throws InvalidTaxonomyException {
+	public void testInvalidShortCommodityTaxonomy() throws InvalidTaxonomyException {
 		@SuppressWarnings("unused")
 		UPI toTest = new UPI("Commodity:Metals:Precious");
+	}
+	
+	// Test an invalid commodity taxonomy (too many fields) - expect an exception
+	@Test(expected = InvalidTaxonomyException.class)
+	public void testInvalidLongCommodityTaxonomy() throws InvalidTaxonomyException {
+		@SuppressWarnings("unused")
+		UPI toTest = new UPI("Commodity:Metals:Precious:SpotFwd:Physical:Fail");
+	}
+	
+	// Test an invalid credit taxonomy (not enough fields) - expect an exception
+	@Test(expected = InvalidTaxonomyException.class)
+	public void testInvalidShortCreditTaxonomy() throws InvalidTaxonomyException {
+		@SuppressWarnings("unused")
+		UPI toTest = new UPI("Credit:SingleName:Corporate");
+	}
+	
+	// Test an invalid credit taxonomy (too many fields) - expect an exception
+	@Test(expected = InvalidTaxonomyException.class)
+	public void testInvalidLongCreditTaxonomy() throws InvalidTaxonomyException {
+		@SuppressWarnings("unused")
+		UPI toTest = new UPI("Credit:SingleName:Corporate:StandardEuropeanCorporate:Fail");
+	}
+	
+	// Test an invalid equity taxonomy (not enough fields) - expect an exception
+	@Test(expected = InvalidTaxonomyException.class)
+	public void testInvalidShortEquityTaxonomy() throws InvalidTaxonomyException {
+		@SuppressWarnings("unused")
+		UPI toTest = new UPI("Equity:PortfolioSwap:PriceReturnBasicPerformance");
+	}
+	
+	// Test an invalid equity taxonomy (too many fields) - expect an exception
+	@Test(expected = InvalidTaxonomyException.class)
+	public void testInvalidLongEquityTaxonomy() throws InvalidTaxonomyException {
+		@SuppressWarnings("unused")
+		UPI toTest = new UPI("Equity:PortfolioSwap:PriceReturnBasicPerformance:SingleName:Fail");
+	}
+	
+	// Test an invalid foreign exchange taxonomy (not enough fields) - expect an exception
+	@Test(expected = InvalidTaxonomyException.class)
+	public void testInvalidShortForeignExchangeTaxonomy() throws InvalidTaxonomyException {
+		@SuppressWarnings("unused")
+		UPI toTest = new UPI("ForeignExchange");
+	}
+	
+	// Test an invalid foreign exchange taxonomy (too many fields) - expect an exception
+	@Test(expected = InvalidTaxonomyException.class)
+	public void testInvalidLongForeignExchangeTaxonomy() throws InvalidTaxonomyException {
+		@SuppressWarnings("unused")
+		UPI toTest = new UPI("ForeignExchange:SimpleExotic:IntradayDigital:Fail");
+	}
+	
+	// Test an invalid rates taxonomy (not enough fields) - expect an exception
+	@Test(expected = InvalidTaxonomyException.class)
+	public void testInvalidShortRatesTaxonomy() throws InvalidTaxonomyException {
+		@SuppressWarnings("unused")
+		UPI toTest = new UPI("InterestRate");
+	}
+	
+	// Test an invalid rates taxonomy (too many fields) - expect an exception
+	@Test(expected = InvalidTaxonomyException.class)
+	public void testInvalidLongRatesTaxonomy() throws InvalidTaxonomyException {
+		@SuppressWarnings("unused")
+		UPI toTest = new UPI("InterestRate:CrossCurrency:Basis:Fail");
 	}
 	
 }
