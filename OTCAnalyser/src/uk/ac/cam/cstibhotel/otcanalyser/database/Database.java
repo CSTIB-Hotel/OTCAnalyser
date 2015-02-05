@@ -6,6 +6,9 @@ import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 import java.util.Date;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 /**
  *
@@ -28,53 +31,19 @@ class Database {
 	Statement statement = connection.createStatement(); // TODO: probably want to convert to prepared statements 
 	try {
 	    statement.execute("SET WRITE_DELAY FALSE"); //Always update data on disk
-//<editor-fold defaultstate="collapsed" desc="create data table sql statement">
-	    statement.execute("CREATE TABLE data "
-		    + "(id INTEGER, "
-		    + "origId INTEGER, "
-		    + "action SMALLINT, "
-		    + "cleared BOOLEAN, "
-		    + "collat SMALLINT, "
-		    + "endUserException BOOLEAN, "
-		    + "bespoke BOOLEAN, "
-		    + "executionVenue BOOLEAN, "
-		    + "blockTrades BOOLEAN, "
-		    + "effectiveDate DATE, "
-		    + "endDate DATE, "
-		    + "dayCountConvention VARCHAR(255), "
-		    + "settlementCurrency VARCHAR(3), "
-		    + "tradeType SMALLINT, "
-		    + "assetClass SMALLINT, "
-		    + "subAssetClass VARCHAR(255), "
-		    + "taxonomy VARCHAR(255), "
-		    + "priceFormingContinuationData SMALLINT, "
-		    + "underlyingAsset1 VARCHAR(255), "
-		    + "underlyingAsset2 VARCHAR(255), "
-		    + "priceNotationType VARCHAR(255), "
-		    + "priceNotation FLOAT, "
-		    + "additionalPriceNotationType VARCHAR(255), "
-		    + "additionalPriceNotation FLOAT, "
-		    + "notionalCurrency1 VARCHAR(3), "
-		    + "notionalCurrency2 VARCHAR(3), "
-		    + "roundedNotionalAmount1 VARCHAR(255), "
-		    + "roundedNotionalAmount2 VARCHAR(255), "
-		    + "paymentFrequency1 VARCHAR(255), "
-		    + "paymentFrequency2 VARCHAR(255), "
-		    + "resetFrequency1 VARCHAR(255), "
-		    + "resetFrequency2 VARCHAR(255), "
-		    + "embeddedOption VARCHAR(255), "
-		    + "optionStrikePrice FLOAT, "
-		    + "optionType VARCHAR(255), "
-		    + "optionFamily VARCHAR(255), "
-		    + "optionCurrency VARCHAR(3), "
-		    + "optionPremium FLOAT, "
-		    + "optionLockPeriod DATE, "
-		    + "optionExpirationDate DATE, "
-		    + "priceNotation2Type VARCHAR(255), "
-		    + "priceNotation2 FLOAT, "
-		    + "priceNotation3Type VARCHAR(255), "
-		    + "priceNotation3 FLOAT); ");
-//</editor-fold>
+	    
+	    StringBuilder dataTableCreator = new StringBuilder("CREATE TABLE data (");
+	    HashMap<String, String> DBNameDBType = TradeFieldMapping.getMapping();
+	    Iterator i = DBNameDBType.entrySet().iterator();
+	    while(i.hasNext()){
+		@SuppressWarnings("unchecked")
+		Entry<String, String> mapEntry = (Entry<String, String>) i.next();
+		dataTableCreator.append(mapEntry.getKey() + " " + mapEntry.getValue() + ", ");
+	    }
+	    dataTableCreator.setLength(dataTableCreator.length() - 2);
+	    dataTableCreator.append(");");
+	    statement.execute(dataTableCreator.toString());
+	    
 	} finally {
 	    statement.close();
 	}
