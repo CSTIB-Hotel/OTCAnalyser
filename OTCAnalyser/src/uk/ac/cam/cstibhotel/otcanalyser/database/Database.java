@@ -28,7 +28,8 @@ class Database {
 	Statement statement = connection.createStatement(); // TODO: probably want to convert to prepared statements 
 	try {
 	    statement.execute("SET WRITE_DELAY FALSE"); //Always update data on disk
-	    statement.executeQuery("CREATE TABLE data "
+//<editor-fold defaultstate="collapsed" desc="create data table sql statement">
+	    statement.execute("CREATE TABLE data "
 		    + "(id INTEGER, "
 		    + "origId INTEGER, "
 		    + "action SMALLINT, "
@@ -73,15 +74,7 @@ class Database {
 		    + "priceNotation2 FLOAT, "
 		    + "priceNotation3Type VARCHAR(255), "
 		    + "priceNotation3 FLOAT); ");
-	   // statement.execute("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_TABLES");
-	 //   ResultSet r = statement.getResultSet();
-	 //   Object o = r.getString(0);
-	 //   System.out.println(o);
-	//    ResultSet result = statement.executeQuery("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_TABLES"); // COUNT(1) ");
-	//	+ "FROM INFORMATION_SCHEMA.SYSTEM_TABLES ");
-	//	+ "WHERE TABLE_NAME = 'data'");
-	//    int i = result.getInt(0);
-	//    System.out.println(i);
+//</editor-fold>
 	} finally {
 	    statement.close();
 	}
