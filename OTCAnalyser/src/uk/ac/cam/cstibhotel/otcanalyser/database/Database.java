@@ -34,10 +34,9 @@ class Database {
 	    
 	    StringBuilder dataTableCreator = new StringBuilder("CREATE TABLE data (");
 	    HashMap<String, String> DBNameDBType = TradeFieldMapping.getMapping();
-	    Iterator i = DBNameDBType.entrySet().iterator();
+	    Iterator<Entry<String, String>> i = DBNameDBType.entrySet().iterator();
 	    while(i.hasNext()){
-		@SuppressWarnings("unchecked")
-		Entry<String, String> mapEntry = (Entry<String, String>) i.next();
+		Entry<String, String> mapEntry = i.next();
 		dataTableCreator.append(mapEntry.getKey()).append(" ").append(mapEntry.getValue()).append(", ");
 	    }
 	    dataTableCreator.setLength(dataTableCreator.length() - 2);
