@@ -26,11 +26,13 @@ public class UPI {
 	public UPI(String taxonomy) throws InvalidTaxonomyException {
 		fullTaxonomy = taxonomy;
 		
-		String[] splitTaxonomy = new String[5];
-		splitTaxonomy = fullTaxonomy.split(":");
+		String[] splitTaxonomy = fullTaxonomy.split(":");
 		
 		try {
-			
+			// If the taxonomy splits into > 5 parts or < 2 parts, we can't treat it as valid
+			if (splitTaxonomy.length >= 6) {
+				throw new InvalidTaxonomyException(taxonomy);
+			}
 			// All asset classes have a base product, set this now
 			baseProduct = splitTaxonomy[1];
 			
@@ -43,9 +45,15 @@ public class UPI {
 			// Set the other fields dependent on asset class
 			switch (splitTaxonomy[0]) {
 			case "Commodity":
-				assetClass = AssetClass.Commodity;
-				transactionType = splitTaxonomy[3];
-				settlementType = splitTaxonomy[4];
+				if (splitTaxonomy.length == 5) {
+					assetClass = AssetClass.Commodity;
+					baseProduct = splitTaxonomy[1];
+					subProduct = splitTaxonomy[2];
+					transactionType = splitTaxonomy[3];
+					settlementType = splitTaxonomy[4];
+				} else {
+					throw new InvalidTaxonomyException(taxonomy);
+				}
 				break;
 			case "Credit":
 				assetClass = AssetClass.Credit;
@@ -64,7 +72,6 @@ public class UPI {
 			default:
 				throw new InvalidTaxonomyException(taxonomy);
 			} 
-		
 		} catch (ArrayIndexOutOfBoundsException e) {
 			throw new InvalidTaxonomyException(taxonomy);
 		} catch (InvalidTaxonomyException e) {
