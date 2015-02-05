@@ -52,7 +52,7 @@ class Database {
 		    + "priceNotationType VARCHAR(255), "
 		    + "priceNotation FLOAT, "
 		    + "additionalPriceNotationType VARCHAR(255), "
-		    + "additionalPriceNotationType FLOAT, "
+		    + "additionalPriceNotation FLOAT, "
 		    + "notionalCurrency1 VARCHAR(3), "
 		    + "notionalCurrency2 VARCHAR(3), "
 		    + "roundedNotionalAmount1 VARCHAR(255), "
