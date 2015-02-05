@@ -1,5 +1,6 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
+import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 import java.util.Comparator;
 
 public class ExecutionTimestampComparator implements Comparator<Trade>{

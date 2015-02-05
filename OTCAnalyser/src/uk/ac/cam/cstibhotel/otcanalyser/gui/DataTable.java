@@ -1,5 +1,6 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
+import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;

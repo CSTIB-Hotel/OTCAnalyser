@@ -1,5 +1,6 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
-
+	
+import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
