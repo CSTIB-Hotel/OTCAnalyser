@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GraphWindow extends CBLPanel{
-  
+  private static final long serialVersionUID = 1L;
   private OHLCSeriesCollection dataset;
   
   public GraphWindow() {

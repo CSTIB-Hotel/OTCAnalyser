@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 public class ColumnChooser extends JDialog{
-  
+  private static final long serialVersionUID = 1L;
   public static ColumnChooser columnChooser = new ColumnChooser();
   private final ColCheckBox[] boxes;
   

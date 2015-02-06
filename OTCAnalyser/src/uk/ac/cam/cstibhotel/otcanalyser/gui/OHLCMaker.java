@@ -8,8 +8,6 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.CandlestickRenderer;
 import org.jfree.data.general.SeriesException;
 import org.jfree.data.time.Day;
-import org.jfree.data.time.RegularTimePeriod;
-import org.jfree.data.time.ohlc.OHLCItem;
 import org.jfree.data.time.ohlc.OHLCSeries;
 import org.jfree.data.time.ohlc.OHLCSeriesCollection;
 import org.jfree.data.xy.OHLCDataset;
@@ -59,7 +57,7 @@ public class OHLCMaker {
   }
   
   //given a list of trades ordered by execution timestamps, makes OHLCSeries
-  public static OHLCSeries makeSeries(List<Trade> trade, Comparable key) {
+  public static OHLCSeries makeSeries(List<Trade> trade, Comparable<String> key) {
     OHLCSeries ohlcs = new OHLCSeries(key);
     addToSeries(ohlcs, trade);
     return ohlcs;

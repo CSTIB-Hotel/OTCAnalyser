@@ -7,8 +7,8 @@ import javax.swing.JFrame;
 public class GUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	SearchWindow searchWindow;
-	
+	static SearchWindow searchWindow;
+	public static GUI theGUI;
 	
 	public GUI() {
 		setTitle("OTC Analyser");
@@ -17,9 +17,5 @@ public class GUI extends JFrame {
 		add(searchWindow,BorderLayout.WEST);
 		searchWindow.setVisible(true);
 		this.setVisible(true);
-	}
-	
-	public static void main(String[] args) {
-		JFrame example = new GUI();
 	}
 }

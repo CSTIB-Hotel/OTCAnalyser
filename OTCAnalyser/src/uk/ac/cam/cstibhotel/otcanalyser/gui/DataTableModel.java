@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 class DataTableModel extends AbstractTableModel{
-  
+  private static final long serialVersionUID = 1L;
   public static final String[] columnNames = {
     "Dissemination ID",
     "Original Dissemination ID",

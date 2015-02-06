@@ -4,8 +4,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 public class DataTableCellRenderer extends DefaultTableCellRenderer{
-	
-	//formatting for the values in the table
+  private static final long serialVersionUID = 1L;
+  //formatting for the values in the table
+
   @Override
   protected void setValue(Object o) {
   	if (o instanceof Boolean) {

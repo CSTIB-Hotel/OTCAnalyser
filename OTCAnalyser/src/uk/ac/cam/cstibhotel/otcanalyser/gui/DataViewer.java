@@ -11,7 +11,7 @@ import javax.swing.JTabbedPane;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 
 public class DataViewer extends JTabbedPane {
-  
+  private static final long serialVersionUID = 1L;
   private DataWindow data;
   private GraphWindow graph;
   private static DataViewer dataViewer = new DataViewer();

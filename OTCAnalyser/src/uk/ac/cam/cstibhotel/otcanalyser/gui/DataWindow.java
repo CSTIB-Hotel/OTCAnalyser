@@ -6,18 +6,21 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
+import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
+
 public class DataWindow extends CBLPanel implements ActionListener, ItemListener{
-  
+  private static final long serialVersionUID = 1L;
   private DataTable table;
   
   public DataWindow(){
     super();
     
-    table = new DataTable(new ArrayList());
+    table = new DataTable(new ArrayList<Trade>());
 
     JButton button = new JButton("Change Columns...");
     button.setActionCommand("columns");
