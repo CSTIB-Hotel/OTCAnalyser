@@ -1,11 +1,7 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
-
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Currency;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -63,9 +59,6 @@ class DataTableModel extends AbstractTableModel{
   private final List<Object[]> data;
             
   public DataTableModel(List<Trade> trades){
-    Class tradeClass = Trade.class;
-    
-    //fill columns
     data = new ArrayList<>(trades.size());
     for (Trade t : trades){
       addRow(t, false);

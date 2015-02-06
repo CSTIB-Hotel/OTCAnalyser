@@ -34,6 +34,11 @@ public class DataViewer extends JTabbedPane {
     dataViewer.graph.addTradesToDatasets(trades);
   }
   
+  public static void clearTrades() {
+  	dataViewer.data = new DataWindow();
+  	dataViewer.graph = new GraphWindow();
+  }
+  
   public static void main(String[] args) {
     JFrame frame = new JFrame("Tabs");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -55,7 +60,11 @@ public class DataViewer extends JTabbedPane {
         trades.add(t);
       }
     }
+    trades.get(11).setRoundedNotionalAmount1("invalid");
     addTrades(trades);
+    clearTrades();
+    addTrades(trades);
+    
    }
 
 }

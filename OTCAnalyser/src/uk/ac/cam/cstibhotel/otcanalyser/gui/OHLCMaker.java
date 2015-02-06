@@ -70,7 +70,8 @@ public class OHLCMaker {
     OHLCSeries ohlcs = dataset.getSeries(series);
     try {
       addToSeries(ohlcs, trade);
-    } catch(SeriesException e) { //overlap with dates; possibly the same period so just redo dataset
+    } catch(SeriesException e) {
+    	// overlap with dates
       return false;
     }
     return true;
@@ -83,13 +84,13 @@ public class OHLCMaker {
     int k = 0;
     Day rtp = new Day(trade.get(k).getExecutionTimestamp()); //day time period
     String rna = trade.get(k).getRoundedNotionalAmount1();
-    //cycle through trade list looking for first non-empty rounded notional amount 1
-    while ((rna == null || rna.isEmpty()) && k < trade.size() - 1) {
+    //cycle through trade list looking for first readable rounded notional amount 1
+    while (!(validRNA(rna)) && k < trade.size() - 1) {
     	k++;
     	rtp = new Day(trade.get(k).getExecutionTimestamp());
     	rna = trade.get(k).getRoundedNotionalAmount1();
     }
-    //if they are all empty
+    //if they are all unreadable
     if (k == trade.size() - 1) {
     	return;
     }
@@ -100,7 +101,7 @@ public class OHLCMaker {
     for (int i = k; i < trade.size(); i++) {
       Trade currentTrade = trade.get(i);
       rna = currentTrade.getRoundedNotionalAmount1();
-      if (rna != null && !rna.isEmpty()) {
+      if (validRNA(rna)) {
         double price = getDoubleRNA(rna);
         if(rtp.equals(new Day(currentTrade.getExecutionTimestamp()))) { //same time period
         	if (price > high) {
@@ -123,9 +124,18 @@ public class OHLCMaker {
     ohlcs.add(rtp, open, high, low, close); //add last item in
   }
   
+  //returns true if rna is in valid Rounded Notional Amount format
+  private static boolean validRNA(String rna) {
+  	try {
+  		getDoubleRNA(rna);
+  		return true;
+  	} catch (Exception e) {
+  		return false;
+  	}
+  }
+  
   //get double form of the Rounded Notional Amount, which sometimes contains the '+' character
   private static double getDoubleRNA(String rna) {
-  	System.out.println("rna " + rna);
   	int index = rna.indexOf('+');
   	if (index > -1) {
   		rna = rna.substring(0, index);
