@@ -9,53 +9,53 @@ public class Trade {
 
 	// The fields in here are a direct copy of the fields of a trade taken
 	// from the OTC repository
-	protected long disseminationID;
-	protected long originalDisseminationID;
-	protected Action action;
-	protected Date executionTimestamp;
-	protected boolean cleared;
-	protected Collateralization collateralization;
-	protected boolean endUserException;
-	protected boolean bespoke;
-	protected boolean executionVenue; // true for ON, false for OFF
-	protected boolean blockTrades;
-	protected Date effectiveDate;
-	protected Date endDate;
-	protected String dayCountConvention; // e.g. ACT/360 and 1/1 30/360
-	protected Currency settlementCurrency;
-	protected TradeType tradeType;
-	protected AssetClass assetClass;
-	protected SubAssetClass subAssetClass;
-	protected UPI taxonomy;
-	protected PriceFormingContinuationData priceFormingContinuationData;
-	protected String underlyingAsset1;
-	protected String underlyingAsset2;
-	protected String priceNotationType;
-	protected double priceNotation;
-	protected String additionalPriceNotationType;
-	protected double additionalPriceNotation;
-	protected Currency notionalCurrency1;
-	protected Currency notionalCurrency2;
-	protected String roundedNotionalAmount1; //probably shouldn't be a long, since some values are e.g. 95,000,000+
-	protected String roundedNotionalAmount2; //also has +
-	protected String paymentFrequency1; //e.g. 3M, 1M, 0, but also dates like 2016-01-29
-	protected String paymentFrequency2; //e.g. 1D, 1T, 1M
-	protected String resetFrequency1; //e.g. 2024-10-10
-	protected String resetFrequency2; //e.g. 1D, 1M, 1T
-	protected String embeddedOption; //e.g. EMBED1
+	private long disseminationID;
+	private long originalDisseminationID;
+	private Action action;
+	private Date executionTimestamp;
+	private boolean cleared;
+	private Collateralization collateralization;
+	private boolean endUserException;
+	private boolean bespoke;
+	private boolean executionVenue; // true for ON, false for OFF
+	private boolean blockTrades;
+	private Date effectiveDate;
+	private Date endDate;
+	private String dayCountConvention; // e.g. ACT/360 and 1/1 30/360
+	private Currency settlementCurrency;
+	private TradeType tradeType;
+	private AssetClass assetClass;
+	private SubAssetClass subAssetClass;
+	private UPI taxonomy;
+	private PriceFormingContinuationData priceFormingContinuationData;
+	private String underlyingAsset1;
+	private String underlyingAsset2;
+	private String priceNotationType;
+	private double priceNotation;
+	private String additionalPriceNotationType;
+	private double additionalPriceNotation;
+	private Currency notionalCurrency1;
+	private Currency notionalCurrency2;
+	private String roundedNotionalAmount1; //probably shouldn't be a long, since some values are e.g. 95,000,000+
+	private String roundedNotionalAmount2; //also has +
+	private String paymentFrequency1; //e.g. 3M, 1M, 0, but also dates like 2016-01-29
+	private String paymentFrequency2; //e.g. 1D, 1T, 1M
+	private String resetFrequency1; //e.g. 2024-10-10
+	private String resetFrequency2; //e.g. 1D, 1M, 1T
+	private String embeddedOption; //e.g. EMBED1
 
 	// Options
-	protected double optionStrikePrice;
-	protected String optionType;
-	protected String optionFamily;
-	protected Currency optionCurrency;
-	protected double optionPremium; //e.g. 0.00034 and 90250
-	protected Date optionLockPeriod;
-	protected Date optionExpirationDate;
-	protected String priceNotation2Type;
-	protected double priceNotation2;
-	protected String priceNotation3Type;
-	protected double priceNotation3;
+	private double optionStrikePrice;
+	private String optionType;
+	private String optionFamily;
+	private Currency optionCurrency;
+	private double optionPremium; //e.g. 0.00034 and 90250
+	private Date optionLockPeriod;
+	private Date optionExpirationDate;
+	private String priceNotation2Type;
+	private double priceNotation2;
+	private String priceNotation3Type;
+	private double priceNotation3;
 
 	public Trade() {
 		// Sets defaults on all enum and objects
