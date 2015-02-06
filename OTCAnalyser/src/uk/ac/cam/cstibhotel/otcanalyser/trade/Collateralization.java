@@ -17,5 +17,23 @@ public enum Collateralization {
     public short getValue() {
 	return value;
     }
+    
+    public static Collateralization parse(String s) throws CollateralizationFormatException{
+    	switch(s){
+    		case "UC":
+    			return UC;
+    		case "PC":
+    			return PC;
+    		case "FC":
+    			return FC;
+    		case "OC":
+    			return OC;
+    		case "":
+    			return BLANK;
+    		default:
+    			throw new CollateralizationFormatException();
+    	}
+    			
+    }
 
 }

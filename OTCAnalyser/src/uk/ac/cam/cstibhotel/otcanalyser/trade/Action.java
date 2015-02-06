@@ -15,5 +15,19 @@ public enum Action {
 	public short getValue() {
 		return value;
 	}
+	
+	public static Action parseAction(String s) throws ActionFormatException{
+		switch(s){
+			case "NEW":
+				return NEW;
+			case "CANCEL":
+				return CANCEL;
+			case "CORRECT":
+				return CORRECT;
+			default:
+				throw new ActionFormatException("Malfunctioned Action entry!");
+		}
+		
+	}
 
 }

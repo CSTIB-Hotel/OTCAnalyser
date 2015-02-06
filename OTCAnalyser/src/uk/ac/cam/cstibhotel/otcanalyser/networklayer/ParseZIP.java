@@ -4,10 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.zip.ZipInputStream;
 import java.net.URL;
+import java.text.ParseException;
 
 import uk.ac.cam.cstibhotel.otcanalyser.trade.*;
 
@@ -21,9 +24,65 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.*;
 public class ParseZIP {
 	
 	//TODO: implement this bit
-	private static Trade stringVectorToTrade(String[] trade){
-		Trade test = null;
-		return test;
+	private static Trade stringVectorToTrade(String[] tradeIn){
+		Trade tradeOut = new Trade();
+		//Setting fields in tradeOut appropriately
+		try{
+			
+	
+			tradeOut.setDisseminationID(Long.parseLong(tradeIn[0]));
+			tradeOut.setOriginalDisseminationID(Long.parseLong(tradeIn[1]));
+			tradeOut.setAction(Action.parseAction(tradeIn[2]));
+			
+			//Parsing the execution timestamp date
+			DateFormat etf = new SimpleDateFormat("yyy-MM-dd'T'kk:mm:ss");
+			tradeOut.setExecutionTimestamp(etf.parse(tradeIn[3]));
+			
+			//Parsing cleared. U == uncleared
+			boolean cleared;
+			if(tradeIn[4] == "U"){
+				cleared = false;
+			}
+			else if(tradeIn[4] == "C"){
+				cleared = true;
+			}
+			else throw new TradeFieldFormatException("ERROR: Cleared field is wrongly formatted");
+			
+			tradeOut.setCleared(cleared);
+			
+			//Collateralization
+			tradeOut.setCollateralization(Collateralization.parse(tradeIn[5]));
+			
+			//End user exception
+			boolean eue = false;
+			if(tradeIn[6] == "N"){
+				cleared = false;
+			}
+			else if((tradeIn[6] == "Y") || (tradeIn[6] == "")){
+				cleared = true;
+			}
+			else throw new TradeFieldFormatException("ERROR: End user exception field is wrongly formatted");
+			
+			tradeOut.setEndUserException(eue);
+			
+			//Other price affecting term
+			
+			
+
+		}
+		catch(ActionFormatException e){
+			e.printStackTrace();
+		}
+		catch(CollateralizationFormatException e){
+			e.printStackTrace();
+		}
+		catch (ParseException e) {
+			e.printStackTrace();
+		}
+		catch(TradeFieldFormatException e){
+			e.printStackTrace();
+		}
+		return tradeOut;
 	}
 	
 	public static LinkedList<Trade> downloadData(String zipFile, String splitBy){
