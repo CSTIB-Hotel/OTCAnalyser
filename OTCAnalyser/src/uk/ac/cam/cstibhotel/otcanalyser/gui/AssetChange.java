@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.MutableComboBoxModel;
 
+//When the selected asset is changed, this class updates the base class selector
+
 public class AssetChange implements ActionListener {
 
 	TaxonomySelector tax;
@@ -27,8 +29,8 @@ public class AssetChange implements ActionListener {
 				break;
 			case ("Foreign Exchange"): AssetBaseClasses = TextStrings.ForexBaseProducts;
 				break;
-			case ("Equity"): break;
-				default:break;
+			case ("Equity"): AssetBaseClasses = TextStrings.EquityBaseProducts;
+			default:break;
 		}
 		MutableComboBoxModel<String> model = (MutableComboBoxModel<String>) tax.BaseClass.getModel();
 		((DefaultComboBoxModel<String>) model).removeAllElements();

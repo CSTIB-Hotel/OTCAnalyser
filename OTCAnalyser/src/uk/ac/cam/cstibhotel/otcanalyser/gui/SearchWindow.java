@@ -2,11 +2,11 @@ package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-public class SearchWindow extends JFrame {
+public class SearchWindow extends JInternalFrame {
 	
 	private static final long serialVersionUID = 1L;
 	public TaxonomySelector tax;
@@ -42,7 +42,7 @@ public class SearchWindow extends JFrame {
 	}
 		
 	public static void main(String[] args) {
-		JFrame f = new SearchWindow();
+		JInternalFrame f = new SearchWindow();
 		f.setVisible(true);
 	}
 }
