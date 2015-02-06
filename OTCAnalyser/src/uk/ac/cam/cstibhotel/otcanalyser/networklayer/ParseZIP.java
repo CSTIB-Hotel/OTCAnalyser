@@ -23,6 +23,19 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.*;
 
 public class ParseZIP {
 	
+	private static Boolean convertToBool(String tv, String fv, String input) throws BooleanFieldFormatException{
+		if(input == tv){
+			return true;
+		}
+		else if(input == fv){
+			return false;
+		}
+		else if(input ==""){
+			return null;
+		}
+		else throw new BooleanFieldFormatException();
+	}
+	
 	//TODO: implement this bit
 	private static Trade stringVectorToTrade(String[] tradeIn){
 		Trade tradeOut = new Trade();
@@ -32,40 +45,30 @@ public class ParseZIP {
 	
 			tradeOut.setDisseminationID(Long.parseLong(tradeIn[0]));
 			tradeOut.setOriginalDisseminationID(Long.parseLong(tradeIn[1]));
-			tradeOut.setAction(Action.parseAction(tradeIn[2]));
+			tradeOut.setAction(Action.parseAct(tradeIn[2]));
 			
 			//Parsing the execution timestamp date
 			DateFormat etf = new SimpleDateFormat("yyy-MM-dd'T'kk:mm:ss");
 			tradeOut.setExecutionTimestamp(etf.parse(tradeIn[3]));
 			
-			//Parsing cleared. U == uncleared
-			boolean cleared;
-			if(tradeIn[4] == "U"){
-				cleared = false;
-			}
-			else if(tradeIn[4] == "C"){
-				cleared = true;
-			}
-			else throw new TradeFieldFormatException("ERROR: Cleared field is wrongly formatted");
-			
-			tradeOut.setCleared(cleared);
+			//Cleared
+			tradeOut.setCleared(convertToBool("C", "U", tradeIn[4]));
 			
 			//Collateralization
-			tradeOut.setCollateralization(Collateralization.parse(tradeIn[5]));
+			tradeOut.setCollateralization(Collateralization.parseColl(tradeIn[5]));
 			
 			//End user exception
-			boolean eue = false;
-			if(tradeIn[6] == "N"){
-				cleared = false;
-			}
-			else if((tradeIn[6] == "Y") || (tradeIn[6] == "")){
-				cleared = true;
-			}
-			else throw new TradeFieldFormatException("ERROR: End user exception field is wrongly formatted");
+			tradeOut.setEndUserException(convertToBool("Y", "N", tradeIn[6]));
 			
-			tradeOut.setEndUserException(eue);
+			//Other price affecting term TODO: Is this the INDICATION_OF_OTHER_PRICE_AFFECTING_TERM?
+			tradeOut.setBespoke(convertToBool("Y", "N", tradeIn[7]));
 			
-			//Other price affecting term
+			//BLOCK
+			tradeOut.setBlockTrades(convertToBool("Y", "N", tradeIn[8]));
+			
+			//EXECUTION_VENUE
+			tradeOut.setExecutionVenue(convertToBool("ON","OFF", tradeIn[9]));
+			
 			
 			
 
@@ -79,7 +82,7 @@ public class ParseZIP {
 		catch (ParseException e) {
 			e.printStackTrace();
 		}
-		catch(TradeFieldFormatException e){
+		catch(BooleanFieldFormatException e){
 			e.printStackTrace();
 		}
 		return tradeOut;
