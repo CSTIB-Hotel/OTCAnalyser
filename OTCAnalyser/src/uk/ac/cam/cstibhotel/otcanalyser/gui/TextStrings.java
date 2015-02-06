@@ -1,4 +1,4 @@
-package uk.ac.cam.cst1bhotel.otcanalyser.gui;
+package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 public class TextStrings {
 	static final String[] Assets = {"Credit","Interest","Commodity","Foreign Exchange","Equity"};
