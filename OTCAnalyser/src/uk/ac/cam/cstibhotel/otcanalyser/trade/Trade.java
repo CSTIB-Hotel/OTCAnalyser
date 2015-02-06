@@ -83,6 +83,188 @@ public class Trade {
 		optionExpirationDate = new Date();
 		
 	}
+	
+	public void setDisseminationID(long disseminationID) {
+		this.disseminationID = disseminationID;
+	}
+
+	public void setOriginalDisseminationID(long originalDisseminationID) {
+		this.originalDisseminationID = originalDisseminationID;
+	}
+
+	public void setAction(Action action) {
+		this.action = action;
+	}
+
+	public void setExecutionTimestamp(Date executionTimestamp) {
+		this.executionTimestamp = executionTimestamp;
+	}
+
+	public void setCleared(boolean cleared) {
+		this.cleared = cleared;
+	}
+
+	public void setCollateralization(Collateralization collateralization) {
+		this.collateralization = collateralization;
+	}
+
+	public void setEndUserException(boolean endUserException) {
+		this.endUserException = endUserException;
+	}
+
+	public void setBespoke(boolean bespoke) {
+		this.bespoke = bespoke;
+	}
+
+	public void setExecutionVenue(boolean executionVenue) {
+		this.executionVenue = executionVenue;
+	}
+
+	public void setBlockTrades(boolean blockTrades) {
+		this.blockTrades = blockTrades;
+	}
+
+	public void setEffectiveDate(Date effectiveDate) {
+		this.effectiveDate = effectiveDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public void setDayCountConvention(String dayCountConvention) {
+		this.dayCountConvention = dayCountConvention;
+	}
+
+	public void setSettlementCurrency(Currency settlementCurrency) {
+		this.settlementCurrency = settlementCurrency;
+	}
+
+	public void setTradeType(TradeType tradeType) {
+		this.tradeType = tradeType;
+	}
+
+	public void setAssetClass(AssetClass assetClass) {
+		this.assetClass = assetClass;
+	}
+
+	public void setSubAssetClass(SubAssetClass subAssetClass) {
+		this.subAssetClass = subAssetClass;
+	}
+
+	public void setTaxonomy(UPI taxonomy) {
+		this.taxonomy = taxonomy;
+	}
+
+	public void setPriceFormingContinuationData(PriceFormingContinuationData priceFormingContinuationData) {
+		this.priceFormingContinuationData = priceFormingContinuationData;
+	}
+
+	public void setUnderlyingAsset1(String underlyingAsset1) {
+		this.underlyingAsset1 = underlyingAsset1;
+	}
+
+	public void setUnderlyingAsset2(String underlyingAsset2) {
+		this.underlyingAsset2 = underlyingAsset2;
+	}
+
+	public void setPriceNotationType(String priceNotationType) {
+		this.priceNotationType = priceNotationType;
+	}
+
+	public void setPriceNotation(double priceNotation) {
+		this.priceNotation = priceNotation;
+	}
+
+	public void setAdditionalPriceNotationType(String additionalPriceNotationType) {
+		this.additionalPriceNotationType = additionalPriceNotationType;
+	}
+
+	public void setAdditionalPriceNotation(double additionalPriceNotation) {
+		this.additionalPriceNotation = additionalPriceNotation;
+	}
+
+	public void setNotionalCurrency1(Currency notionalCurrency1) {
+		this.notionalCurrency1 = notionalCurrency1;
+	}
+
+	public void setNotionalCurrency2(Currency notionalCurrency2) {
+		this.notionalCurrency2 = notionalCurrency2;
+	}
+
+	public void setRoundedNotionalAmount1(String roundedNotionalAmount1) {
+		this.roundedNotionalAmount1 = roundedNotionalAmount1;
+	}
+
+	public void setRoundedNotionalAmount2(String roundedNotionalAmount2) {
+		this.roundedNotionalAmount2 = roundedNotionalAmount2;
+	}
+
+	public void setPaymentFrequency1(String paymentFrequency1) {
+		this.paymentFrequency1 = paymentFrequency1;
+	}
+
+	public void setPaymentFrequency2(String paymentFrequency2) {
+		this.paymentFrequency2 = paymentFrequency2;
+	}
+
+	public void setResetFrequency1(String resetFrequency1) {
+		this.resetFrequency1 = resetFrequency1;
+	}
+
+	public void setResetFrequency2(String resetFrequency2) {
+		this.resetFrequency2 = resetFrequency2;
+	}
+
+	public void setEmbeddedOption(String embeddedOption) {
+		this.embeddedOption = embeddedOption;
+	}
+
+	public void setOptionStrikePrice(double optionStrikePrice) {
+		this.optionStrikePrice = optionStrikePrice;
+	}
+
+	public void setOptionType(String optionType) {
+		this.optionType = optionType;
+	}
+
+	public void setOptionFamily(String optionFamily) {
+		this.optionFamily = optionFamily;
+	}
+
+	public void setOptionCurrency(Currency optionCurrency) {
+		this.optionCurrency = optionCurrency;
+	}
+
+	public void setOptionPremium(double optionPremium) {
+		this.optionPremium = optionPremium;
+	}
+
+	public void setOptionLockPeriod(Date optionLockPeriod) {
+		this.optionLockPeriod = optionLockPeriod;
+	}
+
+	public void setOptionExpirationDate(Date optionExpirationDate) {
+		this.optionExpirationDate = optionExpirationDate;
+	}
+
+	public void setPriceNotation2Type(String priceNotation2Type) {
+		this.priceNotation2Type = priceNotation2Type;
+	}
+
+	public void setPriceNotation2(double priceNotation2) {
+		this.priceNotation2 = priceNotation2;
+	}
+
+	public void setPriceNotation3Type(String priceNotation3Type) {
+		this.priceNotation3Type = priceNotation3Type;
+	}
+
+	public void setPriceNotation3(double priceNotation3) {
+		this.priceNotation3 = priceNotation3;
+	}
+
+	
 
 	public long getDisseminationID() {
 		return disseminationID;
