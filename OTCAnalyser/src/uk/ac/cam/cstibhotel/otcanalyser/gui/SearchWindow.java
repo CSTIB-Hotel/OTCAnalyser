@@ -9,12 +9,12 @@ import javax.swing.JTextField;
 public class SearchWindow extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
-	private TaxonomySelector tax;
+	public TaxonomySelector tax;
 	private JLabel UnderLyingAssetDescriptor;
-	private JTextField UnderLyingAsset;
-	private DateSelector StartDate;
-	private DateSelector EndDate;
-	private JButton SearchButton;
+	public JTextField UnderLyingAsset;
+	public DateSelector StartDate;
+	public DateSelector EndDate;
+	public JButton SearchButton;
 	
 	public SearchWindow() {
 			setTitle("Search Window");

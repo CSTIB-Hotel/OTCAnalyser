@@ -7,15 +7,18 @@ import javax.swing.JInternalFrame;
 
 public class TaxonomySelector extends JInternalFrame {
 	private static final long serialVersionUID = 1L;
-	private JComboBox<String> Asset;
-	private JComboBox<String> BaseClass;
-	private JComboBox<String> SubClass;
+	public JComboBox<String> Asset;
+	public JComboBox<String> BaseClass;
+	public JComboBox<String> SubClass;
+	private AssetChange assetChange;
 	
 	public TaxonomySelector() {
 		setTitle("Taxonomy Selector");
 		setSize(300,50); // default size is 0,0
 		setLocation(100,200); // default is 0,0 (top left corner)
+		assetChange = new AssetChange(this);
 		Asset = new JComboBox<String>(TextStrings.Assets);
+		Asset.addActionListener(assetChange);
 		BaseClass = new JComboBox<String>(TextStrings.CommodityBaseProducts);
 		SubClass = new JComboBox<String>(TextStrings.CommodityMetalsSubProducts);
 		Asset.setVisible(true);
@@ -30,4 +33,6 @@ public class TaxonomySelector extends JInternalFrame {
 		JInternalFrame f = new TaxonomySelector();
 		f.setVisible(true);
 	}
+	
+	
 }
