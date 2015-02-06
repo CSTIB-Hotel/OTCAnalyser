@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 
 public class DataViewer extends JTabbedPane {
   
@@ -48,9 +49,9 @@ public class DataViewer extends JTabbedPane {
           - (long)(Math.random() * 500000000) * i);
       for (int j = 0; j < 10; j++) {
         t = new Trade();
-        t.action = "action" + i;
-        t.priceNotation = 200 + Math.random() * 500;
-        t.executionTimestamp = d;
+        t.setAction(Action.NEW); /// "action" + i;
+        t.setPriceNotation(200 + Math.random() * 500);
+        t.setExecutionTimestamp(d);
         trades.add(t);
       }
     }

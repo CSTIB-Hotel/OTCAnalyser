@@ -80,15 +80,15 @@ public class OHLCMaker {
     if (trade.isEmpty()) {
       return;
     }
-    Day rtp = new Day(trade.get(0).executionTimestamp); //day time period
-    double open = trade.get(0).priceNotation;
+    Day rtp = new Day(trade.get(0).getExecutionTimestamp()); //day time period
+    double open = trade.get(0).getPriceNotation();
     double high = open;
     double low = open;
     double close = open;
     for (int i = 0; i < trade.size(); i++) {
       Trade currentTrade = trade.get(i);
-      double price = currentTrade.priceNotation;
-      if(rtp.equals(new Day(currentTrade.executionTimestamp))) { //same time period
+      double price = currentTrade.getPriceNotation();
+      if(rtp.equals(new Day(currentTrade.getExecutionTimestamp()))) { //same time period
         if (price > high) {
           high = price;
         }
@@ -98,7 +98,7 @@ public class OHLCMaker {
         close = price;
       } else {
         ohlcs.add(rtp, open, high, low, close);
-        rtp = new Day(currentTrade.executionTimestamp);
+        rtp = new Day(currentTrade.getExecutionTimestamp());
         open = price;
         high = open;
         low = open;
