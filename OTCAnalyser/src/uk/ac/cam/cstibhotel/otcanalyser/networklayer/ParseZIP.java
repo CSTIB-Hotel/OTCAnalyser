@@ -2,8 +2,14 @@ package uk.ac.cam.cstibhotel.otcanalyser.networklayer;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.zip.ZipInputStream;
+import java.net.URL;
+
+import uk.ac.cam.cstibhotel.otcanalyser.trade.*;
 
 
 /*
@@ -14,22 +20,36 @@ import java.io.IOException;
 
 public class ParseZIP {
 	
-	public static void unZip(String zipFile){
-		
+	//TODO: implement this bit
+	private static Trade stringVectorToTrade(String[] trade){
+		Trade test = null;
+		return test;
 	}
 	
-	public static void parseCSV(String file, String splitBy){
+	public static LinkedList<Trade> downloadData(String zipFile, String splitBy){
 		String line;
+		int i = 0;
+		LinkedList<Trade> dataOut = new LinkedList<Trade>();
 		
-		try {
-	 		BufferedReader br = new BufferedReader(new FileReader(file));
-	 		while((line = br.readLine()) != null){
-	 			String[] trade = line.split(splitBy);
-	 			
-	 			System.out.println(trade[0]);
+		try{
+			URL url = new URL(zipFile);
+			ZipInputStream zis = new ZipInputStream(url.openStream());
+			zis.getNextEntry();
+			InputStreamReader isr = new InputStreamReader(zis);
+			BufferedReader br = new BufferedReader(isr);
+			
+			//reading line by line
+			while((line = br.readLine()) != null){
+	 			//do not read the first line
+				if(i!=0){
+	 				dataOut.add(stringVectorToTrade(line.split(splitBy)));
+	 			}
+	 			i++;
 	 		}
 	 		
 	 		br.close();
+	 		
+	 		return dataOut;
 		}
 		catch(FileNotFoundException e){
 			e.printStackTrace();
@@ -37,11 +57,12 @@ public class ParseZIP {
 		catch(IOException ioe){
 			ioe.printStackTrace();
 		}
+		
+		return null;
 	}
-
+	
 	public static void main(String[] args) {
-		ParseZIP.parseCSV("COMMODITIES.csv", ",");
-
+		ParseZIP.downloadData("https://kgc0418-tdw-data-0.s3.amazonaws.com/slices/CUMULATIVE_COMMODITIES_2015_02_04.zip",",");
 	}
 
 }
