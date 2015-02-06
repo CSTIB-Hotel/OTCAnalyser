@@ -13,7 +13,7 @@ import java.util.Map.Entry;
  *
  * @author Wai-Wai Ng
  */
-class Database {
+public class Database {
 
 	protected Connection connection;
 
@@ -86,7 +86,7 @@ class Database {
 	 *
 	 * @return The time the database was last updated
 	 */
-	java.util.Date getLastUpdateTime() {
+	public static java.util.Date getLastUpdateTime() {
 		return null;
 	}
 
