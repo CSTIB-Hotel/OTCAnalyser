@@ -16,7 +16,7 @@ public enum Action {
 		return value;
 	}
 	
-	public static Action parseAction(String s) throws ActionFormatException{
+	public static Action parseAct(String s) throws ActionFormatException{
 		switch(s){
 			case "NEW":
 				return NEW;

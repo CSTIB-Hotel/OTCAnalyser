@@ -18,7 +18,7 @@ public enum Collateralization {
 	return value;
     }
     
-    public static Collateralization parse(String s) throws CollateralizationFormatException{
+    public static Collateralization parseColl(String s) throws CollateralizationFormatException{
     	switch(s){
     		case "UC":
     			return UC;
