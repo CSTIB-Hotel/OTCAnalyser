@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
-//makes an OHLC chart based on execution timestamps and price notation per day
+//makes an OHLC chart based on execution timestamps and rounded notional amount 1 per day
 public class OHLCMaker {
   
   public static JFreeChart makeChart(String name, OHLCDataset dataset) {
@@ -80,31 +80,56 @@ public class OHLCMaker {
     if (trade.isEmpty()) {
       return;
     }
-    Day rtp = new Day(trade.get(0).getExecutionTimestamp()); //day time period
-    double open = trade.get(0).getPriceNotation();
+    int k = 0;
+    Day rtp = new Day(trade.get(k).getExecutionTimestamp()); //day time period
+    String rna = trade.get(k).getRoundedNotionalAmount1();
+    //cycle through trade list looking for first non-empty rounded notional amount 1
+    while ((rna == null || rna.isEmpty()) && k < trade.size() - 1) {
+    	k++;
+    	rtp = new Day(trade.get(k).getExecutionTimestamp());
+    	rna = trade.get(k).getRoundedNotionalAmount1();
+    }
+    //if they are all empty
+    if (k == trade.size() - 1) {
+    	return;
+    }
+    double open = getDoubleRNA(rna);
     double high = open;
     double low = open;
     double close = open;
-    for (int i = 0; i < trade.size(); i++) {
+    for (int i = k; i < trade.size(); i++) {
       Trade currentTrade = trade.get(i);
-      double price = currentTrade.getPriceNotation();
-      if(rtp.equals(new Day(currentTrade.getExecutionTimestamp()))) { //same time period
-        if (price > high) {
-          high = price;
-        }
-        if (price < low) {
-          low = price;
-        }
-        close = price;
-      } else {
-        ohlcs.add(rtp, open, high, low, close);
-        rtp = new Day(currentTrade.getExecutionTimestamp());
-        open = price;
-        high = open;
-        low = open;
-        close = open;
+      rna = currentTrade.getRoundedNotionalAmount1();
+      if (rna != null && !rna.isEmpty()) {
+        double price = getDoubleRNA(rna);
+        if(rtp.equals(new Day(currentTrade.getExecutionTimestamp()))) { //same time period
+        	if (price > high) {
+        		high = price;
+        	}
+        	if (price < low) {
+        		low = price;
+        	}
+        	close = price;
+        } else {
+        	ohlcs.add(rtp, open, high, low, close);
+        	rtp = new Day(currentTrade.getExecutionTimestamp());
+        	open = price;
+        	high = open;
+        	low = open;
+          close = open;
+       }
       }
     }
     ohlcs.add(rtp, open, high, low, close); //add last item in
+  }
+  
+  //get double form of the Rounded Notional Amount, which sometimes contains the '+' character
+  private static double getDoubleRNA(String rna) {
+  	System.out.println("rna " + rna);
+  	int index = rna.indexOf('+');
+  	if (index > -1) {
+  		rna = rna.substring(0, index);
+  	}
+  	return Double.parseDouble(rna);
   }
 }
