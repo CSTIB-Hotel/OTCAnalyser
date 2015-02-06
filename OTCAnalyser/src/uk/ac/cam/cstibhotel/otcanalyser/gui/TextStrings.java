@@ -19,7 +19,7 @@ public class TextStrings {
 	static final String[] ForexBaseProducts = {"Spot","NDF","NDO","Forward,Vanilla Option","Simple Exotic","Complex Exotic"};
 	static final String[] ForexSimpleExoticSubProducts = {"Barrier","Digital"};
 	//EQUITY TODO
-	static final String[] Years = {"2015","2014","2013","2012","2011","2010"};
+	static final Integer[] Years = {2015,2014,2013,2012,2011,2010};
 	static final String[] Months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
 	static final Integer[] Days28 = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28};
 	static final Integer[] Days30 = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30};
