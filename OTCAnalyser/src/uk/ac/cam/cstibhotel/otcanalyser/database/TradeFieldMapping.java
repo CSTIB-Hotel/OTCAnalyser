@@ -1,6 +1,12 @@
 package uk.ac.cam.cstibhotel.otcanalyser.database;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 
 /**
  *
@@ -8,59 +14,72 @@ import java.util.HashMap;
  */
 public class TradeFieldMapping {
 
-    public static HashMap<String, String> DBNameDBType;
+	public static HashMap<String, SQLField> DBNameDBType;
 
-    public static HashMap<String, String> getMapping() {
-
-	if (DBNameDBType == null) {
-	    DBNameDBType = new HashMap<>();
-	    DBNameDBType.put("id", "INTEGER");
-	    DBNameDBType.put("origId", "INTEGER");
-	    DBNameDBType.put("action", "SMALLINT");
-	    DBNameDBType.put("cleared", "BOOLEAN");
-	    DBNameDBType.put("collat", "SMALLINT");
-	    DBNameDBType.put("endUserException", "BOOLEAN");
-	    DBNameDBType.put("bespoke", "BOOLEAN");
-	    DBNameDBType.put("executionVenue", "BOOLEAN");
-	    DBNameDBType.put("blockTrades", "BOOLEAN");
-	    DBNameDBType.put("effectiveDate", "DATE");
-	    DBNameDBType.put("endDate", "DATE");
-	    DBNameDBType.put("dayCountConvention", "VARCHAR(255)");
-	    DBNameDBType.put("settlementCurrency", "VARCHAR(3)");
-	    DBNameDBType.put("tradeType", "SMALLINT");
-	    DBNameDBType.put("assetClass", "SMALLINT");
-	    DBNameDBType.put("subAssetClass", "VARCHAR(255)");
-	    DBNameDBType.put("taxonomy", "VARCHAR(255)");
-	    DBNameDBType.put("priceFormingContinuationData", "SMALLINT");
-	    DBNameDBType.put("underlyingAsset1", "VARCHAR(255)");
-	    DBNameDBType.put("underlyingAsset2", "VARCHAR(255)");
-	    DBNameDBType.put("priceNotationType", "VARCHAR(255)");
-	    DBNameDBType.put("priceNotation", "FLOAT");
-	    DBNameDBType.put("additionalPriceNotationType", "VARCHAR(255)");
-	    DBNameDBType.put("additionalPriceNotationType", "FLOAT");
-	    DBNameDBType.put("notionalCurrency1", "VARCHAR(3)");
-	    DBNameDBType.put("notionalCurrency2", "VARCHAR(3)");
-	    DBNameDBType.put("roundedNotionalAmount1", "VARCHAR(255)");
-	    DBNameDBType.put("roundedNotionalAmount2", "VARCHAR(255)");
-	    DBNameDBType.put("paymentFrequency1", "VARCHAR(255)");
-	    DBNameDBType.put("paymentFrequency2", "VARCHAR(255)");
-	    DBNameDBType.put("resetFrequency1", "VARCHAR(255)");
-	    DBNameDBType.put("resetFrequency2", "VARCHAR(255)");
-	    DBNameDBType.put("embeddedOption", "VARCHAR(255)");
-	    DBNameDBType.put("optionStrikePrice", "FLOAT");
-	    DBNameDBType.put("optionType", "VARCHAR(255)");
-	    DBNameDBType.put("optionFamily", "VARCHAR(255)");
-	    DBNameDBType.put("optionCurrency", "VARCHAR(3)");
-	    DBNameDBType.put("optionPremium", "FLOAT");
-	    DBNameDBType.put("optionLockPeriod", "DATE");
-	    DBNameDBType.put("optionExpirationDate", "DATE");
-	    DBNameDBType.put("priceNotation2Type", "VARCHAR(255)");
-	    DBNameDBType.put("priceNotation2", "FLOAT");
-	    DBNameDBType.put("priceNotation3Type", "VARCHAR(255)");
-	    DBNameDBType.put("priceNotation3", "FLOAT");
+	private Timestamp strToTimeStamp(String s) {
+		// this is the ISO 8601 format used by RTDATA.DTCC.COM
+		SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		try {
+			Timestamp t = new Timestamp(d.parse(s).getTime());
+			return t;
+		} catch (ParseException ex) {
+			Logger.getLogger(TradeFieldMapping.class.getName()).log(Level.WARNING, "Failed to parse timestamp", ex);
+			return null;
+		}
 	}
 
-	return DBNameDBType;
-    }
+	public static HashMap<String, SQLField> getMapping(Trade t) {
+
+		if (DBNameDBType==null) {
+			DBNameDBType = new HashMap<>();
+			DBNameDBType.put("id", new BigIntSQLField(t.getDisseminationID()));
+			DBNameDBType.put("origId", new BigIntSQLField(t.getOriginalDisseminationID()));
+			DBNameDBType.put("action", new SmallIntSQLField(t.getAction().getValue()));
+			DBNameDBType.put("executionTime", new TimestampSQLField(t.getExecutionTimestamp().getTime()));
+			DBNameDBType.put("cleared", new BoolSQLField(t.isCleared()));
+			DBNameDBType.put("collat", new SmallIntSQLField(t.getCollateralization().getValue()));
+			DBNameDBType.put("endUserException", new BoolSQLField(t.isEndUserException()));
+			DBNameDBType.put("bespoke", new BoolSQLField(t.isBespoke()));
+			DBNameDBType.put("executionVenue", new BoolSQLField(t.isExecutionVenue()));
+			DBNameDBType.put("blockTrades", new BoolSQLField(t.isBlockTrades()));
+			DBNameDBType.put("effectiveDate", new DateSQLField(t.getEffectiveDate()));
+			DBNameDBType.put("endDate", new DateSQLField(t.getEndDate()));
+			DBNameDBType.put("dayCountConvention", new VarCharSQLField(255, t.getDayCountConvention()));
+			DBNameDBType.put("settlementCurrency", new VarCharSQLField(3, t.getSettlementCurrency().getCurrencyCode()));
+			DBNameDBType.put("tradeType", new SmallIntSQLField(t.getTradeType().getValue()));
+			DBNameDBType.put("assetClass", new SmallIntSQLField(t.getAssetClass().getValue()));
+			DBNameDBType.put("subAssetClass", new VarCharSQLField(255, t.getSubAssetClass().toString())); // TODO write subassetclass
+			DBNameDBType.put("taxonomy", new VarCharSQLField(255, t.getTaxonomy().toString())); // TODO write UPI
+			DBNameDBType.put("priceFormingContinuationData", new SmallIntSQLField(t.getPriceFormingContinuationData().getValue()));
+			DBNameDBType.put("underlyingAsset1", new VarCharSQLField(255, t.getUnderlyingAsset1()));
+			DBNameDBType.put("underlyingAsset2", new VarCharSQLField(255, t.getUnderlyingAsset2()));
+			DBNameDBType.put("priceNotationType", new VarCharSQLField(255, t.getPriceNotationType()));
+			DBNameDBType.put("priceNotation", new FloatSQLField(t.getPriceNotation()));
+			DBNameDBType.put("additionalPriceNotationType", new VarCharSQLField(255, t.getAdditionalPriceNotationType()));
+			DBNameDBType.put("additionalPriceNotation", new FloatSQLField(t.getAdditionalPriceNotation()));
+			DBNameDBType.put("notionalCurrency1", new VarCharSQLField(3, t.getNotionalCurrency1().getCurrencyCode()));
+			DBNameDBType.put("notionalCurrency2", new VarCharSQLField(3, t.getNotionalCurrency2().getCurrencyCode()));
+			DBNameDBType.put("roundedNotionalAmount1", new VarCharSQLField(255, t.getRoundedNotionalAmount1()));
+			DBNameDBType.put("roundedNotionalAmount2", new VarCharSQLField(255, t.getRoundedNotionalAmount2()));
+			DBNameDBType.put("paymentFrequency1", new VarCharSQLField(255, t.getPaymentFrequency1()));
+			DBNameDBType.put("paymentFrequency2", new VarCharSQLField(255, t.getPaymentFrequency2()));
+			DBNameDBType.put("resetFrequency1", new VarCharSQLField(255, t.getResetFrequency1()));
+			DBNameDBType.put("resetFrequency2", new VarCharSQLField(255, t.getResetFrequency2()));
+			DBNameDBType.put("embeddedOption", new VarCharSQLField(255, t.getEmbeddedOption()));
+			DBNameDBType.put("optionStrikePrice", new FloatSQLField(t.getOptionStrikePrice()));
+			DBNameDBType.put("optionType", new VarCharSQLField(255, t.getOptionType()));
+			DBNameDBType.put("optionFamily", new VarCharSQLField(255, t.getOptionFamily()));
+			DBNameDBType.put("optionCurrency", new VarCharSQLField(3, t.getOptionCurrency().getCurrencyCode()));
+			DBNameDBType.put("optionPremium", new FloatSQLField(t.getOptionPremium()));
+			DBNameDBType.put("optionLockPeriod", new DateSQLField(t.getOptionLockPeriod()));
+			DBNameDBType.put("optionExpirationDate", new DateSQLField(t.getOptionExpirationDate()));
+			DBNameDBType.put("priceNotation2Type", new VarCharSQLField(255, t.getPriceNotation2Type()));
+			DBNameDBType.put("priceNotation2", new FloatSQLField(t.getPriceNotation2()));
+			DBNameDBType.put("priceNotation3Type", new VarCharSQLField(255, t.getPriceNotation3Type()));
+			DBNameDBType.put("priceNotation3", new FloatSQLField(t.getPriceNotation3()));
+		}
+
+		return DBNameDBType;
+	}
 
 }
