@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JInternalFrame;
-import javax.swing.MutableComboBoxModel;
 
 public class DateSelector extends JInternalFrame implements ActionListener {
 
@@ -36,8 +35,8 @@ public class DateSelector extends JInternalFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) { //when the month is changed, this method updates the box displaying the number of days
 		String month = (String) Months.getSelectedItem();
 		if (month=="February") {
-			MutableComboBoxModel<Integer> model = (MutableComboBoxModel<Integer>) Day.getModel();
-			((DefaultComboBoxModel<Integer>) model).removeAllElements();
+			DefaultComboBoxModel<Integer> model = (DefaultComboBoxModel<Integer>) Day.getModel();
+			model.removeAllElements();
 			for (int i:TextStrings.Days28) {
 				model.addElement(i);
 			}
@@ -46,15 +45,15 @@ public class DateSelector extends JInternalFrame implements ActionListener {
 			}
 		}
 		else if (month=="April"||month=="June"||month=="September"||month=="November") {
-			MutableComboBoxModel<Integer> model = (MutableComboBoxModel<Integer>) Day.getModel();
-			((DefaultComboBoxModel<Integer>) model).removeAllElements();
+			DefaultComboBoxModel<Integer> model = (DefaultComboBoxModel<Integer>) Day.getModel();
+			model.removeAllElements();
 			for (int i:TextStrings.Days30) {
 				model.addElement(i);
 			}
 		}
 		else {
-			MutableComboBoxModel<Integer> model = (MutableComboBoxModel<Integer>) Day.getModel();
-			((DefaultComboBoxModel<Integer>) model).removeAllElements();
+			DefaultComboBoxModel<Integer> model = (DefaultComboBoxModel<Integer>) Day.getModel();
+			model.removeAllElements();
 			for (int i:TextStrings.Days31) {
 				model.addElement(i);
 			}
