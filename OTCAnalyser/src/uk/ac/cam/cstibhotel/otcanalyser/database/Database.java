@@ -4,7 +4,9 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
+
 import java.sql.*;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -87,7 +89,7 @@ public class Database {
 	 * @return The time the database was last updated
 	 */
 	public static java.util.Date getLastUpdateTime() {
-		return null;
+		return new Date(115, 2, 1);
 	}
 
 	/**

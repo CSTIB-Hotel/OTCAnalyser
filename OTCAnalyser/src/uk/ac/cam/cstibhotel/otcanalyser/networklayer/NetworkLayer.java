@@ -11,7 +11,7 @@ import java.util.List;
 import uk.ac.cam.cstibhotel.otcanalyser.database.Database;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 
-class NetworkLayer {
+public class NetworkLayer {
     static Date lastUpdateDate = Database.getLastUpdateTime();
     static int lastSlice = 0; //the ID of the last received slice today, counting from 1
     static Date targetUpdateDate;
@@ -19,7 +19,7 @@ class NetworkLayer {
     static final String repo = "https://kgc0418-tdw-data-0.s3.amazonaws.com";
     static final String splitter = ",";
     
-    void initialUpdate() { //called at startup and every day afterwards
+    public static void initialUpdate() { //called at startup and every day afterwards
     	
     	Thread update = new Thread() {
     	    public void run() {
@@ -41,7 +41,9 @@ class NetworkLayer {
     	        		lastUpdate.add(Calendar.DATE, 1);
     	        		
 	        			String formatDate = lastUpdate.get(Calendar.YEAR) + "_" + 
+	        					(lastUpdate.get(Calendar.MONTH) < 10 ? "0" : "") +
 	        					lastUpdate.get(Calendar.MONTH) + "_" + 
+	        					(lastUpdate.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "") +
 	        					lastUpdate.get(Calendar.DAY_OF_MONTH);
 	        			List<String> zipURLString = new LinkedList<String>();
 	        			zipURLString.add(repo + "/slices/CUMULATIVE_COMMODITIES_" + formatDate + ".zip");
@@ -86,7 +88,7 @@ class NetworkLayer {
     	update.start();
     }
     
-    void poll() { //called internally by a timer
+    public static void poll() { //called internally by a timer
     	
     }
 }
