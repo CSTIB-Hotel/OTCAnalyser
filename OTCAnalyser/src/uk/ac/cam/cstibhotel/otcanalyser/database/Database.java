@@ -91,7 +91,7 @@ public class Database {
 	 * @return The time the database was last updated
 	 */
 	public static java.util.Date getLastUpdateTime() {
-		return new Date(115, 2, 1);
+		return new Date(114, 0, 0);
 	}
 
 	/**

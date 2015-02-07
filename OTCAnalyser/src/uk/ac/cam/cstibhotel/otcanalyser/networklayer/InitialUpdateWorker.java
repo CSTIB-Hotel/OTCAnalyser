@@ -28,14 +28,14 @@ public class InitialUpdateWorker extends Thread {
         	lastUpdate.setTime(NetworkLayer.lastUpdateDate);
         	
         	while (target.get(Calendar.YEAR) != lastUpdate.get(Calendar.YEAR) ||
-        			target.get(Calendar.MONTH) != lastUpdate.get(Calendar.MONTH) ||
+        			target.get(Calendar.MONTH) + 1 != lastUpdate.get(Calendar.MONTH) + 1 ||
         			target.get(Calendar.DAY_OF_MONTH) != lastUpdate.get(Calendar.DAY_OF_MONTH)) {
         		
         		lastUpdate.add(Calendar.DATE, 1);
         		
     			String formatDate = lastUpdate.get(Calendar.YEAR) + "_" + 
-    					(lastUpdate.get(Calendar.MONTH) < 10 ? "0" : "") +
-    					lastUpdate.get(Calendar.MONTH) + "_" + 
+    					((lastUpdate.get(Calendar.MONTH) + 1) < 10 ? "0" : "") +
+    					(lastUpdate.get(Calendar.MONTH) + 1) + "_" + 
     					(lastUpdate.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "") +
     					lastUpdate.get(Calendar.DAY_OF_MONTH);
     			List<String> zipURLString = new LinkedList<String>();
@@ -73,7 +73,7 @@ public class InitialUpdateWorker extends Thread {
         		//todo: only if successful
     			NetworkLayer.lastUpdateDate = lastUpdate.getTime();
     			System.out.println("NetworkLayer: current version is " + lastUpdate.get(Calendar.YEAR) + " "+
-        			lastUpdate.get(Calendar.MONTH) + " " + lastUpdate.get(Calendar.DAY_OF_MONTH));
+        			(lastUpdate.get(Calendar.MONTH) + 1) + " " + lastUpdate.get(Calendar.DAY_OF_MONTH));
         	}
         	System.out.println("NetworkLayer: initial update completed");
         }
