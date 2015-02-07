@@ -24,16 +24,24 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.*;
 public class ParseZIP {
 	
 	private static Boolean convertToBool(String tv, String fv, String input) throws BooleanFieldFormatException{
-		if(input == tv){
+		if(input.equals(tv)){
 			return true;
 		}
-		else if(input == fv){
+		else if(input.equals(fv)){
 			return false;
 		}
-		else if(input ==""){
+		else if(input.equals("")){
 			return null;
 		}
 		else throw new BooleanFieldFormatException();
+	}
+	
+	private static long parseLong(String input) {
+		if (input.equals("")) {
+			return 0;
+		} else {
+			return Long.parseLong(input);
+		}
 	}
 	
 	//TODO: implement this bit
@@ -43,8 +51,8 @@ public class ParseZIP {
 		try{
 			
 	
-			tradeOut.setDisseminationID(Long.parseLong(tradeIn[0]));
-			tradeOut.setOriginalDisseminationID(Long.parseLong(tradeIn[1]));
+			tradeOut.setDisseminationID(parseLong(tradeIn[0]));
+			tradeOut.setOriginalDisseminationID(parseLong(tradeIn[1]));
 			tradeOut.setAction(Action.parseAct(tradeIn[2]));
 			
 			//Parsing the execution timestamp date
@@ -103,7 +111,14 @@ public class ParseZIP {
 		while((line = br.readLine()) != null){
  			//do not read the first line
 			if(i!=0){
- 				dataOut.add(stringVectorToTrade(line.split(splitBy)));
+				String[] tradeIn = line.split(splitBy);
+				for (int j = 0; j < tradeIn.length; j++) {
+					if (tradeIn[j].startsWith("\"") && tradeIn[j].endsWith("\"")) {
+						tradeIn[j] = tradeIn[j].substring(1, tradeIn[j].length() - 1);
+					}
+				}
+					
+ 				dataOut.add(stringVectorToTrade(tradeIn));
  			}
  			i++;
  		}
