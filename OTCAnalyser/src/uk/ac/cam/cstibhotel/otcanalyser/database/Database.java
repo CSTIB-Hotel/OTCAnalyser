@@ -15,11 +15,11 @@ import java.util.Map.Entry;
  */
 class Database {
 
-	protected Connection connection;
+	protected static Connection connection;
 
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
 		Database d = new Database();
-		d.addTrade(new Trade());
+		addTrade(new Trade());
 	}
 
 	public Database() throws SQLException, ClassNotFoundException  {
@@ -54,7 +54,7 @@ class Database {
 	 *
 	 * @param trade a trade to be added to the database
 	 */
-	void addTrade(Trade trade) throws SQLException {
+	public static void addTrade(Trade trade) throws SQLException {
 		StringBuilder a = new StringBuilder("INSERT INTO data (");
 		StringBuilder b = new StringBuilder(") VALUES (");
 
@@ -86,17 +86,8 @@ class Database {
 	 *
 	 * @return The time the database was last updated
 	 */
-	java.util.Date getLastUpdateTime() {
+	public static java.util.Date getLastUpdateTime() {
 		return null;
-	}
-
-	/**
-	 * Adds a CSV file listing trades to the database
-	 *
-	 * @param csv the relevant CSV file
-	 */
-	void addTrades(CSVTradeFile csv) {
-
 	}
 
 	/**
@@ -104,7 +95,7 @@ class Database {
 	 * @param s the search parameters
 	 * @return all data matching the search
 	 */
-	SearchResult search(Search s) {
+	public static SearchResult search(Search s) {
 		return null;
 	}
 
@@ -112,14 +103,14 @@ class Database {
 	 *
 	 * @param s the search to save
 	 */
-	void saveSearch(Search s) {
+	public static void saveSearch(Search s) {
 	}
 
 	/**
 	 *
 	 * @return A list of previously saved searches
 	 */
-	Search[] getSavedSearches() {
+	public static Search[] getSavedSearches() {
 		return null;
 	}
 
@@ -128,7 +119,7 @@ class Database {
 	 * @param s The string to search against
 	 * @return A list of UPIs which have the parameter as a substring
 	 */
-	UPI[] getMatchingUPI(String s) {
+	public static UPI[] getMatchingUPI(String s) {
 		return null;
 	}
 
