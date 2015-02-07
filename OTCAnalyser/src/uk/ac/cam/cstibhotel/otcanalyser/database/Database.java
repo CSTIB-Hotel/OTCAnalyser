@@ -54,8 +54,8 @@ public class Database {
 	 *
 	 * @param trade a trade to be added to the database
 	 */
-	void addTrade(Trade trade) throws SQLException {
-		StringBuilder a = new StringBuilder("INSERT INTO data (");
+	public static void addTrade(Trade trade) throws SQLException {
+		/*StringBuilder a = new StringBuilder("INSERT INTO data (");
 		StringBuilder b = new StringBuilder(") VALUES (");
 
 		HashMap<String, SQLField> DBNameValue = TradeFieldMapping.getMapping(trade);
@@ -79,7 +79,7 @@ public class Database {
 			iterator.next().getValue().addToPreparedStatement(p);
 		}
 		
-		p.execute();
+		p.execute();*/
 	}
 
 	/**
