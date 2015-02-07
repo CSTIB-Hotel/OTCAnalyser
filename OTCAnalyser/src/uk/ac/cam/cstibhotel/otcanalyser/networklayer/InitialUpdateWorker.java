@@ -14,8 +14,10 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 public class InitialUpdateWorker extends Thread {
 	@Override
 	public void run() {
-    	
+    	System.out.println("NetworkLayer: initial update requested");
         synchronized(NetworkLayer.lastUpdateDate) {
+        	System.out.println("NetworkLayer: initial update started");
+        	
         	Date now = new Date();
         	Calendar target = Calendar.getInstance();
         	target.setTime(now);
@@ -54,7 +56,7 @@ public class InitialUpdateWorker extends Thread {
 					} catch (IOException e) {
 						e.printStackTrace();
 					} catch (SQLException e) {
-						
+						e.printStackTrace();
 					}
     				
     				
@@ -70,8 +72,10 @@ public class InitialUpdateWorker extends Thread {
         		
         		//todo: only if successful
     			NetworkLayer.lastUpdateDate = lastUpdate.getTime();
+    			System.out.println("NetworkLayer: current version is " + lastUpdate.get(Calendar.YEAR) + " "+
+        			lastUpdate.get(Calendar.MONTH) + " " + lastUpdate.get(Calendar.DAY_OF_MONTH));
         	}
-        			
+        	System.out.println("NetworkLayer: initial update completed");
         }
     }  
 

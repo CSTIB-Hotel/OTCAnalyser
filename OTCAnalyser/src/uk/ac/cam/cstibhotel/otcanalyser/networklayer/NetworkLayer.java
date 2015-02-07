@@ -10,7 +10,7 @@ public class NetworkLayer {
     static Date targetUpdateDate;
     
     static final String repo = "https://kgc0418-tdw-data-0.s3.amazonaws.com";
-    static final String splitter = ",";
+    static final String splitter = "\",\"";
     
     public static void initialUpdate() { //called at startup and every day afterwards
     	

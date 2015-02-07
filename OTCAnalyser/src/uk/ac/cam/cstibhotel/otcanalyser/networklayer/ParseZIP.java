@@ -23,17 +23,16 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.*;
 
 public class ParseZIP {
 	
-	private static Boolean convertToBool(String tv, String fv, String input) throws BooleanFieldFormatException{
+	private static Boolean convertToBool(String tv, String fv, String input) {
 		if(input.equals(tv)){
 			return true;
 		}
 		else if(input.equals(fv)){
 			return false;
 		}
-		else if(input.equals("")){
+		else {
 			return null;
 		}
-		else throw new BooleanFieldFormatException();
 	}
 	
 	private static long parseLong(String input) {
@@ -49,15 +48,17 @@ public class ParseZIP {
 		Trade tradeOut = new Trade();
 		//Setting fields in tradeOut appropriately
 		try{
-			
-	
 			tradeOut.setDisseminationID(parseLong(tradeIn[0]));
 			tradeOut.setOriginalDisseminationID(parseLong(tradeIn[1]));
 			tradeOut.setAction(Action.parseAct(tradeIn[2]));
 			
 			//Parsing the execution timestamp date
-			DateFormat etf = new SimpleDateFormat("yyy-MM-dd'T'kk:mm:ss");
-			tradeOut.setExecutionTimestamp(etf.parse(tradeIn[3]));
+			try {
+				DateFormat etf = new SimpleDateFormat("yyy-MM-dd'T'kk:mm:ss");
+				tradeOut.setExecutionTimestamp(etf.parse(tradeIn[3]));
+			} catch ( ParseException e ) {
+				tradeOut.setExecutionTimestamp(null);
+			}
 			
 			//Cleared
 			tradeOut.setCleared(convertToBool("C", "U", tradeIn[4]));
@@ -87,12 +88,6 @@ public class ParseZIP {
 		catch(CollateralizationFormatException e){
 			e.printStackTrace();
 		}
-		catch (ParseException e) {
-			e.printStackTrace();
-		}
-		catch(BooleanFieldFormatException e){
-			e.printStackTrace();
-		}
 		return tradeOut;
 	}
 	
@@ -111,13 +106,22 @@ public class ParseZIP {
 		while((line = br.readLine()) != null){
  			//do not read the first line
 			if(i!=0){
+				//fix quotes around dissemination ID
+				if (!line.startsWith("\"")) 
+					line = "\"" + line;
+				if (line.charAt(line.indexOf(",") - 1) != '"') {
+					line = line.substring(0, line.indexOf(",")) + "\"" + line.substring(line.indexOf(","));
+				}
+				
 				String[] tradeIn = line.split(splitBy);
 				for (int j = 0; j < tradeIn.length; j++) {
-					if (tradeIn[j].startsWith("\"") && tradeIn[j].endsWith("\"")) {
-						tradeIn[j] = tradeIn[j].substring(1, tradeIn[j].length() - 1);
-					}
+					//remove quotes
+					if (tradeIn[j].startsWith("\""))
+						tradeIn[j] = tradeIn[j].substring(1, tradeIn[j].length());
+					if (tradeIn[j].endsWith("\""))
+						tradeIn[j] = tradeIn[j].substring(0, tradeIn[j].length() - 1);
 				}
-					
+
  				dataOut.add(stringVectorToTrade(tradeIn));
  			}
  			i++;
