@@ -25,7 +25,7 @@ public class Database {
 	}
 
 	public Database() throws SQLException, ClassNotFoundException  {
-		Class.forName("org.hsqldb.jdbcDriver");
+		/*Class.forName("org.hsqldb.jdbcDriver");
 		connection = DriverManager.getConnection("jdbc:hsqldb:file:"
 				+"/Users/waiwaing/Library/OTCAnalyser/database.db"); // TODO: fix directory
 		connection.setAutoCommit(false);
@@ -45,9 +45,11 @@ public class Database {
 			dataTableCreator.append(");");
 			statement.execute(dataTableCreator.toString());
 
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			statement.close();
-		}
+		}*/
 
 	}
 
