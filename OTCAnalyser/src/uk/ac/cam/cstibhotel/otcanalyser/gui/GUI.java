@@ -7,10 +7,11 @@ import javax.swing.JFrame;
 public class GUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	SearchWindow searchWindow;
+	
 	StatusBar statusBar;
 	
-	private static GUI gui;
+	public static GUI gui;
+	static SearchWindow searchWindow;
 	
 	public static GUI getInstance() {
 		if (gui==null) {
@@ -30,9 +31,5 @@ public class GUI extends JFrame {
 		statusBar.setVisible(true);
 		this.setVisible(true);
 	}
-	
-	public static void main(String[] args) {
-		getInstance();
-		StatusBar.setMessage("the database has exploded", 1);
-	}
+
 }

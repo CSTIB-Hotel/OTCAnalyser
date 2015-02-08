@@ -8,8 +8,6 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.CandlestickRenderer;
 import org.jfree.data.general.SeriesException;
 import org.jfree.data.time.Day;
-import org.jfree.data.time.RegularTimePeriod;
-import org.jfree.data.time.ohlc.OHLCItem;
 import org.jfree.data.time.ohlc.OHLCSeries;
 import org.jfree.data.time.ohlc.OHLCSeriesCollection;
 import org.jfree.data.xy.OHLCDataset;
@@ -18,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
-//makes an OHLC chart based on execution timestamps and price notation per day
+//makes an OHLC chart based on execution timestamps and rounded notional amount 1 per day
 public class OHLCMaker {
   
   public static JFreeChart makeChart(String name, OHLCDataset dataset) {
@@ -59,7 +57,7 @@ public class OHLCMaker {
   }
   
   //given a list of trades ordered by execution timestamps, makes OHLCSeries
-  public static OHLCSeries makeSeries(List<Trade> trade, Comparable key) {
+  public static OHLCSeries makeSeries(List<Trade> trade, Comparable<String> key) {
     OHLCSeries ohlcs = new OHLCSeries(key);
     addToSeries(ohlcs, trade);
     return ohlcs;
@@ -70,7 +68,8 @@ public class OHLCMaker {
     OHLCSeries ohlcs = dataset.getSeries(series);
     try {
       addToSeries(ohlcs, trade);
-    } catch(SeriesException e) { //overlap with dates; possibly the same period so just redo dataset
+    } catch(SeriesException e) {
+    	// overlap with dates
       return false;
     }
     return true;
@@ -80,31 +79,65 @@ public class OHLCMaker {
     if (trade.isEmpty()) {
       return;
     }
-    Day rtp = new Day(trade.get(0).getExecutionTimestamp()); //day time period
-    double open = trade.get(0).getPriceNotation();
+    int k = 0;
+    Day rtp = new Day(trade.get(k).getExecutionTimestamp()); //day time period
+    String rna = trade.get(k).getRoundedNotionalAmount1();
+    //cycle through trade list looking for first readable rounded notional amount 1
+    while (!(validRNA(rna)) && k < trade.size() - 1) {
+    	k++;
+    	rtp = new Day(trade.get(k).getExecutionTimestamp());
+    	rna = trade.get(k).getRoundedNotionalAmount1();
+    }
+    //if they are all unreadable
+    if (k == trade.size() - 1) {
+    	return;
+    }
+    double open = getDoubleRNA(rna);
     double high = open;
     double low = open;
     double close = open;
-    for (int i = 0; i < trade.size(); i++) {
+    for (int i = k; i < trade.size(); i++) {
       Trade currentTrade = trade.get(i);
-      double price = currentTrade.getPriceNotation();
-      if(rtp.equals(new Day(currentTrade.getExecutionTimestamp()))) { //same time period
-        if (price > high) {
-          high = price;
-        }
-        if (price < low) {
-          low = price;
-        }
-        close = price;
-      } else {
-        ohlcs.add(rtp, open, high, low, close);
-        rtp = new Day(currentTrade.getExecutionTimestamp());
-        open = price;
-        high = open;
-        low = open;
-        close = open;
+      rna = currentTrade.getRoundedNotionalAmount1();
+      if (validRNA(rna)) {
+        double price = getDoubleRNA(rna);
+        if(rtp.equals(new Day(currentTrade.getExecutionTimestamp()))) { //same time period
+        	if (price > high) {
+        		high = price;
+        	}
+        	if (price < low) {
+        		low = price;
+        	}
+        	close = price;
+        } else {
+        	ohlcs.add(rtp, open, high, low, close);
+        	rtp = new Day(currentTrade.getExecutionTimestamp());
+        	open = price;
+        	high = open;
+        	low = open;
+          close = open;
+       }
       }
     }
     ohlcs.add(rtp, open, high, low, close); //add last item in
+  }
+  
+  //returns true if rna is in valid Rounded Notional Amount format
+  private static boolean validRNA(String rna) {
+  	try {
+  		getDoubleRNA(rna);
+  		return true;
+  	} catch (Exception e) {
+  		return false;
+  	}
+  }
+  
+  //get double form of the Rounded Notional Amount, which sometimes contains the '+' character
+  private static double getDoubleRNA(String rna) {
+  	int index = rna.indexOf('+');
+  	if (index > -1) {
+  		rna = rna.substring(0, index);
+  	}
+  	return Double.parseDouble(rna);
   }
 }
