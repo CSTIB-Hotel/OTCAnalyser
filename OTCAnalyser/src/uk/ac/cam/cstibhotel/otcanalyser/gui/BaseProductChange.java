@@ -7,14 +7,17 @@ public class BaseProductChange implements ActionListener {
 
 TaxonomySelector tax;
 	
-	BaseProductChange(TaxonomySelector tax) {
-		this.tax = tax;
+	BaseProductChange() {
+		this.tax = TaxonomySelector.getInstance();
 	}
 
 	
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-
+	public void actionPerformed(ActionEvent e) {
+		String selectedBaseClass = (String) tax.BaseClass.getSelectedItem();
+		String[] subClass = {""};
+		switch (selectedBaseClass){
+			case()
+		}
 	}
 
 }

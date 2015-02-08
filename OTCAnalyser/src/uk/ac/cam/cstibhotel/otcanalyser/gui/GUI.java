@@ -8,18 +8,31 @@ public class GUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	SearchWindow searchWindow;
+	StatusBar statusBar;
 	
+	private static GUI gui;
 	
-	public GUI() {
+	public static GUI getInstance() {
+		if (gui==null) {
+			gui = new GUI();
+		}
+		return gui;
+	}
+	
+	private GUI() {
 		setTitle("OTC Analyser");
 		setSize(800,600);
-		searchWindow = new SearchWindow();
+		searchWindow = SearchWindow.getInstance();
 		add(searchWindow,BorderLayout.WEST);
 		searchWindow.setVisible(true);
+		statusBar = StatusBar.getInstance();
+		add(statusBar,BorderLayout.SOUTH);
+		statusBar.setVisible(true);
 		this.setVisible(true);
 	}
 	
 	public static void main(String[] args) {
-		JFrame example = new GUI();
+		getInstance();
+		StatusBar.setMessage("the database has exploded", 1);
 	}
 }

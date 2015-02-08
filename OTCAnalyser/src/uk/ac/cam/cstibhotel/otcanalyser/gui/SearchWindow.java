@@ -16,12 +16,19 @@ public class SearchWindow extends JInternalFrame {
 	public DateSelector EndDate;
 	public JButton SearchButton;
 	
-	public SearchWindow() {
+	private static SearchWindow instance;
+	
+	public static SearchWindow getInstance() {
+		if (instance==null) instance = new SearchWindow();
+		return instance;
+	}
+	
+	private SearchWindow() {
 			setTitle("Search Window");
-			setSize(400,400); // default size is 0,0
+			setSize(400,100); // default size is 0,0
 			setLocation(100,200); // default is 0,0 (top left corner)
 			setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
-			tax = new TaxonomySelector();
+			tax = TaxonomySelector.getInstance();
 			this.add(tax);
 			tax.setVisible(true);
 			UnderLyingAssetDescriptor = new JLabel("Underlying Asset (optional)");
@@ -40,9 +47,5 @@ public class SearchWindow extends JInternalFrame {
 			this.add(SearchButton);
 			SearchButton.setVisible(true);
 	}
-		
-	public static void main(String[] args) {
-		JInternalFrame f = new SearchWindow();
-		f.setVisible(true);
-	}
+	
 }

@@ -11,8 +11,14 @@ public class TaxonomySelector extends JInternalFrame {
 	public JComboBox<String> BaseClass;
 	public JComboBox<String> SubClass;
 	private AssetChange assetChange;
+	private static TaxonomySelector instance;
 	
-	public TaxonomySelector() {
+	public static TaxonomySelector getInstance() {
+		if (instance==null) instance = new TaxonomySelector();
+		return instance;
+	}
+	
+	private TaxonomySelector() {
 		setTitle("Taxonomy Selector");
 		setSize(300,50); // default size is 0,0
 		setLocation(100,200); // default is 0,0 (top left corner)
