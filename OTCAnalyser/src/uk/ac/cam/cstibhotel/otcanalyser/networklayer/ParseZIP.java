@@ -91,7 +91,7 @@ public class ParseZIP {
 		return tradeOut;
 	}
 	
-	public static LinkedList<Trade> downloadData(String zipFile, String splitBy) throws IOException {
+	public static LinkedList<Trade> downloadData(String zipFile, String splitBy, String secondarySplitBy) throws IOException {
 		String line;
 		int i = 0;
 		LinkedList<Trade> dataOut = new LinkedList<Trade>();
@@ -114,6 +114,15 @@ public class ParseZIP {
 				}
 				
 				String[] tradeIn = line.split(splitBy);
+				
+				/*
+				 * todo: research normal # of fields
+				 * currently it is around 45-48
+				 */
+				
+				if (tradeIn.length < 10)
+					tradeIn = line.split(secondarySplitBy);
+				
 				for (int j = 0; j < tradeIn.length; j++) {
 					//remove quotes
 					if (tradeIn[j].startsWith("\""))
@@ -138,7 +147,7 @@ public class ParseZIP {
 	
 	public static void main(String[] args) {
 		try {
-			ParseZIP.downloadData("https://kgc0418-tdw-data-0.s3.amazonaws.com/slices/CUMULATIVE_COMMODITIES_2015_02_04.zip",",");
+			ParseZIP.downloadData("https://kgc0418-tdw-data-0.s3.amazonaws.com/slices/CUMULATIVE_COMMODITIES_2015_02_04.zip","\",\"", ",");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -47,7 +47,7 @@ public class InitialUpdateWorker extends Thread {
     			
     			for (String s : zipURLString) {
     				try {
-						List<Trade> newTrades = ParseZIP.downloadData(s, NetworkLayer.splitter);
+						List<Trade> newTrades = ParseZIP.downloadData(s, NetworkLayer.splitter, NetworkLayer.secondarySplitter);
 						for (Trade t : newTrades) {
 							Database.addTrade(t);
 						}
