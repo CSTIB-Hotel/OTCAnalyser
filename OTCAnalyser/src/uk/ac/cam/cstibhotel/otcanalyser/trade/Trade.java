@@ -36,8 +36,10 @@ public class Trade {
 	private Double additionalPriceNotation;
 	private String notionalCurrency1;
 	private String notionalCurrency2;
-	private String roundedNotionalAmount1; //probably shouldn't be a long, since some values are e.g. 95,000,000+
-	private String roundedNotionalAmount2; //also has +
+	
+	//TODO: Not sure about the types in the upcoming fields
+	private String roundedNotionalAmount1; //probably shouldn't be a long, since some values are e.g. 95,000,000+ TODO: probably should be long
+	private String roundedNotionalAmount2; //also has + TODO: Probably should be long
 	private String paymentFrequency1; //e.g. 3M, 1M, 0, but also dates like 2016-01-29
 	private String paymentFrequency2; //e.g. 1D, 1T, 1M
 	private String resetFrequency1; //e.g. 2024-10-10
@@ -74,6 +76,9 @@ public class Trade {
 			taxonomy = new UPI("Rates:Foo:Bar");
 		} catch (InvalidTaxonomyException ex) {
 			Logger.getLogger(Trade.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (EmptyTaxonomyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		priceFormingContinuationData = PriceFormingContinuationData.TRADE;
 		notionalCurrency1 = "";

@@ -23,8 +23,11 @@ public class UPI {
 	 * Splits a string containing a full taxonomy into its component parts to allow
 	 * for easier access.
 	 */	
-	public UPI(String taxonomy) throws InvalidTaxonomyException {
+	public UPI(String taxonomy) throws InvalidTaxonomyException, EmptyTaxonomyException {
 		fullTaxonomy = taxonomy;
+		
+		if(taxonomy.equals(""))
+			throw new EmptyTaxonomyException();
 		
 		String[] splitTaxonomy = fullTaxonomy.split(":");
 		
