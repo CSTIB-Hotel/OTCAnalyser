@@ -34,8 +34,8 @@ public class Trade {
 	private Double priceNotation;
 	private String additionalPriceNotationType;
 	private Double additionalPriceNotation;
-	private Currency notionalCurrency1;
-	private Currency notionalCurrency2;
+	private String notionalCurrency1;
+	private String notionalCurrency2;
 	private String roundedNotionalAmount1; //probably shouldn't be a long, since some values are e.g. 95,000,000+
 	private String roundedNotionalAmount2; //also has +
 	private String paymentFrequency1; //e.g. 3M, 1M, 0, but also dates like 2016-01-29
@@ -76,8 +76,8 @@ public class Trade {
 			Logger.getLogger(Trade.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		priceFormingContinuationData = PriceFormingContinuationData.TRADE;
-		notionalCurrency1 = Currency.getInstance("GBP");
-		notionalCurrency2 = Currency.getInstance("GBP");
+		notionalCurrency1 = "";
+		notionalCurrency2 = "";
 		optionCurrency = Currency.getInstance("GBP");
 		optionLockPeriod = new Date();
 		optionExpirationDate = new Date();
@@ -184,11 +184,11 @@ public class Trade {
 		this.additionalPriceNotation = additionalPriceNotation;
 	}
 
-	public void setNotionalCurrency1(Currency notionalCurrency1) {
+	public void setNotionalCurrency1(String notionalCurrency1) {
 		this.notionalCurrency1 = notionalCurrency1;
 	}
 
-	public void setNotionalCurrency2(Currency notionalCurrency2) {
+	public void setNotionalCurrency2(String notionalCurrency2) {
 		this.notionalCurrency2 = notionalCurrency2;
 	}
 
@@ -366,11 +366,11 @@ public class Trade {
 		return additionalPriceNotation;
 	}
 
-	public Currency getNotionalCurrency1() {
+	public String getNotionalCurrency1() {
 		return notionalCurrency1;
 	}
 
-	public Currency getNotionalCurrency2() {
+	public String getNotionalCurrency2() {
 		return notionalCurrency2;
 	}
 
