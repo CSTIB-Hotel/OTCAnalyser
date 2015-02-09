@@ -9,12 +9,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.zip.ZipInputStream;
+import java.util.Currency;
 
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.ActionFormatException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.AssetClass;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.AssetClassFormatException;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Collateralization;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.CollateralizationFormatException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.PFCDFormatException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.PriceFormingContinuationData;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 
 /*
@@ -56,7 +63,7 @@ public class ParseZIP {
 			
 			//Parsing the execution timestamp date
 			try {
-				DateFormat etf = new SimpleDateFormat("yyy-MM-dd'T'kk:mm:ss");
+				DateFormat etf = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss");
 				tradeOut.setExecutionTimestamp(etf.parse(tradeIn[3]));
 			} catch ( ParseException e ) {
 				tradeOut.setExecutionTimestamp(null);
@@ -80,16 +87,78 @@ public class ParseZIP {
 			//EXECUTION_VENUE
 			tradeOut.setExecutionVenue(convertToBool("ON","OFF", tradeIn[9]));
 			
+			//EFFECTIVE_DATE
+			DateFormat ed = new SimpleDateFormat("yyy-MM-dd");
+			try {
+				tradeOut.setEffectiveDate(ed.parse(tradeIn[10]));
+			} catch(ParseException e){
+				tradeOut.setEffectiveDate(null);
+			}
 			
+			//END_DATE
+			try {
+				tradeOut.setEndDate(ed.parse(tradeIn[11]));
+			} catch (ParseException e){
+				tradeOut.setEndDate(null);
+			}
+			
+			//DAY_COUNT_CONVENTION
+			tradeOut.setDayCountConvention(tradeIn[12]);
+			
+			//SETTLEMENT_CURRENCY
+			try {
+				Currency c = Currency.getInstance(tradeIn[13]);
+				tradeOut.setSettlementCurrency(c);
+			} catch (NullPointerException e){
+				e.printStackTrace();
+			} catch (IllegalArgumentException e){
+				//Illegal currency entry, it stays "GBP"
+				//TODO: What does this mean that this field is empty? Why GBP the default?
+			}
+			
+			//ASSET_CLASS
+			tradeOut.setAssetClass(AssetClass.parseAssetC(tradeIn[14]));
+			
+			//SUB_ASSET_CLASS tradeIn[15]
+			
+			//UPI ie: taxonomy 
+			tradeOut.setTaxonomy(new UPI(tradeIn[16]));
+			
+			//PRICE_FORMING_CONT_DATA
+			tradeOut.setPriceFormingContinuationData(PriceFormingContinuationData.parsePFCD(tradeIn[17]));
+			
+			//UNDERLYING_ASSET_1
+			tradeOut.setUnderlyingAsset1(tradeIn[18]);
+			
+			//UNDERLYING_ASSET_2
+			tradeOut.setUnderlyingAsset2(tradeIn[19]);
+			
+			//PRICE_NOTATION_TYPE
+			tradeOut.setPriceNotationType(tradeIn[20]);
+			
+			//PRICE_NOTATION
+			String price_notation = tradeIn[21];
+			if(price_notation.equals("")){
+				tradeOut.setPriceNotation(null);
+			} else {
+				tradeOut.setPriceNotation(Double.parseDouble(price_notation));
+			}
 			
 
-		}
-		catch(ActionFormatException e){
+		} catch(ActionFormatException e){
+			e.printStackTrace();
+		} catch(CollateralizationFormatException e){
+			e.printStackTrace();
+		} catch(AssetClassFormatException e){
+			e.printStackTrace();
+		} catch (InvalidTaxonomyException e) {
+			e.printStackTrace();
+		} catch (PFCDFormatException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e){ //thrown by praseDouble
 			e.printStackTrace();
 		}
-		catch(CollateralizationFormatException e){
-			e.printStackTrace();
-		}
+		
 		return tradeOut;
 	}
 	
