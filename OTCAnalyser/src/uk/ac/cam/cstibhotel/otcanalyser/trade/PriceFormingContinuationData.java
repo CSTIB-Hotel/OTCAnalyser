@@ -4,7 +4,8 @@ public enum PriceFormingContinuationData {
 
 	TERMINATION(0),
 	TRADE(1),
-	AMENDMENT(2);
+	AMENDMENT(2),
+	INCREASE(3);
 
 	private short value;
 
@@ -24,10 +25,12 @@ public enum PriceFormingContinuationData {
 				return TRADE;
 			case "Amendment":
 				return AMENDMENT;
+			case "Increase":
+				return INCREASE;
 			case "":
 				return null;
 			default:
-				throw new PFCDFormatException();
+				throw new PFCDFormatException("for string " + s);
 		}
 	}
 
