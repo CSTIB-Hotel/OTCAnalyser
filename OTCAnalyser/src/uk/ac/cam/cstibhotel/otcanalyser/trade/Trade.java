@@ -31,9 +31,9 @@ public class Trade {
 	private String underlyingAsset1;
 	private String underlyingAsset2;
 	private String priceNotationType;
-	private double priceNotation;
+	private Double priceNotation;
 	private String additionalPriceNotationType;
-	private double additionalPriceNotation;
+	private Double additionalPriceNotation;
 	private Currency notionalCurrency1;
 	private Currency notionalCurrency2;
 	private String roundedNotionalAmount1; //probably shouldn't be a long, since some values are e.g. 95,000,000+
@@ -68,7 +68,7 @@ public class Trade {
 		endDate = new Date();
 		settlementCurrency = Currency.getInstance("GBP");
 		tradeType = TradeType.OPTION;
-		assetClass = AssetClass.Commodity;
+		assetClass = AssetClass.COMMODITY;
 		subAssetClass = new SubAssetClass();
 		try {
 			taxonomy = new UPI("Rates:Foo:Bar");
@@ -172,7 +172,7 @@ public class Trade {
 		this.priceNotationType = priceNotationType;
 	}
 
-	public void setPriceNotation(double priceNotation) {
+	public void setPriceNotation(Double priceNotation) {
 		this.priceNotation = priceNotation;
 	}
 
@@ -180,7 +180,7 @@ public class Trade {
 		this.additionalPriceNotationType = additionalPriceNotationType;
 	}
 
-	public void setAdditionalPriceNotation(double additionalPriceNotation) {
+	public void setAdditionalPriceNotation(Double additionalPriceNotation) {
 		this.additionalPriceNotation = additionalPriceNotation;
 	}
 
@@ -354,7 +354,7 @@ public class Trade {
 		return priceNotationType;
 	}
 
-	public double getPriceNotation() {
+	public Double getPriceNotation() {
 		return priceNotation;
 	}
 
@@ -362,7 +362,7 @@ public class Trade {
 		return additionalPriceNotationType;
 	}
 
-	public double getAdditionalPriceNotation() {
+	public Double getAdditionalPriceNotation() {
 		return additionalPriceNotation;
 	}
 
