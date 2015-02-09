@@ -31,5 +31,9 @@ public class GUI extends JFrame {
 		statusBar.setVisible(true);
 		this.setVisible(true);
 	}
+	
+	public static void main (String[] args) {
+		getInstance();
+	}
 
 }
