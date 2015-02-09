@@ -13,12 +13,12 @@ public class Trade {
 	private long originalDisseminationID;
 	private Action action;
 	private Date executionTimestamp;
-	private boolean cleared;
+	private Boolean cleared;
 	private Collateralization collateralization;
-	private boolean endUserException;
-	private boolean bespoke;
-	private boolean executionVenue; // true for ON, false for OFF
-	private boolean blockTrades;
+	private Boolean endUserException;
+	private Boolean bespoke;
+	private Boolean executionVenue; // true for ON, false for OFF
+	private Boolean blockTrades;
 	private Date effectiveDate;
 	private Date endDate;
 	private String dayCountConvention; // e.g. ACT/360 and 1/1 30/360
@@ -100,7 +100,7 @@ public class Trade {
 		this.executionTimestamp = executionTimestamp;
 	}
 
-	public void setCleared(boolean cleared) {
+	public void setCleared(Boolean cleared) {
 		this.cleared = cleared;
 	}
 
@@ -108,19 +108,19 @@ public class Trade {
 		this.collateralization = collateralization;
 	}
 
-	public void setEndUserException(boolean endUserException) {
+	public void setEndUserException(Boolean endUserException) {
 		this.endUserException = endUserException;
 	}
 
-	public void setBespoke(boolean bespoke) {
+	public void setBespoke(Boolean bespoke) {
 		this.bespoke = bespoke;
 	}
 
-	public void setExecutionVenue(boolean executionVenue) {
+	public void setExecutionVenue(Boolean executionVenue) {
 		this.executionVenue = executionVenue;
 	}
 
-	public void setBlockTrades(boolean blockTrades) {
+	public void setBlockTrades(Boolean blockTrades) {
 		this.blockTrades = blockTrades;
 	}
 
@@ -278,7 +278,7 @@ public class Trade {
 		return action;
 	}
 
-	public boolean isCleared() {
+	public Boolean isCleared() {
 		return cleared;
 	}
 
@@ -290,19 +290,19 @@ public class Trade {
 		return collateralization;
 	}
 
-	public boolean isEndUserException() {
+	public Boolean isEndUserException() {
 		return endUserException;
 	}
 
-	public boolean isBespoke() {
+	public Boolean isBespoke() {
 		return bespoke;
 	}
 
-	public boolean isExecutionVenue() {
+	public Boolean isExecutionVenue() {
 		return executionVenue;
 	}
 
-	public boolean isBlockTrades() {
+	public Boolean isBlockTrades() {
 		return blockTrades;
 	}
 

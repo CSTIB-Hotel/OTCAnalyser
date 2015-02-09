@@ -4,7 +4,9 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
+
 import java.sql.*;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -19,11 +21,11 @@ public class Database {
 
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
 		Database d = new Database();
-		d.addTrade(new Trade());
+		addTrade(new Trade());
 	}
 
 	public Database() throws SQLException, ClassNotFoundException  {
-		Class.forName("org.hsqldb.jdbcDriver");
+		/*Class.forName("org.hsqldb.jdbcDriver");
 		connection = DriverManager.getConnection("jdbc:hsqldb:file:"
 				+"/Users/waiwaing/Library/OTCAnalyser/database.db"); // TODO: fix directory
 		connection.setAutoCommit(false);
@@ -43,9 +45,11 @@ public class Database {
 			dataTableCreator.append(");");
 			statement.execute(dataTableCreator.toString());
 
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			statement.close();
-		}
+		}*/
 
 	}
 
@@ -54,8 +58,8 @@ public class Database {
 	 *
 	 * @param trade a trade to be added to the database
 	 */
-	void addTrade(Trade trade) throws SQLException {
-		StringBuilder a = new StringBuilder("INSERT INTO data (");
+	public static void addTrade(Trade trade) throws SQLException {
+		/*StringBuilder a = new StringBuilder("INSERT INTO data (");
 		StringBuilder b = new StringBuilder(") VALUES (");
 
 		HashMap<String, SQLField> DBNameValue = TradeFieldMapping.getMapping(trade);
@@ -79,7 +83,7 @@ public class Database {
 			iterator.next().getValue().addToPreparedStatement(p);
 		}
 		
-		p.execute();
+		p.execute();*/
 	}
 
 	/**
@@ -87,7 +91,7 @@ public class Database {
 	 * @return The time the database was last updated
 	 */
 	public static java.util.Date getLastUpdateTime() {
-		return null;
+		return new Date(115, 1, 0);
 	}
 
 	/**

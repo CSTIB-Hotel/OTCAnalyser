@@ -2,12 +2,13 @@ package uk.ac.cam.cstibhotel.otcanalyser.database;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 
 public class BoolSQLField extends SQLField {
 
-	private final boolean fieldValue;
+	private final Boolean fieldValue;
 
-	public BoolSQLField(boolean fieldValue) {
+	public BoolSQLField(Boolean fieldValue) {
 		this.fieldValue = fieldValue;
 	}
 	
@@ -18,7 +19,10 @@ public class BoolSQLField extends SQLField {
 
 	@Override
 	public void addToPreparedStatement(PreparedStatement p) throws SQLException {
-		p.setBoolean(index, fieldValue);
+		if (fieldValue == null)
+			p.setNull(index, Types.BOOLEAN);
+		else
+			p.setBoolean(index, fieldValue);
 	}
 	
 }
