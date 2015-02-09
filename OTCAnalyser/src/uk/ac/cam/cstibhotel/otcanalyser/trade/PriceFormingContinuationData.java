@@ -16,7 +16,7 @@ public enum PriceFormingContinuationData {
 		return value;
 	}
 	
-	public static PriceFormingContinuationData parsesPFCD(String s) throws PFCDFormatException{
+	public static PriceFormingContinuationData parsePFCD(String s) throws PFCDFormatException{
 		switch(s){
 			case "Termination":
 				return TERMINATION;
