@@ -1,6 +1,7 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 	
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -11,8 +12,10 @@ import org.jfree.data.time.Day;
 import org.jfree.data.time.ohlc.OHLCSeries;
 import org.jfree.data.time.ohlc.OHLCSeriesCollection;
 import org.jfree.data.xy.OHLCDataset;
+
 import java.awt.Color;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +36,12 @@ public class OHLCMaker {
     
     //date formatting
     DateAxis axis = (DateAxis) plot.getDomainAxis();
-    if (axis.getMaximumDate().getMonth() > axis.getMinimumDate().getMonth()){
+    Calendar max = Calendar.getInstance();
+    Calendar min = Calendar.getInstance();
+    max.setTime(axis.getMaximumDate());
+    min.setTime(axis.getMinimumDate());
+    if (max.get(Calendar.MONTH) > min.get(Calendar.MONTH) ||
+        max.get(Calendar.YEAR) > max.get(Calendar.YEAR)){
       axis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
     } else {
       axis.setDateFormatOverride(new SimpleDateFormat("dd-MMM-yyyy"));
@@ -44,16 +52,11 @@ public class OHLCMaker {
   
   public static OHLCSeriesCollection makeDataset(List<Trade> trade, String name, boolean sorted) {
     if (!sorted) { //not sorted by execution timestamps
-      sortByExecutionTimestamp(trade);
+      DateSorter.sortByExecutionTimestamp(trade);
     }
     OHLCSeriesCollection dataset = new OHLCSeriesCollection();
     dataset.addSeries(makeSeries(trade, name));
     return dataset;
-  }
-  
-  //sorts trades by execution timestamp
-  public static void sortByExecutionTimestamp(List<Trade> trade) {
-    Collections.sort(trade, new ExecutionTimestampComparator());
   }
   
   //given a list of trades ordered by execution timestamps, makes OHLCSeries
@@ -83,7 +86,7 @@ public class OHLCMaker {
     Day rtp = new Day(trade.get(k).getExecutionTimestamp()); //day time period
     String rna = trade.get(k).getRoundedNotionalAmount1();
     //cycle through trade list looking for first readable rounded notional amount 1
-    while (!(validRNA(rna)) && k < trade.size() - 1) {
+    while (!(RNAExtractor.validRNA(rna)) && k < trade.size() - 1) {
     	k++;
     	rtp = new Day(trade.get(k).getExecutionTimestamp());
     	rna = trade.get(k).getRoundedNotionalAmount1();
@@ -92,15 +95,15 @@ public class OHLCMaker {
     if (k == trade.size() - 1) {
     	return;
     }
-    double open = getDoubleRNA(rna);
+    double open = RNAExtractor.getDoubleRNA(rna);
     double high = open;
     double low = open;
     double close = open;
     for (int i = k; i < trade.size(); i++) {
       Trade currentTrade = trade.get(i);
       rna = currentTrade.getRoundedNotionalAmount1();
-      if (validRNA(rna)) {
-        double price = getDoubleRNA(rna);
+      if (RNAExtractor.validRNA(rna)) {
+        double price = RNAExtractor.getDoubleRNA(rna);
         if(rtp.equals(new Day(currentTrade.getExecutionTimestamp()))) { //same time period
         	if (price > high) {
         		high = price;
@@ -122,22 +125,4 @@ public class OHLCMaker {
     ohlcs.add(rtp, open, high, low, close); //add last item in
   }
   
-  //returns true if rna is in valid Rounded Notional Amount format
-  private static boolean validRNA(String rna) {
-  	try {
-  		getDoubleRNA(rna);
-  		return true;
-  	} catch (Exception e) {
-  		return false;
-  	}
-  }
-  
-  //get double form of the Rounded Notional Amount, which sometimes contains the '+' character
-  private static double getDoubleRNA(String rna) {
-  	int index = rna.indexOf('+');
-  	if (index > -1) {
-  		rna = rna.substring(0, index);
-  	}
-  	return Double.parseDouble(rna);
-  }
 }

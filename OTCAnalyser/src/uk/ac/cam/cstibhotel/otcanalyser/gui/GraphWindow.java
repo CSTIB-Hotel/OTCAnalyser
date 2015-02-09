@@ -25,7 +25,7 @@ public class GraphWindow extends CBLPanel{
   
   //add trades to existing datasets
   public void addTradesToDatasets(List<Trade> trade) {
-    OHLCMaker.sortByExecutionTimestamp(trade);
+    DateSorter.sortByExecutionTimestamp(trade);
     int count = dataset.getSeriesCount();
     for (int i = 0; i < count; i++) {
       OHLCMaker.updateSeries(dataset, i, trade);
