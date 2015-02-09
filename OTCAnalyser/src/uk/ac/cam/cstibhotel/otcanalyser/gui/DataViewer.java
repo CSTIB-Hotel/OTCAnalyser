@@ -14,7 +14,7 @@ public class DataViewer extends JTabbedPane {
   private static final long serialVersionUID = 1L;
   private DataWindow data;
   private GraphWindow graph;
-  private static DataViewer dataViewer = new DataViewer();
+  public static DataViewer dataViewer = new DataViewer();
   
   private DataViewer() {
     

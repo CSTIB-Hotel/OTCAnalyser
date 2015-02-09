@@ -20,7 +20,7 @@ public class GUI extends JFrame {
 		return gui;
 	}
 	
-	private GUI() {
+	public GUI() {
 		setTitle("OTC Analyser");
 		setSize(800,600);
 		searchWindow = SearchWindow.getInstance();
