@@ -11,6 +11,7 @@ public class TaxonomySelector extends JInternalFrame {
 	public JComboBox<String> BaseClass;
 	public JComboBox<String> SubClass;
 	private AssetChange assetChange;
+	private BaseProductChange baseProductChange;
 	private static TaxonomySelector instance;
 	
 	public static TaxonomySelector getInstance() {
@@ -25,8 +26,10 @@ public class TaxonomySelector extends JInternalFrame {
 		assetChange = new AssetChange(this);
 		Asset = new JComboBox<String>(TextStrings.Assets);
 		Asset.addActionListener(assetChange);
-		BaseClass = new JComboBox<String>(TextStrings.CommodityBaseProducts);
-		SubClass = new JComboBox<String>(TextStrings.CommodityMetalsSubProducts);
+		BaseClass = new JComboBox<String>(TextStrings.CreditBaseProducts);
+		baseProductChange  = new BaseProductChange(this);
+		BaseClass.addActionListener(baseProductChange);
+		SubClass = new JComboBox<String>(TextStrings.CreditSingleNameSubProducts);
 		Asset.setVisible(true);
 		BaseClass.setVisible(true);
 		SubClass.setVisible(true);
