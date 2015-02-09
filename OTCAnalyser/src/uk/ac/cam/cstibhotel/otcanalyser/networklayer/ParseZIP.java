@@ -7,6 +7,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.zip.ZipInputStream;
 import java.util.Currency;
@@ -17,6 +18,7 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.AssetClass;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.AssetClassFormatException;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Collateralization;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.CollateralizationFormatException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.EmptyTaxonomyException;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.PFCDFormatException;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.PriceFormingContinuationData;
@@ -52,9 +54,28 @@ public class ParseZIP {
 		}
 	}
 	
+	private static Double parseDouble(String input) throws NumberFormatException{
+		if(input.equals("")){
+			return null;
+		}
+		else{
+			return Double.parseDouble(input.replace(",",""));
+		}
+	}
+	
+	private static Date parseDate(DateFormat df, String s){
+		try {
+			return df.parse(s);
+		} catch ( ParseException e ) {
+			return null;
+		}
+	}
+	
 	//TODO: implement this bit
 	private static Trade stringVectorToTrade(String[] tradeIn){
 		Trade tradeOut = new Trade();
+		DateFormat df = new SimpleDateFormat("yyy-MM-dd");
+		DateFormat etf = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss");
 		//Setting fields in tradeOut appropriately
 		try{
 			tradeOut.setDisseminationID(parseLong(tradeIn[0]));
@@ -62,12 +83,8 @@ public class ParseZIP {
 			tradeOut.setAction(Action.parseAct(tradeIn[2]));
 			
 			//Parsing the execution timestamp date
-			try {
-				DateFormat etf = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss");
-				tradeOut.setExecutionTimestamp(etf.parse(tradeIn[3]));
-			} catch ( ParseException e ) {
-				tradeOut.setExecutionTimestamp(null);
-			}
+			tradeOut.setExecutionTimestamp(parseDate(etf,tradeIn[3]));
+			
 			
 			//Cleared
 			tradeOut.setCleared(convertToBool("C", "U", tradeIn[4]));
@@ -88,19 +105,11 @@ public class ParseZIP {
 			tradeOut.setExecutionVenue(convertToBool("ON","OFF", tradeIn[9]));
 			
 			//EFFECTIVE_DATE
-			DateFormat ed = new SimpleDateFormat("yyy-MM-dd");
-			try {
-				tradeOut.setEffectiveDate(ed.parse(tradeIn[10]));
-			} catch(ParseException e){
-				tradeOut.setEffectiveDate(null);
-			}
+			tradeOut.setEffectiveDate(parseDate(df,tradeIn[10]));
 			
 			//END_DATE
-			try {
-				tradeOut.setEndDate(ed.parse(tradeIn[11]));
-			} catch (ParseException e){
-				tradeOut.setEndDate(null);
-			}
+			tradeOut.setEndDate(parseDate(df,tradeIn[11]));
+		
 			
 			//DAY_COUNT_CONVENTION
 			tradeOut.setDayCountConvention(tradeIn[12]);
@@ -109,10 +118,8 @@ public class ParseZIP {
 			try {
 				Currency c = Currency.getInstance(tradeIn[13]);
 				tradeOut.setSettlementCurrency(c);
-			} catch (NullPointerException e){
-				e.printStackTrace();
 			} catch (IllegalArgumentException e){
-				//Illegal currency entry, it stays "GBP"
+				//Illegal currency entry, not ISO 4217, it stays "GBP"
 				//TODO: What does this mean that this field is empty? Why GBP the default?
 			}
 			
@@ -137,14 +144,82 @@ public class ParseZIP {
 			tradeOut.setPriceNotationType(tradeIn[20]);
 			
 			//PRICE_NOTATION
-			String price_notation = tradeIn[21];
-			if(price_notation.equals("")){
-				tradeOut.setPriceNotation(null);
-			} else {
-				tradeOut.setPriceNotation(Double.parseDouble(price_notation));
+			tradeOut.setPriceNotation(parseDouble(tradeIn[21]));
+				
+			//ADDITIONAL_PRICE_NOTATION_TYPE
+			tradeOut.setAdditionalPriceNotationType(tradeIn[22]);
+			
+			//ADDITIONAL_PRICE_NOTATION
+			tradeOut.setAdditionalPriceNotation(parseDouble(tradeIn[23]));
+			
+			//NOTIONAL_CURRENCY_1
+			tradeOut.setNotionalCurrency1(tradeIn[24]);
+			
+			//NOTIONAL_CURRENCY_2
+			tradeOut.setNotionalCurrency2(tradeIn[25]);
+			
+			//ROUNDED_NOTIONAL_AMOUNT_1
+			tradeOut.setRoundedNotionalAmount1(tradeIn[26]);
+			
+			//ROUNDED_NOTIONAL_AMOUNT_2
+			tradeOut.setRoundedNotionalAmount2(tradeIn[27]);
+			
+			//PAYMENT_FREQUENCY_1
+			tradeOut.setPaymentFrequency1(tradeIn[28]);
+			
+			//PAYMENT_FREQUENCY_2
+			tradeOut.setPaymentFrequency2(tradeIn[29]);
+			
+			//RESET_FREQUENCY_1
+			tradeOut.setResetFrequency1(tradeIn[30]);
+			
+			//RESET_FREQUENCY_2
+			tradeOut.setResetFrequency2(tradeIn[31]);
+			
+			//EMBEDED_OPTION
+			tradeOut.setEmbeddedOption(tradeIn[32]);
+
+			//OPTION_STRIKE_PRICE
+			tradeOut.setOptionStrikePrice(parseDouble(tradeIn[33]));
+			
+			//OPTION_TYPE
+			tradeOut.setOptionType(tradeIn[34]);
+			
+			//OPTION_FAMILY
+			tradeOut.setOptionFamily(tradeIn[35]);
+			
+			//OPTION_CURRENCY
+			try {
+				Currency c = Currency.getInstance(tradeIn[36]);
+				tradeOut.setOptionCurrency(c);
+			} catch (IllegalArgumentException e){
+				//Illegal currency entry, not ISO 4217, it stays "GBP"
+				//TODO: What does this mean that this field is empty? Why GBP the default?
 			}
 			
-
+			//OPTION_PREMIUM
+			tradeOut.setOptionPremium(parseDouble(tradeIn[37]));
+			
+			//OPTION_LOCK_PERIOD
+			tradeOut.setEffectiveDate(parseDate(df,tradeIn[38]));
+			
+			//OPTION_EXPIRATION_DATE
+			tradeOut.setEffectiveDate(parseDate(df,tradeIn[39]));
+			
+			//PRICE_NOTATION2_TYPE
+			tradeOut.setPriceNotation2Type(tradeIn[40]);
+			
+			//PRICE_NOTATION2
+			tradeOut.setPriceNotation2(parseDouble(tradeIn[41]));
+			
+			//PRICE_NOTATION3_TYPE
+			tradeOut.setPriceNotation3Type(tradeIn[42]);
+			
+			//PRICE_NOTATION3
+			tradeOut.setPriceNotation3(parseDouble(tradeIn[43]));
+			
+			
+			
 		} catch(ActionFormatException e){
 			e.printStackTrace();
 		} catch(CollateralizationFormatException e){
@@ -152,10 +227,12 @@ public class ParseZIP {
 		} catch(AssetClassFormatException e){
 			e.printStackTrace();
 		} catch (InvalidTaxonomyException e) {
-			e.printStackTrace();
+			System.err.println("The taxonomy: "+ e.getMessage()+" is invalid. in ParseZIP.java");
 		} catch (PFCDFormatException e) {
 			e.printStackTrace();
-		} catch (NumberFormatException e){ //thrown by praseDouble
+		} catch (NumberFormatException e){ //thrown by praseDouble: price notation + additional price notation
+			e.printStackTrace();
+		} catch (EmptyTaxonomyException e) {
 			e.printStackTrace();
 		}
 		
@@ -187,7 +264,7 @@ public class ParseZIP {
 				String[] tradeIn = line.split(splitBy);
 				
 				/*
-				 * todo: research normal # of fields
+				 * TODO: research normal # of fields
 				 * currently it is around 45-48
 				 */
 				
@@ -219,6 +296,7 @@ public class ParseZIP {
 	public static void main(String[] args) {
 		try {
 			ParseZIP.downloadData("https://kgc0418-tdw-data-0.s3.amazonaws.com/slices/CUMULATIVE_COMMODITIES_2015_02_04.zip","\",\"", ",");
+			System.out.println(Integer.parseInt("1,234".replace(",","")));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
