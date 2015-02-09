@@ -45,17 +45,17 @@ public class Trade {
 	private String embeddedOption; //e.g. EMBED1
 
 	// Options
-	private double optionStrikePrice;
+	private Double optionStrikePrice;
 	private String optionType;
 	private String optionFamily;
 	private Currency optionCurrency;
-	private double optionPremium; //e.g. 0.00034 and 90250
+	private Double optionPremium; //e.g. 0.00034 and 90250
 	private Date optionLockPeriod;
 	private Date optionExpirationDate;
 	private String priceNotation2Type;
-	private double priceNotation2;
+	private Double priceNotation2;
 	private String priceNotation3Type;
-	private double priceNotation3;
+	private Double priceNotation3;
 
 	public Trade() {
 		// Sets defaults on all enum and objects
@@ -220,7 +220,7 @@ public class Trade {
 		this.embeddedOption = embeddedOption;
 	}
 
-	public void setOptionStrikePrice(double optionStrikePrice) {
+	public void setOptionStrikePrice(Double optionStrikePrice) {
 		this.optionStrikePrice = optionStrikePrice;
 	}
 
@@ -236,7 +236,7 @@ public class Trade {
 		this.optionCurrency = optionCurrency;
 	}
 
-	public void setOptionPremium(double optionPremium) {
+	public void setOptionPremium(Double optionPremium) {
 		this.optionPremium = optionPremium;
 	}
 
@@ -252,7 +252,7 @@ public class Trade {
 		this.priceNotation2Type = priceNotation2Type;
 	}
 
-	public void setPriceNotation2(double priceNotation2) {
+	public void setPriceNotation2(Double priceNotation2) {
 		this.priceNotation2 = priceNotation2;
 	}
 
@@ -260,7 +260,7 @@ public class Trade {
 		this.priceNotation3Type = priceNotation3Type;
 	}
 
-	public void setPriceNotation3(double priceNotation3) {
+	public void setPriceNotation3(Double priceNotation3) {
 		this.priceNotation3 = priceNotation3;
 	}
 
@@ -402,7 +402,7 @@ public class Trade {
 		return embeddedOption;
 	}
 
-	public double getOptionStrikePrice() {
+	public Double getOptionStrikePrice() {
 		return optionStrikePrice;
 	}
 
@@ -418,7 +418,7 @@ public class Trade {
 		return optionCurrency;
 	}
 
-	public double getOptionPremium() {
+	public Double getOptionPremium() {
 		return optionPremium;
 	}
 
@@ -434,7 +434,7 @@ public class Trade {
 		return priceNotation2Type;
 	}
 
-	public double getPriceNotation2() {
+	public Double getPriceNotation2() {
 		return priceNotation2;
 	}
 
@@ -442,7 +442,7 @@ public class Trade {
 		return priceNotation3Type;
 	}
 
-	public double getPriceNotation3() {
+	public Double getPriceNotation3() {
 		return priceNotation3;
 	}
 
