@@ -16,7 +16,7 @@ TaxonomySelector tax;
 		String selectedBaseClass = (String) tax.BaseClass.getSelectedItem();
 		String[] subClass = {""};
 		switch (selectedBaseClass){
-			case()
+			//case()
 		}
 	}
 
