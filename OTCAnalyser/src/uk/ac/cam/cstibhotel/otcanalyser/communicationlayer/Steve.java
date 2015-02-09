@@ -7,7 +7,7 @@ public class Steve {
 
 	public static void main(String[] args) {
 		//main entry point for the application
-		GUI.gui = new GUI();
+		GUI.getInstance();
 		NetworkLayer.initialUpdate();
 	}
 
