@@ -108,7 +108,7 @@ public class Database {
 	 * @param s the search parameters
 	 * @return all data matching the search
 	 */
-	SearchResult search(Search s) {
+	public SearchResult search(Search s) {
 		return null;
 	}
 
