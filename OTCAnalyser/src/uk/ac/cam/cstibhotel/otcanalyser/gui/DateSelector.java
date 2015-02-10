@@ -11,9 +11,9 @@ import javax.swing.JInternalFrame;
 public class DateSelector extends JInternalFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private JComboBox<Integer> Year;
-	private JComboBox<String> Months;
-	private JComboBox<Integer> Day;
+	public JComboBox<Integer> Year;
+	public JComboBox<String> Months;
+	public JComboBox<Integer> Day;
 	
 	public DateSelector(String title) {
 		setTitle(title);
