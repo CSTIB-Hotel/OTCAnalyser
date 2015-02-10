@@ -9,11 +9,11 @@ public enum TradeType {
     private short value;
 
     private TradeType(int value) {
-	this.value = (short) value;
+    	this.value = (short) value;
     }
 
     public short getValue() {
-	return value;
+    	return value;
     }
 
 }

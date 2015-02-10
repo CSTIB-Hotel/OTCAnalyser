@@ -9,6 +9,7 @@ public class Steve {
 		//main entry point for the application
 		GUI.getInstance();
 		NetworkLayer.initialUpdate();
+		CommunicationLayer.registerListener(GUI.getInstance());
 	}
 
 }
