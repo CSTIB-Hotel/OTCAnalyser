@@ -1,17 +1,20 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
-import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
 import javax.swing.JLabel;
 
-public class StatusBar extends JInternalFrame {
+public class StatusBar extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
 	private static int logLevel;
 	private static JLabel textArea;
-	private static StatusBar instance; 
+	private static StatusBar instance;
+	private JLabel label;
 	
 	private StatusBar() {
-		this.setTitle("Status");
+		label = new JLabel("Status Bar");
+		this.add(label);
+		label.setVisible(true);
 		textArea = new JLabel();
 		textArea.setVisible(true);
 		this.add(textArea);

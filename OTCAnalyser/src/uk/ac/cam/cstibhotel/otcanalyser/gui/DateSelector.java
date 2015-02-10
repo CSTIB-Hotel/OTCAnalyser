@@ -6,17 +6,16 @@ import java.awt.event.ActionListener;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
 
-public class DateSelector extends JInternalFrame implements ActionListener {
+public class DateSelector extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	public JComboBox<Integer> Year;
 	public JComboBox<String> Months;
 	public JComboBox<Integer> Day;
 	
-	public DateSelector(String title) {
-		setTitle(title);
+	public DateSelector() {
 		setSize(300,50); // default size is 0,0
 		setLocation(100,200); // default is 0,0 (top left corner)
 		Year = new JComboBox<Integer>(TextStrings.Years);
@@ -26,9 +25,9 @@ public class DateSelector extends JInternalFrame implements ActionListener {
 		Year.setVisible(true);
 		Months.setVisible(true);
 		Day.setVisible(true);
-		this.getContentPane().add(Year,BorderLayout.WEST);
-		this.getContentPane().add(Months);
-		this.getContentPane().add(Day,BorderLayout.EAST);
+		this.add(Year,BorderLayout.WEST);
+		this.add(Months);
+		this.add(Day,BorderLayout.EAST);
 	}
 
 	@Override
