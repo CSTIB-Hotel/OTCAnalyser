@@ -32,9 +32,11 @@ public class UPI {
 		
 		String[] splitTaxonomy = taxonomy.split(":");
 		
+		int taxonomyLength = splitTaxonomy.length;
+		
 		try {
 			// If the taxonomy splits into > 5 parts or < 2 parts, we can't treat it as valid
-			if (splitTaxonomy.length > 5 || splitTaxonomy.length < 2) {
+			if (taxonomyLength > 5 || taxonomyLength < 2) {
 				throw new InvalidTaxonomyException(taxonomy);
 			}
 			
@@ -43,10 +45,26 @@ public class UPI {
 			case "Commodity":
 				assetClass = AssetClass.COMMODITY;
 				baseProduct = splitTaxonomy[1];
-				subProduct = splitTaxonomy[2];
-				transactionType = splitTaxonomy[3];
-				if (splitTaxonomy.length != 4) {
-					settlementType = splitTaxonomy[4];
+				if (baseProduct.equals("Index") || baseProduct.equals("Freight")){
+					//subproduct ommited in this case
+					subProduct = "";
+					if(taxonomyLength >= 3){
+						transactionType = splitTaxonomy[2];
+					}
+					if(taxonomyLength >= 4){
+						settlementType = splitTaxonomy[3];
+					}
+				}
+				else{
+					if(taxonomyLength >= 3){
+						subProduct = splitTaxonomy[2];
+					}
+					else if (taxonomyLength >= 4){
+						transactionType = splitTaxonomy[3];
+					}
+					else if (taxonomyLength >= 5){
+						settlementType = splitTaxonomy[4];
+					}
 				}
 				break;
 			case "Credit":
@@ -55,8 +73,12 @@ public class UPI {
 				}
 				assetClass = AssetClass.CREDIT;
 				baseProduct = splitTaxonomy[1];
-				subProduct = splitTaxonomy[2];
-				transactionType = splitTaxonomy[3];
+				if (taxonomyLength >= 3){
+					subProduct = splitTaxonomy[2];					
+				}
+				else if (taxonomyLength >= 4){
+					transactionType = splitTaxonomy[3];					
+				}
 				break;
 			case "Equity":
 				if (splitTaxonomy.length >= 5) {
@@ -64,8 +86,10 @@ public class UPI {
 				}
 				assetClass = AssetClass.EQUITY;
 				baseProduct= splitTaxonomy[1];
-				subProduct = splitTaxonomy[2];
-				transactionType = splitTaxonomy[3];
+				if (taxonomyLength >= 3){
+					subProduct = splitTaxonomy[2];
+					transactionType = splitTaxonomy[3];					
+				}
 				break;
 			case "ForeignExchange":
 				if (splitTaxonomy.length >= 4) {
@@ -73,7 +97,7 @@ public class UPI {
 				}
 				assetClass = AssetClass.FOREX;
 				baseProduct= splitTaxonomy[1];
-				if (splitTaxonomy.length != 2) {
+				if (splitTaxonomy.length >= 3) {
 					subProduct = splitTaxonomy[2];
 				}
 				break;
@@ -83,7 +107,7 @@ public class UPI {
 				}
 				assetClass = AssetClass.RATES;
 				baseProduct= splitTaxonomy[1];
-				if (splitTaxonomy.length != 2) {
+				if (splitTaxonomy.length >= 3) {
 					subProduct = splitTaxonomy[2];
 				}
 				break;
