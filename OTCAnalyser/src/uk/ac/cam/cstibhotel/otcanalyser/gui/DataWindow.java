@@ -7,6 +7,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
@@ -31,7 +32,9 @@ public class DataWindow extends CBLPanel implements ActionListener, ItemListener
     toolbar.add(button);
     
     add(toolbar, BorderLayout.PAGE_END);
-    add(new JScrollPane(table), BorderLayout.CENTER);
+    JScrollPane scrollPane = new JScrollPane(table);
+    scrollPane.setBorder(BorderFactory.createEtchedBorder());
+    add(scrollPane, BorderLayout.CENTER);
     
     button.addActionListener(this);
     ColumnChooser.columnChooser.addItemListener(this);

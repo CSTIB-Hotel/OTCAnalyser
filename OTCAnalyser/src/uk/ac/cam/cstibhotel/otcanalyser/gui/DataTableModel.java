@@ -18,7 +18,7 @@ class DataTableModel extends AbstractTableModel{
     "Cleared",
     "Collateralization",
     "End User Exception",
-    "Bespoke Y/N",
+    "Bespoke",
     "Execution Venue",
     "Block Trades",
     "Effective Date",
