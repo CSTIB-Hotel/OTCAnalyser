@@ -10,15 +10,28 @@ import org.junit.Test;
  */
 public class UPITest {
 	
-	// Test a valid commodity taxonomy
+	// Test a valid commodity taxonomy (full 5 terms)
 	@Test
-	public void testValidCommodityTaxonomy() throws InvalidTaxonomyException, EmptyTaxonomyException {
+	public void testValidCommodityTaxonomy() throws InvalidTaxonomyException,
+			EmptyTaxonomyException {
 		UPI toTest = new UPI("Commodity:Metals:Precious:SpotFwd:Physical");
 		assertEquals(toTest.assetClass, AssetClass.COMMODITY);
 		assertEquals(toTest.baseProduct, "Metals");
 		assertEquals(toTest.subProduct, "Precious");
 		assertEquals(toTest.transactionType, "SpotFwd");
 		assertEquals(toTest.settlementType, "Physical");
+	}
+	
+	// Test a valid commodity taxonomy (only 4 terms)
+	@Test
+	public void testValidShortCommodityTaxonomy() throws InvalidTaxonomyException,
+			EmptyTaxonomyException {
+		UPI toTest = new UPI("Commodity:Metals:Precious:SpotFwd");
+		assertEquals(toTest.assetClass, AssetClass.COMMODITY);
+		assertEquals(toTest.baseProduct, "Metals");
+		assertEquals(toTest.subProduct, "Precious");
+		assertEquals(toTest.transactionType, "SpotFwd");
+		assertEquals(toTest.settlementType, null);
 	}
 	
 	// Test a valid credit taxonomy

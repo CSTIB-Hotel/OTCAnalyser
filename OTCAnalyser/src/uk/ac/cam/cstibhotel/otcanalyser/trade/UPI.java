@@ -45,7 +45,9 @@ public class UPI {
 				baseProduct = splitTaxonomy[1];
 				subProduct = splitTaxonomy[2];
 				transactionType = splitTaxonomy[3];
-				settlementType = splitTaxonomy[4];
+				if (splitTaxonomy.length != 4) {
+					settlementType = splitTaxonomy[4];
+				}
 				break;
 			case "Credit":
 				if (splitTaxonomy.length >= 5) {
