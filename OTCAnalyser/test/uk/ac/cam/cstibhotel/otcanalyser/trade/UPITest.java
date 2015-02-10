@@ -10,15 +10,28 @@ import org.junit.Test;
  */
 public class UPITest {
 	
-	// Test a valid commodity taxonomy
+	// Test a valid commodity taxonomy (full 5 terms)
 	@Test
-	public void testValidCommodityTaxonomy() throws InvalidTaxonomyException, EmptyTaxonomyException {
+	public void testValidCommodityTaxonomy() throws InvalidTaxonomyException,
+			EmptyTaxonomyException {
 		UPI toTest = new UPI("Commodity:Metals:Precious:SpotFwd:Physical");
-		assertEquals(toTest.assetClass, AssetClass.COMMODITY);
-		assertEquals(toTest.baseProduct, "Metals");
-		assertEquals(toTest.subProduct, "Precious");
-		assertEquals(toTest.transactionType, "SpotFwd");
-		assertEquals(toTest.settlementType, "Physical");
+		assertEquals(toTest.getAssetClass(), AssetClass.COMMODITY);
+		assertEquals(toTest.getBaseProduct(), "Metals");
+		assertEquals(toTest.getSubProduct(), "Precious");
+		assertEquals(toTest.getTransactionType(), "SpotFwd");
+		assertEquals(toTest.getSettlementType(), "Physical");
+	}
+	
+	// Test a valid commodity taxonomy (only 4 terms)
+	@Test
+	public void testValidShortCommodityTaxonomy() throws InvalidTaxonomyException,
+			EmptyTaxonomyException {
+		UPI toTest = new UPI("Commodity:Metals:Precious:SpotFwd");
+		assertEquals(toTest.getAssetClass(), AssetClass.COMMODITY);
+		assertEquals(toTest.getBaseProduct(), "Metals");
+		assertEquals(toTest.getSubProduct(), "Precious");
+		assertEquals(toTest.getTransactionType(), "SpotFwd");
+		assertEquals(toTest.getSettlementType(), null);
 	}
 	
 	// Test a valid credit taxonomy
@@ -26,11 +39,11 @@ public class UPITest {
 	public void testValidCreditTaxonomy() throws InvalidTaxonomyException,
 			EmptyTaxonomyException {
 		UPI toTest = new UPI("Credit:SingleName:Corporate:StandardEuropeanCorporate");
-		assertEquals(toTest.assetClass, AssetClass.CREDIT);
-		assertEquals(toTest.baseProduct, "SingleName");
-		assertEquals(toTest.subProduct, "Corporate");
-		assertEquals(toTest.transactionType, "StandardEuropeanCorporate");
-		assertEquals(toTest.settlementType, null);
+		assertEquals(toTest.getAssetClass(), AssetClass.CREDIT);
+		assertEquals(toTest.getBaseProduct(), "SingleName");
+		assertEquals(toTest.getSubProduct(), "Corporate");
+		assertEquals(toTest.getTransactionType(), "StandardEuropeanCorporate");
+		assertEquals(toTest.getSettlementType(), null);
 	}
 	
 	// Test a valid equity taxonomy
@@ -38,11 +51,11 @@ public class UPITest {
 	public void testValidEquityTaxonomy() throws InvalidTaxonomyException,
 			EmptyTaxonomyException {
 		UPI toTest = new UPI("Equity:PortfolioSwap:PriceReturnBasicPerformance:SingleName");
-		assertEquals(toTest.assetClass, AssetClass.EQUITY);
-		assertEquals(toTest.baseProduct, "PortfolioSwap");
-		assertEquals(toTest.subProduct, "PriceReturnBasicPerformance");
-		assertEquals(toTest.transactionType, "SingleName");
-		assertEquals(toTest.settlementType, null);
+		assertEquals(toTest.getAssetClass(), AssetClass.EQUITY);
+		assertEquals(toTest.getBaseProduct(), "PortfolioSwap");
+		assertEquals(toTest.getSubProduct(), "PriceReturnBasicPerformance");
+		assertEquals(toTest.getTransactionType(), "SingleName");
+		assertEquals(toTest.getSettlementType(), null);
 	}
 	
 	// Test a valid foreign exchange taxonomy (with a sub-product)
@@ -50,11 +63,11 @@ public class UPITest {
 	public void testValidForeignExchangeTaxonomyWithSubProduct() throws InvalidTaxonomyException,
 			EmptyTaxonomyException {
 		UPI toTest = new UPI("ForeignExchange:SimpleExotic:IntradayDigital");
-		assertEquals(toTest.assetClass, AssetClass.FOREX);
-		assertEquals(toTest.baseProduct, "SimpleExotic");
-		assertEquals(toTest.subProduct, "IntradayDigital");
-		assertEquals(toTest.transactionType, null);
-		assertEquals(toTest.settlementType, null);
+		assertEquals(toTest.getAssetClass(), AssetClass.FOREX);
+		assertEquals(toTest.getBaseProduct(), "SimpleExotic");
+		assertEquals(toTest.getSubProduct(), "IntradayDigital");
+		assertEquals(toTest.getTransactionType(), null);
+		assertEquals(toTest.getSettlementType(), null);
 	}
 	
 	// Test a valid foreign exchange taxonomy (without a sub-product)
@@ -62,11 +75,11 @@ public class UPITest {
 	public void testValidForeignExchangeTaxonomyWithoutSubProduct() 
 			throws InvalidTaxonomyException, EmptyTaxonomyException {
 		UPI toTest = new UPI("ForeignExchange:NDF");
-		assertEquals(toTest.assetClass, AssetClass.FOREX);
-		assertEquals(toTest.baseProduct, "NDF");
-		assertEquals(toTest.subProduct, null);
-		assertEquals(toTest.transactionType, null);
-		assertEquals(toTest.settlementType, null);
+		assertEquals(toTest.getAssetClass(), AssetClass.FOREX);
+		assertEquals(toTest.getBaseProduct(), "NDF");
+		assertEquals(toTest.getSubProduct(), null);
+		assertEquals(toTest.getTransactionType(), null);
+		assertEquals(toTest.getSettlementType(), null);
 	}
 	
 	// Test a valid interest rate taxonomy (with a sub-product)
@@ -74,11 +87,11 @@ public class UPITest {
 	public void testValidRatesTaxonomyWithSubProduct() throws InvalidTaxonomyException,
 			EmptyTaxonomyException {
 		UPI toTest = new UPI("InterestRate:CrossCurrency:Basis");
-		assertEquals(toTest.assetClass, AssetClass.RATES);
-		assertEquals(toTest.baseProduct, "CrossCurrency");
-		assertEquals(toTest.subProduct, "Basis");
-		assertEquals(toTest.transactionType, null);
-		assertEquals(toTest.settlementType, null);
+		assertEquals(toTest.getAssetClass(), AssetClass.RATES);
+		assertEquals(toTest.getBaseProduct(), "CrossCurrency");
+		assertEquals(toTest.getSubProduct(), "Basis");
+		assertEquals(toTest.getTransactionType(), null);
+		assertEquals(toTest.getSettlementType(), null);
 	}
 	
 	// Test a valid interest rate taxonomy (without a sub-product)
@@ -86,11 +99,11 @@ public class UPITest {
 	public void testValidRatesTaxonomyWithoutSubProduct() throws InvalidTaxonomyException,
 			EmptyTaxonomyException {
 		UPI toTest = new UPI("InterestRate:CapFloor");
-		assertEquals(toTest.assetClass, AssetClass.RATES);
-		assertEquals(toTest.baseProduct, "CapFloor");
-		assertEquals(toTest.subProduct, null);
-		assertEquals(toTest.transactionType, null);
-		assertEquals(toTest.settlementType, null);
+		assertEquals(toTest.getAssetClass(), AssetClass.RATES);
+		assertEquals(toTest.getBaseProduct(), "CapFloor");
+		assertEquals(toTest.getSubProduct(), null);
+		assertEquals(toTest.getTransactionType(), null);
+		assertEquals(toTest.getSettlementType(), null);
 	}
 	
 	// Test a taxonomy with an invalid asset class - expect an exception
