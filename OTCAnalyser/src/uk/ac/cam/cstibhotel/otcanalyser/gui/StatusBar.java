@@ -6,8 +6,8 @@ import javax.swing.JLabel;
 public class StatusBar extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
-	private static int logLevel;
-	private static JLabel textArea;
+	public static int logLevel;
+	public static JLabel textArea;
 	private static StatusBar instance;
 	private JLabel label;
 	
