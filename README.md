@@ -7,3 +7,5 @@ Use the guidelines contained here: https://google-styleguide.googlecode.com/svn/
 All files should be 100 columns wide.
 
 uk.ac.cam.cstibhotel.otcanalyser is our default package.
+
+Graphing library: http://sourceforge.net/projects/jfreechart/

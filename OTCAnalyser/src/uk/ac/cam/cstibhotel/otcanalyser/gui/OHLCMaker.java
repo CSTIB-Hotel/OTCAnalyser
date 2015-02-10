@@ -1,6 +1,7 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 	
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -8,17 +9,17 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.CandlestickRenderer;
 import org.jfree.data.general.SeriesException;
 import org.jfree.data.time.Day;
-import org.jfree.data.time.RegularTimePeriod;
-import org.jfree.data.time.ohlc.OHLCItem;
 import org.jfree.data.time.ohlc.OHLCSeries;
 import org.jfree.data.time.ohlc.OHLCSeriesCollection;
 import org.jfree.data.xy.OHLCDataset;
+
 import java.awt.Color;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-//makes an OHLC chart based on execution timestamps and price notation per day
+//makes an OHLC chart based on execution timestamps and rounded notional amount 1 per day
 public class OHLCMaker {
   
   public static JFreeChart makeChart(String name, OHLCDataset dataset) {
@@ -35,7 +36,12 @@ public class OHLCMaker {
     
     //date formatting
     DateAxis axis = (DateAxis) plot.getDomainAxis();
-    if (axis.getMaximumDate().getMonth() > axis.getMinimumDate().getMonth()){
+    Calendar max = Calendar.getInstance();
+    Calendar min = Calendar.getInstance();
+    max.setTime(axis.getMaximumDate());
+    min.setTime(axis.getMinimumDate());
+    if (max.get(Calendar.MONTH) > min.get(Calendar.MONTH) ||
+        max.get(Calendar.YEAR) > max.get(Calendar.YEAR)){
       axis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
     } else {
       axis.setDateFormatOverride(new SimpleDateFormat("dd-MMM-yyyy"));
@@ -46,20 +52,15 @@ public class OHLCMaker {
   
   public static OHLCSeriesCollection makeDataset(List<Trade> trade, String name, boolean sorted) {
     if (!sorted) { //not sorted by execution timestamps
-      sortByExecutionTimestamp(trade);
+      DateSorter.sortByExecutionTimestamp(trade);
     }
     OHLCSeriesCollection dataset = new OHLCSeriesCollection();
     dataset.addSeries(makeSeries(trade, name));
     return dataset;
   }
   
-  //sorts trades by execution timestamp
-  public static void sortByExecutionTimestamp(List<Trade> trade) {
-    Collections.sort(trade, new ExecutionTimestampComparator());
-  }
-  
   //given a list of trades ordered by execution timestamps, makes OHLCSeries
-  public static OHLCSeries makeSeries(List<Trade> trade, Comparable key) {
+  public static OHLCSeries makeSeries(List<Trade> trade, Comparable<String> key) {
     OHLCSeries ohlcs = new OHLCSeries(key);
     addToSeries(ohlcs, trade);
     return ohlcs;
@@ -70,7 +71,8 @@ public class OHLCMaker {
     OHLCSeries ohlcs = dataset.getSeries(series);
     try {
       addToSeries(ohlcs, trade);
-    } catch(SeriesException e) { //overlap with dates; possibly the same period so just redo dataset
+    } catch(SeriesException e) {
+    	// overlap with dates
       return false;
     }
     return true;
@@ -80,31 +82,47 @@ public class OHLCMaker {
     if (trade.isEmpty()) {
       return;
     }
-    Day rtp = new Day(trade.get(0).getExecutionTimestamp()); //day time period
-    double open = trade.get(0).getPriceNotation();
+    int k = 0;
+    Day rtp = new Day(trade.get(k).getExecutionTimestamp()); //day time period
+    String rna = trade.get(k).getRoundedNotionalAmount1();
+    //cycle through trade list looking for first readable rounded notional amount 1
+    while (!(RNAExtractor.validRNA(rna)) && k < trade.size() - 1) {
+    	k++;
+    	rtp = new Day(trade.get(k).getExecutionTimestamp());
+    	rna = trade.get(k).getRoundedNotionalAmount1();
+    }
+    //if they are all unreadable
+    if (k == trade.size() - 1) {
+    	return;
+    }
+    double open = RNAExtractor.getDoubleRNA(rna);
     double high = open;
     double low = open;
     double close = open;
-    for (int i = 0; i < trade.size(); i++) {
+    for (int i = k; i < trade.size(); i++) {
       Trade currentTrade = trade.get(i);
-      double price = currentTrade.getPriceNotation();
-      if(rtp.equals(new Day(currentTrade.getExecutionTimestamp()))) { //same time period
-        if (price > high) {
-          high = price;
-        }
-        if (price < low) {
-          low = price;
-        }
-        close = price;
-      } else {
-        ohlcs.add(rtp, open, high, low, close);
-        rtp = new Day(currentTrade.getExecutionTimestamp());
-        open = price;
-        high = open;
-        low = open;
-        close = open;
+      rna = currentTrade.getRoundedNotionalAmount1();
+      if (RNAExtractor.validRNA(rna)) {
+        double price = RNAExtractor.getDoubleRNA(rna);
+        if(rtp.equals(new Day(currentTrade.getExecutionTimestamp()))) { //same time period
+        	if (price > high) {
+        		high = price;
+        	}
+        	if (price < low) {
+        		low = price;
+        	}
+        	close = price;
+        } else {
+        	ohlcs.add(rtp, open, high, low, close);
+        	rtp = new Day(currentTrade.getExecutionTimestamp());
+        	open = price;
+        	high = open;
+        	low = open;
+          close = open;
+       }
       }
     }
     ohlcs.add(rtp, open, high, low, close); //add last item in
   }
+  
 }
