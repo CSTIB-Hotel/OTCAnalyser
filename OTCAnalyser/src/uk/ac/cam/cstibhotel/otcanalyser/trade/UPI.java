@@ -12,12 +12,12 @@ package uk.ac.cam.cstibhotel.otcanalyser.trade;
 
 public class UPI {
 	
-	public String fullTaxonomy;
-	public AssetClass assetClass;
-	public String baseProduct;
-	public String subProduct;
-	public String transactionType;
-	public String settlementType;
+	private String fullTaxonomy;
+	private AssetClass assetClass;
+	private String baseProduct;
+	private String subProduct;
+	private String transactionType;
+	private String settlementType;
 	
 	/*
 	 * Splits a string containing a full taxonomy into its component parts to allow
@@ -93,6 +93,54 @@ public class UPI {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			throw new InvalidTaxonomyException(taxonomy);
 		}
+	}
+
+	public String getFullTaxonomy() {
+		return fullTaxonomy;
+	}
+
+	public void setFullTaxonomy(String fullTaxonomy) {
+		this.fullTaxonomy = fullTaxonomy;
+	}
+
+	public AssetClass getAssetClass() {
+		return assetClass;
+	}
+
+	public void setAssetClass(AssetClass assetClass) {
+		this.assetClass = assetClass;
+	}
+
+	public String getBaseProduct() {
+		return baseProduct;
+	}
+
+	public void setBaseProduct(String baseProduct) {
+		this.baseProduct = baseProduct;
+	}
+
+	public String getSubProduct() {
+		return subProduct;
+	}
+
+	public void setSubProduct(String subProduct) {
+		this.subProduct = subProduct;
+	}
+
+	public String getTransactionType() {
+		return transactionType;
+	}
+
+	public void setTransactionType(String transactionType) {
+		this.transactionType = transactionType;
+	}
+
+	public String getSettlementType() {
+		return settlementType;
+	}
+
+	public void setSettlementType(String settlementType) {
+		this.settlementType = settlementType;
 	}
 	
 }
