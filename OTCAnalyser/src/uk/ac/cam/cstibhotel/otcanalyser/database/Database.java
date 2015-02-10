@@ -108,7 +108,7 @@ public class Database {
 	 * @return all data matching the search
 	 */
 	public static SearchResult search(Search s) {
-		return null;
+ 		return null;
 	}
 
 	/**
