@@ -42,7 +42,7 @@ public class Database {
 		connection = DriverManager.getConnection("jdbc:hsqldb:file:"+s);
 		connection.setAutoCommit(false);
 
-		Statement statement = connection.createStatement(); // TODO: probably want to convert to prepared statements 
+		Statement statement = connection.createStatement();  
 		try {
 			statement.execute("SET WRITE_DELAY FALSE"); //Always update data on disk
 
