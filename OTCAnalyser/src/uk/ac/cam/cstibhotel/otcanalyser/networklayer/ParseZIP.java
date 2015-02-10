@@ -295,7 +295,7 @@ public class ParseZIP {
 	
 	public static void main(String[] args) {
 		try {
-			ParseZIP.downloadData("https://kgc0418-tdw-data-0.s3.amazonaws.com/slices/CUMULATIVE_COMMODITIES_2015_02_04.zip","\",\"", ",");
+			ParseZIP.downloadData("https://kgc0418-tdw-data-0.s3.amazonaws.com/slices/CUMULATIVE_CREDITS_2015_02_04.zip","\",\"", ",");
 			System.out.println(Integer.parseInt("1,234".replace(",","")));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
