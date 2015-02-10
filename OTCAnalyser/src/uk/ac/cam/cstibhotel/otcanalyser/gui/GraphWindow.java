@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GraphWindow extends CBLPanel{
+	
   private static final long serialVersionUID = 1L;
   private OHLCSeriesCollection dataset;
   
@@ -18,7 +19,7 @@ public class GraphWindow extends CBLPanel{
     panel.setFillZoomRectangle(true);
     panel.setMouseWheelEnabled(true);
     
-    GraphPanel pnl = new GraphPanel();
+    ContentPanel pnl = new ContentPanel();
     pnl.add(panel);
     add(pnl);
   }

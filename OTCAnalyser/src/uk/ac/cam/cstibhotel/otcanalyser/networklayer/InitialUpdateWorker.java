@@ -2,7 +2,6 @@ package uk.ac.cam.cstibhotel.otcanalyser.networklayer;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;

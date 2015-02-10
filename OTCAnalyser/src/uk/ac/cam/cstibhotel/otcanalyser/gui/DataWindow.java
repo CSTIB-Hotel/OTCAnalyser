@@ -15,6 +15,7 @@ import javax.swing.JToolBar;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 
 public class DataWindow extends CBLPanel implements ActionListener, ItemListener{
+	
   private static final long serialVersionUID = 1L;
   private DataTable table;
   
