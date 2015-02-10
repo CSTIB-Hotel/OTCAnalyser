@@ -73,7 +73,7 @@ public class Trade {
 		assetClass = AssetClass.COMMODITY;
 		subAssetClass = new SubAssetClass();
 		try {
-			taxonomy = new UPI("Rates:Foo:Bar");
+			taxonomy = new UPI("ForeignExchange:ForeignExchange:Bar");
 		} catch (InvalidTaxonomyException ex) {
 			Logger.getLogger(Trade.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (EmptyTaxonomyException e) {
@@ -86,6 +86,12 @@ public class Trade {
 		optionCurrency = Currency.getInstance("GBP");
 		optionLockPeriod = new Date();
 		optionExpirationDate = new Date();
+		priceNotation = new Double(0);
+		priceNotation2 = new Double(0);
+		priceNotation3 = new Double(0);
+		additionalPriceNotation = new Double(0);
+		optionStrikePrice = new Double(0);
+		optionPremium = new Double(0);
 		
 	}
 	
