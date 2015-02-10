@@ -56,6 +56,15 @@ public class Database {
 			dataTableCreator.setLength(dataTableCreator.length()-2);
 			dataTableCreator.append(");");
 			statement.execute(dataTableCreator.toString());
+			
+			String infoTableCreator = "CREATE TABLE info ("
+					+ "key VARCHAR(255), value VARCHAR(255)";
+			statement.execute(infoTableCreator);
+			
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO info (key, value) VALUES (?, ?)");
+			ps.setString(1, "last_update");
+			ps.setString(2, "0");
+			ps.executeQuery();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,8 +112,11 @@ public class Database {
 	 *
 	 * @return The time the database was last updated
 	 */
-	public static java.util.Date getLastUpdateTime() {
-		return new java.util.Date(115, 1, 0);
+	public static java.util.Date getLastUpdateTime() throws SQLException {
+		Statement s = connection.createStatement();
+		s.execute("SELECT value FROM info WHERE key = last_update");
+		String timeString = s.getResultSet().getString(1);
+		return new java.util.Date(Long.getLong(timeString));
 	}
 
 	/**
