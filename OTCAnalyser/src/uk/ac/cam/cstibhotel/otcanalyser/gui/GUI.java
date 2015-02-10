@@ -23,6 +23,7 @@ public class GUI extends JFrame {
 	public GUI() {
 		setTitle("OTC Analyser");
 		setSize(800,600);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		searchWindow = SearchWindow.getInstance();
 		add(searchWindow,BorderLayout.WEST);
 		searchWindow.setVisible(true);
