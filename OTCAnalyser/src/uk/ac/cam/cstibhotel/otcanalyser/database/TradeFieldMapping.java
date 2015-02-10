@@ -69,7 +69,7 @@ public class TradeFieldMapping {
 			DBNameDBType.put("optionStrikePrice", new FloatSQLField(t.getOptionStrikePrice()));
 			DBNameDBType.put("optionType", new VarCharSQLField(255, t.getOptionType()));
 			DBNameDBType.put("optionFamily", new VarCharSQLField(255, t.getOptionFamily()));
-			DBNameDBType.put("optionCurrency", new VarCharSQLField(20, t.getOptionCurrency());
+			DBNameDBType.put("optionCurrency", new VarCharSQLField(20, t.getOptionCurrency()));
 			DBNameDBType.put("optionPremium", new FloatSQLField(t.getOptionPremium()));
 			DBNameDBType.put("optionLockPeriod", new DateSQLField(t.getOptionLockPeriod()));
 			DBNameDBType.put("optionExpirationDate", new DateSQLField(t.getOptionExpirationDate()));

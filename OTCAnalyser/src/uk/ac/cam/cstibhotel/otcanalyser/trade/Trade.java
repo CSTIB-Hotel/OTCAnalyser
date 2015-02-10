@@ -22,7 +22,7 @@ public class Trade {
 	private Date effectiveDate;
 	private Date endDate;
 	private String dayCountConvention; // e.g. ACT/360 and 1/1 30/360
-	private Currency settlementCurrency;
+	private String settlementCurrency;
 	private TradeType tradeType;
 	private AssetClass assetClass;
 	private SubAssetClass subAssetClass;
@@ -50,7 +50,7 @@ public class Trade {
 	private Double optionStrikePrice;
 	private String optionType;
 	private String optionFamily;
-	private Currency optionCurrency;
+	private String optionCurrency;
 	private Double optionPremium; //e.g. 0.00034 and 90250
 	private Date optionLockPeriod;
 	private Date optionExpirationDate;
@@ -68,7 +68,7 @@ public class Trade {
 		collateralization = Collateralization.BLANK;
 		effectiveDate = new Date();
 		endDate = new Date();
-		settlementCurrency = Currency.getInstance("GBP");
+		settlementCurrency = "";
 		tradeType = TradeType.OPTION;
 		assetClass = AssetClass.COMMODITY;
 		subAssetClass = new SubAssetClass();
@@ -83,7 +83,7 @@ public class Trade {
 		priceFormingContinuationData = PriceFormingContinuationData.TRADE;
 		notionalCurrency1 = "";
 		notionalCurrency2 = "";
-		optionCurrency = Currency.getInstance("GBP");
+		optionCurrency = "";
 		optionLockPeriod = new Date();
 		optionExpirationDate = new Date();
 		priceNotation = new Double(0);
@@ -147,7 +147,7 @@ public class Trade {
 		this.dayCountConvention = dayCountConvention;
 	}
 
-	public void setSettlementCurrency(Currency settlementCurrency) {
+	public void setSettlementCurrency(String settlementCurrency) {
 		this.settlementCurrency = settlementCurrency;
 	}
 
@@ -243,7 +243,7 @@ public class Trade {
 		this.optionFamily = optionFamily;
 	}
 
-	public void setOptionCurrency(Currency optionCurrency) {
+	public void setOptionCurrency(String optionCurrency) {
 		this.optionCurrency = optionCurrency;
 	}
 
@@ -329,7 +329,7 @@ public class Trade {
 		return dayCountConvention;
 	}
 
-	public Currency getSettlementCurrency() {
+	public String getSettlementCurrency() {
 		return settlementCurrency;
 	}
 
@@ -425,7 +425,7 @@ public class Trade {
 		return optionFamily;
 	}
 
-	public Currency getOptionCurrency() {
+	public String getOptionCurrency() {
 		return optionCurrency;
 	}
 
