@@ -45,6 +45,10 @@ public class DataViewer extends JTabbedPane {
 	  dataViewer.analysis.addAnalysis(analysis);
   }
   
+  public static void addAnalysis (String analysis, String title) {
+	  dataViewer.analysis.addAnalysis(analysis, title);
+  }
+  
   public static void main(String[] args) {
     JFrame frame = new JFrame("Tabs");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,8 +76,10 @@ public class DataViewer extends JTabbedPane {
     clearTrades();
     addTrades(trades);
     
-    for (int i = 1; i < 4; i++) {
-    	addAnalysis("Analysis " + i);
+    String a = "Analysis of data.";
+    
+    for (int i = 1; i < 5; i++) {
+    	addAnalysis(a, "Analysis Title " + i);
     }
     
    }
