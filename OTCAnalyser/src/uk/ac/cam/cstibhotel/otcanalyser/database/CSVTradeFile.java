@@ -4,6 +4,7 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 import java.io.File;
 
 abstract class CSVTradeFile extends File{
+	private static final long serialVersionUID = 1L;
     String[] columnHeaders;
 
     public CSVTradeFile(File f, String path){

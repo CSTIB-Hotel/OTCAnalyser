@@ -4,7 +4,9 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
+
 import java.sql.*;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -13,7 +15,7 @@ import java.util.Map.Entry;
  *
  * @author Wai-Wai Ng
  */
-class Database {
+public class Database {
 
 	protected static Connection connection;
 
@@ -23,7 +25,7 @@ class Database {
 	}
 
 	public Database() throws SQLException, ClassNotFoundException  {
-		Class.forName("org.hsqldb.jdbcDriver");
+		/*Class.forName("org.hsqldb.jdbcDriver");
 		connection = DriverManager.getConnection("jdbc:hsqldb:file:"
 				+"/Users/waiwaing/Library/OTCAnalyser/database.db"); // TODO: fix directory
 		connection.setAutoCommit(false);
@@ -43,9 +45,11 @@ class Database {
 			dataTableCreator.append(");");
 			statement.execute(dataTableCreator.toString());
 
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			statement.close();
-		}
+		}*/
 
 	}
 
@@ -87,7 +91,7 @@ class Database {
 	 * @return The time the database was last updated
 	 */
 	public static java.util.Date getLastUpdateTime() {
-		return null;
+		return new java.util.Date(115, 1, 0);
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package uk.ac.cam.cst1bhotel.otcanalyser.gui;
+package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import java.awt.BorderLayout;
 
@@ -7,17 +7,29 @@ import javax.swing.JInternalFrame;
 
 public class TaxonomySelector extends JInternalFrame {
 	private static final long serialVersionUID = 1L;
-	private JComboBox<String> Asset;
-	private JComboBox<String> BaseClass;
-	private JComboBox<String> SubClass;
+	public JComboBox<String> Asset;
+	public JComboBox<String> BaseClass;
+	public JComboBox<String> SubClass;
+	private AssetChange assetChange;
+	private BaseProductChange baseProductChange;
+	private static TaxonomySelector instance;
 	
-	public TaxonomySelector() {
+	public static TaxonomySelector getInstance() {
+		if (instance==null) instance = new TaxonomySelector();
+		return instance;
+	}
+	
+	private TaxonomySelector() {
 		setTitle("Taxonomy Selector");
 		setSize(300,50); // default size is 0,0
 		setLocation(100,200); // default is 0,0 (top left corner)
+		assetChange = new AssetChange(this);
 		Asset = new JComboBox<String>(TextStrings.Assets);
-		BaseClass = new JComboBox<String>(TextStrings.CommodityBaseProducts);
-		SubClass = new JComboBox<String>(TextStrings.CommodityMetalsSubProducts);
+		Asset.addActionListener(assetChange);
+		BaseClass = new JComboBox<String>(TextStrings.CreditBaseProducts);
+		baseProductChange  = new BaseProductChange(this);
+		//BaseClass.addActionListener(baseProductChange);
+		SubClass = new JComboBox<String>(TextStrings.CreditSingleNameSubProducts);
 		Asset.setVisible(true);
 		BaseClass.setVisible(true);
 		SubClass.setVisible(true);
@@ -30,4 +42,6 @@ public class TaxonomySelector extends JInternalFrame {
 		JInternalFrame f = new TaxonomySelector();
 		f.setVisible(true);
 	}
+	
+	
 }

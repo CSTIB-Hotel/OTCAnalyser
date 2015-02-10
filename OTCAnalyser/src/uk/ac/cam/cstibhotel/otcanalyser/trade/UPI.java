@@ -23,8 +23,11 @@ public class UPI {
 	 * Splits a string containing a full taxonomy into its component parts to allow
 	 * for easier access.
 	 */	
-	public UPI(String taxonomy) throws InvalidTaxonomyException {
+	public UPI(String taxonomy) throws InvalidTaxonomyException, EmptyTaxonomyException {
 		fullTaxonomy = taxonomy;
+		
+		if(taxonomy.equals(""))
+			throw new EmptyTaxonomyException();
 		
 		String[] splitTaxonomy = fullTaxonomy.split(":");
 		
@@ -46,7 +49,7 @@ public class UPI {
 			switch (splitTaxonomy[0]) {
 			case "Commodity":
 				if (splitTaxonomy.length == 5) {
-					assetClass = AssetClass.Commodity;
+					assetClass = AssetClass.COMMODITY;
 					baseProduct = splitTaxonomy[1];
 					subProduct = splitTaxonomy[2];
 					transactionType = splitTaxonomy[3];
@@ -56,18 +59,18 @@ public class UPI {
 				}
 				break;
 			case "Credit":
-				assetClass = AssetClass.Credit;
+				assetClass = AssetClass.CREDIT;
 				transactionType = splitTaxonomy[3];
 				break;
 			case "Equity":
-				assetClass = AssetClass.Equity;
+				assetClass = AssetClass.EQUITY;
 				transactionType = splitTaxonomy[3];
 				break;
 			case "ForeignExhange":
-				assetClass = AssetClass.ForeignExchange;
+				assetClass = AssetClass.FOREX;
 				break;
 			case "Rates":
-				assetClass = AssetClass.Rates;
+				assetClass = AssetClass.RATES;
 				break;
 			default:
 				throw new InvalidTaxonomyException(taxonomy);

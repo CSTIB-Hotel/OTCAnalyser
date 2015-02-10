@@ -57,8 +57,8 @@ public class TradeFieldMapping {
 			DBNameDBType.put("priceNotation", new FloatSQLField(t.getPriceNotation()));
 			DBNameDBType.put("additionalPriceNotationType", new VarCharSQLField(255, t.getAdditionalPriceNotationType()));
 			DBNameDBType.put("additionalPriceNotation", new FloatSQLField(t.getAdditionalPriceNotation()));
-			DBNameDBType.put("notionalCurrency1", new VarCharSQLField(3, t.getNotionalCurrency1().getCurrencyCode()));
-			DBNameDBType.put("notionalCurrency2", new VarCharSQLField(3, t.getNotionalCurrency2().getCurrencyCode()));
+			DBNameDBType.put("notionalCurrency1", new VarCharSQLField(3, t.getNotionalCurrency1()));
+			DBNameDBType.put("notionalCurrency2", new VarCharSQLField(3, t.getNotionalCurrency2()));
 			DBNameDBType.put("roundedNotionalAmount1", new VarCharSQLField(255, t.getRoundedNotionalAmount1()));
 			DBNameDBType.put("roundedNotionalAmount2", new VarCharSQLField(255, t.getRoundedNotionalAmount2()));
 			DBNameDBType.put("paymentFrequency1", new VarCharSQLField(255, t.getPaymentFrequency1()));

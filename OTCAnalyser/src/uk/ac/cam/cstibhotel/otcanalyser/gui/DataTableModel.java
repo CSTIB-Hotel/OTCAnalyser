@@ -1,13 +1,13 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.table.AbstractTableModel;
 
 class DataTableModel extends AbstractTableModel{
-  
+  private static final long serialVersionUID = 1L;
   public static final String[] columnNames = {
     "Dissemination ID",
     "Original Dissemination ID",
@@ -59,9 +59,6 @@ class DataTableModel extends AbstractTableModel{
   private final List<Object[]> data;
             
   public DataTableModel(List<Trade> trades){
-    Class tradeClass = Trade.class;
-    
-    //fill columns
     data = new ArrayList<>(trades.size());
     for (Trade t : trades){
       addRow(t, false);
@@ -82,6 +79,16 @@ class DataTableModel extends AbstractTableModel{
   public int getColumnCount() {
     return columnNames.length;
   }
+  
+  //make sure columns are sorted by their compareTo methodss
+  @Override
+  public Class<?> getColumnClass(int columnIndex) {
+  	if (!data.isEmpty() && data.get(0)[columnIndex] instanceof Comparable) {
+  	  return data.get(0)[columnIndex].getClass();
+  	} else { 
+  		return super.getColumnClass(columnIndex); //seems to return Object for everything
+  	}
+  }
 
   @Override
   public Object getValueAt(int rowIndex, int columnIndex) {
@@ -89,20 +96,56 @@ class DataTableModel extends AbstractTableModel{
   }
   
   public final void addRow(Trade t, boolean toBeginning){
-    Class tradeClass = t.getClass();
-    Field[] fields = tradeClass.getDeclaredFields();
-    Object[] row = new Object[fields.length];
-    for (int i = 0; i < fields.length; i++) {
-      try {
-      row[i] = fields[i].get(t);
-      } catch (IllegalAccessException e) {
-        System.err.println("Problem filling table.");
-      }
-    }
-    if (toBeginning){
+    Object[] row = new Object[columnNames.length];
+    //fill row
+    row[0] = t.getDisseminationID();
+    row[1] = t.getOriginalDisseminationID();
+    row[2] = t.getAction();
+    row[3] = t.getExecutionTimestamp();
+    row[4] = t.isCleared();
+    row[5] = t.getCollateralization();
+    row[6] = t.isEndUserException();
+    row[7] = t.isBespoke();
+    row[8] = t.isExecutionVenue();
+    row[9] = t.isBlockTrades();
+    row[10] = t.getEffectiveDate();
+    row[11] = t.getEndDate();
+    row[12] = t.getDayCountConvention();
+    row[13] = t.getSettlementCurrency();
+    row[14] = t.getTradeType();
+    row[15] = t.getAssetClass();
+    row[16] = t.getSubAssetClass();
+    row[17] = t.getTaxonomy();
+    row[18] = t.getPriceFormingContinuationData();
+    row[19] = t.getUnderlyingAsset1();
+    row[20] = t.getUnderlyingAsset2();
+    row[21] = t.getPriceNotationType();
+    row[22] = t.getPriceNotation();
+    row[23] = t.getAdditionalPriceNotationType();
+    row[24] = t.getAdditionalPriceNotation();
+    row[25] = t.getNotionalCurrency1();
+    row[26] = t.getNotionalCurrency2();
+    row[27] = t.getRoundedNotionalAmount1();
+    row[28] = t.getRoundedNotionalAmount2();
+    row[29] = t.getPaymentFrequency1();
+    row[30] = t.getPaymentFrequency2();
+    row[31] = t.getResetFrequency1();
+    row[32] = t.getResetFrequency2();
+    row[33] = t.getEmbeddedOption();
+    row[34] = t.getOptionStrikePrice();
+  	row[35] = t.getOptionType();
+  	row[36] = t.getOptionFamily();
+  	row[37] = t.getOptionCurrency();
+  	row[38] = t.getOptionPremium();
+  	row[39] = t.getOptionLockPeriod();
+  	row[40] = t.getOptionExpirationDate();
+  	row[41] = t.getPriceNotation2Type();
+  	row[42] = t.getPriceNotation2();
+  	row[43] = t.getPriceNotation3Type();
+  	row[44] = t.getPriceNotation3();
+    if (toBeginning) {
       data.add(0, row);
-    }
-    else {
+    } else {
       data.add(row);
     }
   }
