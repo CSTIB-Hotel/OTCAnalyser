@@ -46,8 +46,6 @@ public class UPI {
 				assetClass = AssetClass.COMMODITY;
 				baseProduct = splitTaxonomy[1];
 				if (baseProduct.equals("Index") || baseProduct.equals("Freight")){
-					//subproduct ommited in this case
-					subProduct = "";
 					if(taxonomyLength >= 3){
 						transactionType = splitTaxonomy[2];
 					}
@@ -59,10 +57,10 @@ public class UPI {
 					if(taxonomyLength >= 3){
 						subProduct = splitTaxonomy[2];
 					}
-					else if (taxonomyLength >= 4){
+					if (taxonomyLength >= 4){
 						transactionType = splitTaxonomy[3];
 					}
-					else if (taxonomyLength >= 5){
+					if (taxonomyLength >= 5){
 						settlementType = splitTaxonomy[4];
 					}
 				}
@@ -76,7 +74,7 @@ public class UPI {
 				if (taxonomyLength >= 3){
 					subProduct = splitTaxonomy[2];					
 				}
-				else if (taxonomyLength >= 4){
+				if (taxonomyLength >= 4){
 					transactionType = splitTaxonomy[3];					
 				}
 				break;
