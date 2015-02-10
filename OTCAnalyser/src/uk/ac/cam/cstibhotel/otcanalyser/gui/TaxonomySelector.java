@@ -28,7 +28,7 @@ public class TaxonomySelector extends JInternalFrame {
 		Asset.addActionListener(assetChange);
 		BaseClass = new JComboBox<String>(TextStrings.CreditBaseProducts);
 		baseProductChange  = new BaseProductChange(this);
-		BaseClass.addActionListener(baseProductChange);
+		//BaseClass.addActionListener(baseProductChange);
 		SubClass = new JComboBox<String>(TextStrings.CreditSingleNameSubProducts);
 		Asset.setVisible(true);
 		BaseClass.setVisible(true);
