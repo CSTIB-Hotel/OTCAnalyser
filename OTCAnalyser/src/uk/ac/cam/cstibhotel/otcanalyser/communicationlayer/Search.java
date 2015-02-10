@@ -4,7 +4,6 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.AssetClass;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.TradeType;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
-import java.util.Currency;
 import java.util.Date;
 
 public class Search {
@@ -13,7 +12,7 @@ public class Search {
 	private AssetClass assetClass;
 	private String asset;
 	private int minPrice, maxPrice;
-	private Currency currency;
+	private String currency;
 	private Date startTime, endTime;
 	private UPI upi;
 	
@@ -21,7 +20,7 @@ public class Search {
 		super();
 	}
 	
-	public Search(TradeType t, AssetClass ac, String asset, int minP, int maxP, Currency c,
+	public Search(TradeType t, AssetClass ac, String asset, int minP, int maxP, String c,
 				Date st, Date et, UPI upi) {
 		this.tradeType = t;
 		this.assetClass = ac;
@@ -74,11 +73,11 @@ public class Search {
 		this.maxPrice = maxPrice;
 	}
 
-	public Currency getCurrency() {
+	public String getCurrency() {
 		return currency;
 	}
 
-	public void setCurrency(Currency currency) {
+	public void setCurrency(String currency) {
 		this.currency = currency;
 	}
 

@@ -9,6 +9,7 @@ import uk.ac.cam.cstibhotel.otcanalyser.gui.SearchWindow;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.StatusBar;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.EmptyTaxonomyException;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.TradeType;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 public class CommunicationLayer {
@@ -39,14 +40,24 @@ public class CommunicationLayer {
 	// Creates a Search and then sends it to the database
 	public static void search() {
 		Search s = new Search();
+
+		String tradeType = (String) SearchWindow.getInstance().TradeType.getSelectedItem();
+		if (tradeType.equals("Swap")) {
+			s.setTradeType(TradeType.SWAP);
+		} else if (tradeType.equals("Option")) {
+			s.setTradeType(TradeType.OPTION);
+		}
 		
-		//TODO: finish the implementations of commented-out blocks
-		//s.setTradeType();
-		//s.setAssetClass();
 		s.setAsset(SearchWindow.getInstance().UnderLyingAsset.getText());
-		//s.setMinPrice();
-		//s.setMaxPrice();
-		//s.setCurrency();
+		
+		try {
+			s.setMinPrice(Integer.parseInt(SearchWindow.getInstance().minValue.getText()));
+			s.setMaxPrice(Integer.parseInt(SearchWindow.getInstance().maxValue.getText()));
+		} catch (NumberFormatException e) {
+			StatusBar.setMessage("Error: Price fields must contain integers", 1);
+		}
+
+		s.setCurrency(SearchWindow.getInstance().currency.getText());
 		
 		int day = (int) SearchWindow.getInstance().StartDate.Day.getSelectedItem();
 		int month = (int) SearchWindow.getInstance().StartDate.Months.getSelectedItem();
@@ -55,7 +66,6 @@ public class CommunicationLayer {
 		cal.set(year, month, day);
 		Date startTime = cal.getTime();
 		s.setStartTime(startTime);
-		
 		
 		day = (int) SearchWindow.getInstance().EndDate.Day.getSelectedItem();
 		month = (int) SearchWindow.getInstance().EndDate.Months.getSelectedItem();
@@ -74,8 +84,10 @@ public class CommunicationLayer {
 			UPI taxonomy = new UPI(fullTaxonomy);
 			s.setUPI(taxonomy);
 		} catch (InvalidTaxonomyException | EmptyTaxonomyException e) {
-			StatusBar.setMessage("Invalid taxonomy: " + fullTaxonomy, 1);
+			StatusBar.setMessage("Error: Invalid taxonomy " + fullTaxonomy, 1);
 		}
+		
+		s.setAssetClass(s.getUPI().getAssetClass());
 		
 		// Get the result from the database
 		SearchResult result = Database.search(s);
