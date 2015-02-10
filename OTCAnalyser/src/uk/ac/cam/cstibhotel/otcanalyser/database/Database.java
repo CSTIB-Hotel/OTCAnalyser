@@ -1,9 +1,12 @@
 package uk.ac.cam.cstibhotel.otcanalyser.database;
 
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.EmptyTaxonomyException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
+
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,10 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.EmptyTaxonomyException;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
+
 
 /**
  *
@@ -22,8 +22,8 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
  */
 public class Database {
 
-	protected static Database db;
-	protected static Connection connection;
+	private static Database db;
+	private static Connection connection;
 
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
 		Database d = getDB();
