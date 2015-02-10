@@ -55,6 +55,7 @@ public class DataViewer extends JTabbedPane {
       for (int j = 0; j < 10; j++) {
         t = new Trade();
         t.setAction(Action.NEW);
+        t.setBlockTrades(false);
         t.setRoundedNotionalAmount1(200 + Math.random() * 500 + "+");
         t.setExecutionTimestamp(d);
         trades.add(t);
