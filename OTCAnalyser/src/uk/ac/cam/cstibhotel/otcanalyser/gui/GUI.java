@@ -8,7 +8,7 @@ public class GUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
-	StatusBar statusBar;
+	public StatusBar statusBar;
 	
 	public static GUI gui;
 	static SearchWindow searchWindow;

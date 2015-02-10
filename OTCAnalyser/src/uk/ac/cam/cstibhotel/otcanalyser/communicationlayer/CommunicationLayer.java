@@ -1,10 +1,14 @@
 package uk.ac.cam.cstibhotel.otcanalyser.communicationlayer;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import uk.ac.cam.cstibhotel.otcanalyser.database.Database;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.SearchWindow;
+import uk.ac.cam.cstibhotel.otcanalyser.gui.StatusBar;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.EmptyTaxonomyException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 public class CommunicationLayer {
@@ -36,25 +40,42 @@ public class CommunicationLayer {
 	public static void search() {
 		Search s = new Search();
 		
-		//TODO: Any of these missing properties are ones where I have very little idea of how to
-		// get them
-		s.setTradeType();
-		s.setAssetClass();
+		//TODO: finish the implementations of commented-out blocks
+		//s.setTradeType();
+		//s.setAssetClass();
 		s.setAsset(SearchWindow.getInstance().UnderLyingAsset.getText());
-		s.setMinPrice();
-		s.setMaxPrice();
-		s.setCurrency();
-		s.setStartTime(new Date());
-		s.setEndTime(new Date());
+		//s.setMinPrice();
+		//s.setMaxPrice();
+		//s.setCurrency();
 		
-		String fullTaxonomy;
+		int day = (int) SearchWindow.getInstance().StartDate.Day.getSelectedItem();
+		int month = (int) SearchWindow.getInstance().StartDate.Months.getSelectedItem();
+		int year = (int) SearchWindow.getInstance().StartDate.Year.getSelectedItem();
+		Calendar cal = Calendar.getInstance();
+		cal.set(year, month, day);
+		Date startTime = cal.getTime();
+		s.setStartTime(startTime);
+		
+		
+		day = (int) SearchWindow.getInstance().EndDate.Day.getSelectedItem();
+		month = (int) SearchWindow.getInstance().EndDate.Months.getSelectedItem();
+		year = (int) SearchWindow.getInstance().EndDate.Year.getSelectedItem();
+		cal.set(year, month, day);
+		Date endTime = cal.getTime();
+		s.setEndTime(endTime);
+		
+		String fullTaxonomy = null;
 		fullTaxonomy += SearchWindow.getInstance().tax.Asset.getSelectedItem();
 		fullTaxonomy += ":";
 		fullTaxonomy += SearchWindow.getInstance().tax.BaseClass.getSelectedItem();
 		fullTaxonomy += ":";
 		fullTaxonomy += SearchWindow.getInstance().tax.SubClass.getSelectedItem();
-		UPI taxonomy = new UPI(fullTaxonomy);
-		s.setUPI(taxonomy);
+		try {
+			UPI taxonomy = new UPI(fullTaxonomy);
+			s.setUPI(taxonomy);
+		} catch (InvalidTaxonomyException | EmptyTaxonomyException e) {
+			StatusBar.setMessage("Invalid taxonomy: " + fullTaxonomy, 1);
+		}
 		
 		// Get the result from the database
 		SearchResult result = Database.search(s);
