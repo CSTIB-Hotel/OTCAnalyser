@@ -45,7 +45,7 @@ public class TradeFieldMapping {
 			DBNameDBType.put("effectiveDate", new DateSQLField(t.getEffectiveDate()));
 			DBNameDBType.put("endDate", new DateSQLField(t.getEndDate()));
 			DBNameDBType.put("dayCountConvention", new VarCharSQLField(255, t.getDayCountConvention()));
-			DBNameDBType.put("settlementCurrency", new VarCharSQLField(3, t.getSettlementCurrency().getCurrencyCode()));
+			DBNameDBType.put("settlementCurrency", new VarCharSQLField(20, t.getSettlementCurrency()));
 			DBNameDBType.put("tradeType", new SmallIntSQLField(t.getTradeType().getValue()));
 			DBNameDBType.put("assetClass", new SmallIntSQLField(t.getAssetClass().getValue()));
 			DBNameDBType.put("subAssetClass", new VarCharSQLField(255, t.getSubAssetClass().toString())); // TODO write subassetclass
@@ -57,8 +57,8 @@ public class TradeFieldMapping {
 			DBNameDBType.put("priceNotation", new FloatSQLField(t.getPriceNotation()));
 			DBNameDBType.put("additionalPriceNotationType", new VarCharSQLField(255, t.getAdditionalPriceNotationType()));
 			DBNameDBType.put("additionalPriceNotation", new FloatSQLField(t.getAdditionalPriceNotation()));
-			DBNameDBType.put("notionalCurrency1", new VarCharSQLField(3, t.getNotionalCurrency1()));
-			DBNameDBType.put("notionalCurrency2", new VarCharSQLField(3, t.getNotionalCurrency2()));
+			DBNameDBType.put("notionalCurrency1", new VarCharSQLField(20, t.getNotionalCurrency1()));
+			DBNameDBType.put("notionalCurrency2", new VarCharSQLField(20, t.getNotionalCurrency2()));
 			DBNameDBType.put("roundedNotionalAmount1", new VarCharSQLField(255, t.getRoundedNotionalAmount1()));
 			DBNameDBType.put("roundedNotionalAmount2", new VarCharSQLField(255, t.getRoundedNotionalAmount2()));
 			DBNameDBType.put("paymentFrequency1", new VarCharSQLField(255, t.getPaymentFrequency1()));
@@ -69,7 +69,7 @@ public class TradeFieldMapping {
 			DBNameDBType.put("optionStrikePrice", new FloatSQLField(t.getOptionStrikePrice()));
 			DBNameDBType.put("optionType", new VarCharSQLField(255, t.getOptionType()));
 			DBNameDBType.put("optionFamily", new VarCharSQLField(255, t.getOptionFamily()));
-			DBNameDBType.put("optionCurrency", new VarCharSQLField(3, t.getOptionCurrency().getCurrencyCode()));
+			DBNameDBType.put("optionCurrency", new VarCharSQLField(20, t.getOptionCurrency());
 			DBNameDBType.put("optionPremium", new FloatSQLField(t.getOptionPremium()));
 			DBNameDBType.put("optionLockPeriod", new DateSQLField(t.getOptionLockPeriod()));
 			DBNameDBType.put("optionExpirationDate", new DateSQLField(t.getOptionExpirationDate()));
