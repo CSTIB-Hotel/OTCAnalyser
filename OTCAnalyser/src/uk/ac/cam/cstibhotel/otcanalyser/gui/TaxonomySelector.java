@@ -6,6 +6,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 public class TaxonomySelector extends JPanel {
+	static boolean baseClassflag;
 	private static final long serialVersionUID = 1L;
 	public JComboBox<String> Asset;
 	public JComboBox<String> BaseClass;
@@ -20,14 +21,15 @@ public class TaxonomySelector extends JPanel {
 	}
 	
 	private TaxonomySelector() {
-		setSize(300,50); // default size is 0,0
-		setLocation(100,200); // default is 0,0 (top left corner)
+		baseClassflag = true;
+		setSize(300,50);
+		setLocation(100,200);
 		assetChange = new AssetChange(this);
 		Asset = new JComboBox<String>(TextStrings.Assets);
 		Asset.addActionListener(assetChange);
 		BaseClass = new JComboBox<String>(TextStrings.CreditBaseProducts);
 		baseProductChange  = new BaseProductChange(this);
-		//BaseClass.addActionListener(baseProductChange);
+		BaseClass.addActionListener(baseProductChange);
 		SubClass = new JComboBox<String>(TextStrings.CreditSingleNameSubProducts);
 		Asset.setVisible(true);
 		BaseClass.setVisible(true);
