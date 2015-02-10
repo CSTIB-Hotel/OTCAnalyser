@@ -2,6 +2,7 @@ package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -15,6 +16,10 @@ public class SearchWindow extends JInternalFrame {
 	public DateSelector StartDate;
 	public DateSelector EndDate;
 	public JButton SearchButton;
+	public JComboBox<String> TradeType;
+	public JTextField minValue;
+	public JTextField maxValue;
+	public JTextField currency;
 	
 	private static SearchWindow instance;
 	
@@ -43,9 +48,13 @@ public class SearchWindow extends JInternalFrame {
 			EndDate = new DateSelector("End Date");
 			this.add(EndDate);
 			EndDate.setVisible(true);
+			TradeType = new JComboBox<String>(TextStrings.TradeType);
 			SearchButton = new JButton("Search");
 			this.add(SearchButton);
 			SearchButton.setVisible(true);
+			minValue = new JTextField();
+			maxValue = new JTextField();
+			currency = new JTextField();
 	}
 	
 }
