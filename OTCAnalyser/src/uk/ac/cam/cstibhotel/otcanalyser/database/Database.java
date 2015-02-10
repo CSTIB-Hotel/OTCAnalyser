@@ -12,9 +12,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
-
 
 /**
  *
@@ -29,17 +29,17 @@ public class Database {
 		Database d = getDB();
 		addTrade(new Trade());
 	}
-	
-	public static Database getDB() throws SQLException, ClassNotFoundException{
-		if(db == null){
+
+	public static Database getDB() throws SQLException, ClassNotFoundException {
+		if (db==null) {
 			db = new Database("/Users/waiwaing/Library/OTCAnalyser/database.db");
 		}
 		return db;
 	}
 
-	private Database(String s) throws SQLException, ClassNotFoundException  {
+	private Database(String s) throws SQLException, ClassNotFoundException {
 		Class.forName("org.hsqldb.jdbcDriver");
-		connection = DriverManager.getConnection("jdbc:hsqldb:file:" + s);
+		connection = DriverManager.getConnection("jdbc:hsqldb:file:"+s);
 		connection.setAutoCommit(false);
 
 		Statement statement = connection.createStatement(); // TODO: probably want to convert to prepared statements 
@@ -56,11 +56,11 @@ public class Database {
 			dataTableCreator.setLength(dataTableCreator.length()-2);
 			dataTableCreator.append(");");
 			statement.execute(dataTableCreator.toString());
-			
+
 			String infoTableCreator = "CREATE TABLE info ("
-					+ "key VARCHAR(255), value VARCHAR(255)";
+					+"key VARCHAR(255), value VARCHAR(255)";
 			statement.execute(infoTableCreator);
-			
+
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO info (key, value) VALUES (?, ?)");
 			ps.setString(1, "last_update");
 			ps.setString(2, "0");
@@ -80,7 +80,7 @@ public class Database {
 	 *
 	 * @param trade a trade to be added to the database
 	 */
-	public static void addTrade(Trade trade) throws SQLException {
+	public static boolean addTrade(Trade trade) {
 		StringBuilder a = new StringBuilder("INSERT INTO data (");
 		StringBuilder b = new StringBuilder(") VALUES (");
 
@@ -94,36 +94,53 @@ public class Database {
 			mapEntry.getValue().index = index;
 			index++;
 		}
-		a.setLength(a.length() - 2);
-		b.setLength(b.length() - 2);
+		a.setLength(a.length()-2);
+		b.setLength(b.length()-2);
 		a.append(b).append(")");
 		
-		PreparedStatement p = connection.prepareStatement(a.toString());
-	
-		iterator = DBNameValue.entrySet().iterator();
-		while (iterator.hasNext()) {
-			iterator.next().getValue().addToPreparedStatement(p);
+		try{
+			PreparedStatement p = connection.prepareStatement(a.toString());
+
+			iterator = DBNameValue.entrySet().iterator();
+			while (iterator.hasNext()) {
+				iterator.next().getValue().addToPreparedStatement(p);
+			}
+
+			p.execute();
+		} catch (SQLException e){
+			System.err.println("Failed to insert row");
+			return false;
 		}
-		
-		p.execute();
-		
+
 		java.util.Date thisUpdateTime = trade.getExecutionTimestamp(); // is this the right date?
 		java.util.Date lastUpdateTime = getLastUpdateTime();
-		if(thisUpdateTime.after(lastUpdateTime)){
-			PreparedStatement ps = connection.prepareCall("UPDATE info SET value = ? WHERE key = last_update");
-			ps.setString(1, Long.toString(thisUpdateTime.getTime()));
+		if (thisUpdateTime.after(lastUpdateTime)) {
+			try{
+				PreparedStatement ps = connection.prepareCall("UPDATE info SET value = ? WHERE key = last_update");
+				ps.setString(1, Long.toString(thisUpdateTime.getTime()));
+			} catch (SQLException e){
+				System.err.println("Failed to update last update time");
+				return true;
+			}
 		}
+		
+		return true;
 	}
 
 	/**
 	 *
 	 * @return The time the database was last updated
 	 */
-	public static java.util.Date getLastUpdateTime() throws SQLException {
-		Statement s = connection.createStatement();
-		s.execute("SELECT value FROM info WHERE key = last_update");
-		String timeString = s.getResultSet().getString(1);
-		return new java.util.Date(Long.getLong(timeString));
+	public static java.util.Date getLastUpdateTime() {
+		try {
+			Statement s = connection.createStatement();
+			s.execute("SELECT value FROM info WHERE key = last_update");
+			String timeString = s.getResultSet().getString(1);
+			return new java.util.Date(Long.getLong(timeString));
+		} catch (SQLException ex) {
+			System.err.println("Could not get the last update time");
+			return new java.util.Date(0);
+		}
 	}
 
 	/**
@@ -131,46 +148,51 @@ public class Database {
 	 * @param s the search parameters
 	 * @return all data matching the search
 	 */
-	
 	/*
-	private TradeType tradeType;
-	private AssetClass assetClass;
-	private String asset;
-	private int minPrice, maxPrice;
-	private Currency currency;
-	private Date startTime, endTime;
-	private UPI upi;	
+	 private TradeType tradeType;
+	 private AssetClass assetClass;
+	 private String asset;
+	 private int minPrice, maxPrice;
+	 private Currency currency;
+	 private Date startTime, endTime;
+	 private UPI upi;	
 	
-	*/
-	public static SearchResult search(Search s) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
-				+ "tradeType = ? AND"
-				+ "assetClass = ? AND"
-				+ "taxonomy = ? AND"
-				+ "optionStrikePrice >= ? AND"
-				+ "optionStrikePrice <= ? AND"
-				+ "currency = ? AND"
-				+ "startTime >= ? AND"
-				+ "endTime <= ? AND"
-				+ "1 = 1");
-		ps.setShort(1, s.getTradeType().getValue());
-		ps.setShort(2, s.getAssetClass().getValue());
-		ps.setString(3, s.getAsset());
-		ps.setFloat(4, s.getMinPrice());
-		ps.setFloat(5, s.getMaxPrice());
-		ps.setString(6, s.getCurrency().getCurrencyCode());
-		ps.setTimestamp(7, new Timestamp(s.getStartTime().getTime()));
-		ps.setTimestamp(8, new Timestamp(s.getEndTime().getTime()));
-		ps.execute();		
-		
- 		return null;
+	 */
+	public static SearchResult search(Search s) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
+					+"tradeType = ? AND"
+					+"assetClass = ? AND"
+					+"taxonomy = ? AND"
+					+"optionStrikePrice >= ? AND"
+					+"optionStrikePrice <= ? AND"
+					+"currency = ? AND"
+					+"startTime >= ? AND"
+					+"endTime <= ? AND"
+					+"1 = 1");
+			ps.setShort(1, s.getTradeType().getValue());
+			ps.setShort(2, s.getAssetClass().getValue());
+			ps.setString(3, s.getAsset());
+			ps.setFloat(4, s.getMinPrice());
+			ps.setFloat(5, s.getMaxPrice());
+			ps.setString(6, s.getCurrency().getCurrencyCode());
+			ps.setTimestamp(7, new Timestamp(s.getStartTime().getTime()));
+			ps.setTimestamp(8, new Timestamp(s.getEndTime().getTime()));
+			ps.execute();
+
+			return null;
+		} catch (SQLException ex) {
+			System.err.println("Search failed");
+			return new SearchResult(new LinkedList<Trade>(), 0);
+		}
 	}
 
 	/**
 	 *
 	 * @param s the search to save
 	 */
-	public static void saveSearch(Search s) {
+	public static boolean saveSearch(Search s) {
+		return false;
 	}
 
 	/**
@@ -186,28 +208,33 @@ public class Database {
 	 * @param s The string to search against
 	 * @return A list of UPIs which have the parameter as a substring
 	 */
-	public static List<UPI> getMatchingUPI(String s) throws SQLException {
+	public static List<UPI> getMatchingUPI(String s) {
 		List<UPI> UPIs = new ArrayList<>();
-		
-		PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
-				+ "taxonomy = LIKE ?");
-		ps.setString(1, "%" + s + "%");
-		ps.execute();
-		
-		ResultSet rs = ps.getResultSet();
-		if(rs.first()){ // are there any matching UPIs?
-			do{
-				try {
-					UPIs.add(new UPI(rs.getString(1)));
-				} catch (InvalidTaxonomyException ex) {
-					System.err.println("ITE: " + ex);
-				} catch (EmptyTaxonomyException ex) {
-					System.err.println("ETE: " + ex);
-				} // we want to fail silently except for logging as this is best graceful degradation
-			} while (rs.next());
+
+		try {
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
+					+"taxonomy = LIKE ?");
+			ps.setString(1, "%"+s+"%");
+			ps.execute();
+
+			ResultSet rs = ps.getResultSet();
+			if (rs.first()) { // are there any matching UPIs?
+				do {
+					try {
+						UPIs.add(new UPI(rs.getString(1)));
+					} catch (InvalidTaxonomyException ex) {
+						System.err.println("ITE: "+ex);
+					} catch (EmptyTaxonomyException ex) {
+						System.err.println("ETE: "+ex);
+					} // we want to fail silently except for logging as this is best graceful degradation
+				} while (rs.next());
+			}
+
+			return UPIs;
+		} catch (SQLException ex) {
+			System.err.println("Failed to fetch UPIs");
+			return UPIs;		
 		}
-		
-		return UPIs;
 	}
 
 }
