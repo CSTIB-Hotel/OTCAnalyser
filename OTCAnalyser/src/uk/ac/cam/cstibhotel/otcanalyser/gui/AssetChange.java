@@ -40,6 +40,7 @@ public class AssetChange implements ActionListener {
 			model.addElement(i);
 		}
 		TaxonomySelector.baseClassflag = true;
+		tax.baseProductChange.updateBaseClass();
 	}
 
 }

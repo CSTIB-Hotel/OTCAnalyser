@@ -10,12 +10,13 @@ public class StatusBar extends JPanel {
 	public static JLabel textArea;
 	private static StatusBar instance;
 	private JLabel label;
+	private static String defaultMessage = "No errors";
 	
 	private StatusBar() {
-		label = new JLabel("Status Bar");
+		label = new JLabel("Current status:");
 		this.add(label);
 		label.setVisible(true);
-		textArea = new JLabel();
+		textArea = new JLabel(defaultMessage);
 		textArea.setVisible(true);
 		this.add(textArea);
 		logLevel = 0;
@@ -36,7 +37,7 @@ public class StatusBar extends JPanel {
 	
 	public synchronized static void reset() {
 		logLevel = 0;
-		textArea.setText("");
+		textArea.setText(defaultMessage);
 	}
 	
 }
