@@ -175,7 +175,7 @@ public class Database {
 			ps.setString(3, s.getAsset());
 			ps.setFloat(4, s.getMinPrice());
 			ps.setFloat(5, s.getMaxPrice());
-			ps.setString(6, s.getCurrency().getCurrencyCode());
+			ps.setString(6, s.getCurrency());
 			ps.setTimestamp(7, new Timestamp(s.getStartTime().getTime()));
 			ps.setTimestamp(8, new Timestamp(s.getEndTime().getTime()));
 			ps.execute();
