@@ -79,6 +79,17 @@ class DataTableModel extends AbstractTableModel{
   public int getColumnCount() {
     return columnNames.length;
   }
+  
+  //make sure columns are sorted by their compareTo methodss
+  @Override
+  public Class<?> getColumnClass(int columnIndex) {
+  	if (!data.isEmpty() && data.get(0)[columnIndex] instanceof Comparable) {
+  	  System.out.println(data.get(0)[columnIndex].getClass());
+  	  return data.get(0)[columnIndex].getClass();
+  	} else { 
+  		return super.getColumnClass(columnIndex); //seems to return Object for everything
+  	}
+  }
 
   @Override
   public Object getValueAt(int rowIndex, int columnIndex) {
