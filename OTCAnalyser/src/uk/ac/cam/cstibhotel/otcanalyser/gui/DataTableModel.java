@@ -84,7 +84,6 @@ class DataTableModel extends AbstractTableModel{
   @Override
   public Class<?> getColumnClass(int columnIndex) {
   	if (!data.isEmpty() && data.get(0)[columnIndex] instanceof Comparable) {
-  	  System.out.println(data.get(0)[columnIndex].getClass());
   	  return data.get(0)[columnIndex].getClass();
   	} else { 
   		return super.getColumnClass(columnIndex); //seems to return Object for everything
