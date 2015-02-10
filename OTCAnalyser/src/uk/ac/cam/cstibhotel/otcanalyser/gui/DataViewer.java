@@ -14,16 +14,18 @@ public class DataViewer extends JTabbedPane {
   private static final long serialVersionUID = 1L;
   private DataWindow data;
   private GraphWindow graph;
+  private AnalysisWindow analysis;
   public static DataViewer dataViewer = new DataViewer();
   
   private DataViewer() {
     
     data = new DataWindow();
     graph = new GraphWindow();
+    analysis = new AnalysisWindow();
     
     addTab("Graph", graph);
     addTab("Data", data);
-    addTab("Extended Analysis", new JLabel("Extended Analysis"));
+    addTab("Extended Analysis", analysis);
     
   }
   
@@ -37,6 +39,14 @@ public class DataViewer extends JTabbedPane {
   public static void clearTrades() {
   	dataViewer.data = new DataWindow();
   	dataViewer.graph = new GraphWindow();
+  }
+  
+  public static void addAnalysis (String analysis) {
+	  dataViewer.analysis.addAnalysis(analysis);
+  }
+  
+  public static void addAnalysis (String analysis, String title) {
+	  dataViewer.analysis.addAnalysis(analysis, title);
   }
   
   public static void main(String[] args) {
@@ -55,6 +65,7 @@ public class DataViewer extends JTabbedPane {
       for (int j = 0; j < 10; j++) {
         t = new Trade();
         t.setAction(Action.NEW);
+        t.setBlockTrades(false);
         t.setRoundedNotionalAmount1(200 + Math.random() * 500 + "+");
         t.setExecutionTimestamp(d);
         trades.add(t);
@@ -64,6 +75,12 @@ public class DataViewer extends JTabbedPane {
     addTrades(trades);
     clearTrades();
     addTrades(trades);
+    
+    String a = "Analysis of data.";
+    
+    for (int i = 1; i < 5; i++) {
+    	addAnalysis(a, "Analysis Title " + i);
+    }
     
    }
 

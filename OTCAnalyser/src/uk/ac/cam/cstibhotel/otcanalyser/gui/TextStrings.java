@@ -3,6 +3,9 @@ package uk.ac.cam.cstibhotel.otcanalyser.gui;
 //The strings used in the dropdown boxes
 
 public class TextStrings {
+	
+	static final String[] TradeType = {"Swap","Option"};
+	
 	static final String[] Assets = {"Credit","Interest","Commodity","Foreign Exchange","Equity"};
 	
 	static final String[] CreditBaseProducts = {"Single Name","Index Tranche","Index", "Total Return Swap","Swaptions","Exotic"};

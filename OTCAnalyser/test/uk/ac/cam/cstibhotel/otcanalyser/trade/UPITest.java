@@ -122,28 +122,12 @@ public class UPITest {
 		UPI toTest = new UPI("");
 	}
 	
-	// Test an invalid commodity taxonomy (not enough fields) - expect an exception
-	@Test(expected = InvalidTaxonomyException.class)
-	public void testInvalidShortCommodityTaxonomy() throws InvalidTaxonomyException, 
-			EmptyTaxonomyException {
-		@SuppressWarnings("unused")
-		UPI toTest = new UPI("Commodity:Metals:Precious");
-	}
-	
 	// Test an invalid commodity taxonomy (too many fields) - expect an exception
 	@Test(expected = InvalidTaxonomyException.class)
 	public void testInvalidLongCommodityTaxonomy() throws InvalidTaxonomyException, 
 			EmptyTaxonomyException {
 		@SuppressWarnings("unused")
 		UPI toTest = new UPI("Commodity:Metals:Precious:SpotFwd:Physical:Fail");
-	}
-	
-	// Test an invalid credit taxonomy (not enough fields) - expect an exception
-	@Test(expected = InvalidTaxonomyException.class)
-	public void testInvalidShortCreditTaxonomy() throws InvalidTaxonomyException,
-			EmptyTaxonomyException {
-		@SuppressWarnings("unused")
-		UPI toTest = new UPI("Credit:SingleName:Corporate");
 	}
 	
 	// Test an invalid credit taxonomy (too many fields) - expect an exception

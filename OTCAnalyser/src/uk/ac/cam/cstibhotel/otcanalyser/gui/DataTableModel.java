@@ -1,7 +1,9 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -16,7 +18,7 @@ class DataTableModel extends AbstractTableModel{
     "Cleared",
     "Collateralization",
     "End User Exception",
-    "Bespoke Y/N",
+    "Bespoke",
     "Execution Venue",
     "Block Trades",
     "Effective Date",
@@ -80,13 +82,13 @@ class DataTableModel extends AbstractTableModel{
     return columnNames.length;
   }
   
-  //make sure columns are sorted by their compareTo methodss
+  //make sure date columns sorted correctly (not alphabetically)
   @Override
   public Class<?> getColumnClass(int columnIndex) {
-  	if (!data.isEmpty() && data.get(0)[columnIndex] instanceof Comparable) {
-  	  return data.get(0)[columnIndex].getClass();
+  	if (!data.isEmpty() && data.get(0)[columnIndex] instanceof Date) {
+  	  return Date.class;
   	} else { 
-  		return super.getColumnClass(columnIndex); //seems to return Object for everything
+  		return super.getColumnClass(columnIndex);
   	}
   }
 
@@ -114,7 +116,7 @@ class DataTableModel extends AbstractTableModel{
     row[13] = t.getSettlementCurrency();
     row[14] = t.getTradeType();
     row[15] = t.getAssetClass();
-    row[16] = t.getSubAssetClass();
+    row[16] = t.getTaxonomy().getSubProduct();
     row[17] = t.getTaxonomy();
     row[18] = t.getPriceFormingContinuationData();
     row[19] = t.getUnderlyingAsset1();

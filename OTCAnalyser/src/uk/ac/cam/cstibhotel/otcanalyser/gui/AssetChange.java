@@ -30,13 +30,16 @@ public class AssetChange implements ActionListener {
 			case ("Foreign Exchange"): AssetBaseClasses = TextStrings.ForexBaseProducts;
 				break;
 			case ("Equity"): AssetBaseClasses = TextStrings.EquityBaseProducts;
+				break;
 			default:break;
 		}
+		TaxonomySelector.baseClassflag = false;
 		MutableComboBoxModel<String> model = (MutableComboBoxModel<String>) tax.BaseClass.getModel();
 		((DefaultComboBoxModel<String>) model).removeAllElements();
 		for (String i:AssetBaseClasses) {
 			model.addElement(i);
 		}
+		TaxonomySelector.baseClassflag = true;
 	}
 
 }

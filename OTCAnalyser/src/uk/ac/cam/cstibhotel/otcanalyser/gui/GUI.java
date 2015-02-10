@@ -8,7 +8,7 @@ public class GUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
-	StatusBar statusBar;
+	public StatusBar statusBar;
 	
 	public static GUI gui;
 	static SearchWindow searchWindow;
@@ -23,6 +23,7 @@ public class GUI extends JFrame {
 	public GUI() {
 		setTitle("OTC Analyser");
 		setSize(800,600);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		searchWindow = SearchWindow.getInstance();
 		add(searchWindow,BorderLayout.WEST);
 		searchWindow.setVisible(true);
