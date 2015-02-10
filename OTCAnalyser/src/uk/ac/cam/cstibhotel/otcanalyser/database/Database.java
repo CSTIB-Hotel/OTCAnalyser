@@ -5,8 +5,8 @@ import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
+
 import java.sql.*;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -17,17 +17,24 @@ import java.util.Map.Entry;
  */
 public class Database {
 
+	protected static Database db;
 	protected static Connection connection;
 
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
-		Database d = new Database();
+		Database d = getDB();
 		addTrade(new Trade());
 	}
+	
+	public static Database getDB() throws SQLException, ClassNotFoundException{
+		if(db == null){
+			db = new Database("/Users/waiwaing/Library/OTCAnalyser/database.db");
+		}
+		return db;
+	}
 
-	public Database() throws SQLException, ClassNotFoundException  {
-		/*Class.forName("org.hsqldb.jdbcDriver");
-		connection = DriverManager.getConnection("jdbc:hsqldb:file:"
-				+"/Users/waiwaing/Library/OTCAnalyser/database.db"); // TODO: fix directory
+	private Database(String s) throws SQLException, ClassNotFoundException  {
+		Class.forName("org.hsqldb.jdbcDriver");
+		connection = DriverManager.getConnection("jdbc:hsqldb:file:" + s);
 		connection.setAutoCommit(false);
 
 		Statement statement = connection.createStatement(); // TODO: probably want to convert to prepared statements 
@@ -47,9 +54,10 @@ public class Database {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		} finally {
 			statement.close();
-		}*/
+		}
 
 	}
 
