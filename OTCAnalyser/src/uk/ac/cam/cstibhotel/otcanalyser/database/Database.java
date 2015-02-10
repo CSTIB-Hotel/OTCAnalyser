@@ -5,11 +5,16 @@ import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
-
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.EmptyTaxonomyException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
 
 /**
  *
@@ -107,7 +112,38 @@ public class Database {
 	 * @param s the search parameters
 	 * @return all data matching the search
 	 */
-	public static SearchResult search(Search s) {
+	
+	/*
+	private TradeType tradeType;
+	private AssetClass assetClass;
+	private String asset;
+	private int minPrice, maxPrice;
+	private Currency currency;
+	private Date startTime, endTime;
+	private UPI upi;	
+	
+	*/
+	public static SearchResult search(Search s) throws SQLException {
+		PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
+				+ "tradeType = ? AND"
+				+ "assetClass = ? AND"
+				+ "taxonomy = ? AND"
+				+ "optionStrikePrice >= ? AND"
+				+ "optionStrikePrice <= ? AND"
+				+ "currency = ? AND"
+				+ "startTime >= ? AND"
+				+ "endTime <= ? AND"
+				+ "1 = 1");
+		ps.setShort(1, s.getTradeType().getValue());
+		ps.setShort(2, s.getAssetClass().getValue());
+		ps.setString(3, s.getAsset());
+		ps.setFloat(4, s.getMinPrice());
+		ps.setFloat(5, s.getMaxPrice());
+		ps.setString(6, s.getCurrency().getCurrencyCode());
+		ps.setTimestamp(7, new Timestamp(s.getStartTime().getTime()));
+		ps.setTimestamp(8, new Timestamp(s.getEndTime().getTime()));
+		ps.execute();		
+		
  		return null;
 	}
 
@@ -122,7 +158,7 @@ public class Database {
 	 *
 	 * @return A list of previously saved searches
 	 */
-	public static Search[] getSavedSearches() {
+	public static List<Search> getSavedSearches() {
 		return null;
 	}
 
@@ -131,8 +167,28 @@ public class Database {
 	 * @param s The string to search against
 	 * @return A list of UPIs which have the parameter as a substring
 	 */
-	public static UPI[] getMatchingUPI(String s) {
-		return null;
+	public static List<UPI> getMatchingUPI(String s) throws SQLException {
+		List<UPI> UPIs = new ArrayList<>();
+		
+		PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
+				+ "taxonomy = LIKE ?");
+		ps.setString(1, "%" + s + "%");
+		ps.execute();
+		
+		ResultSet rs = ps.getResultSet();
+		if(rs.first()){ // are there any matching UPIs?
+			do{
+				try {
+					UPIs.add(new UPI(rs.getString(1)));
+				} catch (InvalidTaxonomyException ex) {
+					System.err.println("ITE: " + ex);
+				} catch (EmptyTaxonomyException ex) {
+					System.err.println("ETE: " + ex);
+				} // we want to fail silently except for logging as this is best graceful degradation
+			} while (rs.next());
+		}
+		
+		return UPIs;
 	}
 
 }
