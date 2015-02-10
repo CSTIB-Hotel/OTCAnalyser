@@ -106,6 +106,13 @@ public class Database {
 		}
 		
 		p.execute();
+		
+		java.util.Date thisUpdateTime = trade.getExecutionTimestamp(); // is this the right date?
+		java.util.Date lastUpdateTime = getLastUpdateTime();
+		if(thisUpdateTime.after(lastUpdateTime)){
+			PreparedStatement ps = connection.prepareCall("UPDATE info SET value = ? WHERE key = last_update");
+			ps.setString(1, Long.toString(thisUpdateTime.getTime()));
+		}
 	}
 
 	/**
