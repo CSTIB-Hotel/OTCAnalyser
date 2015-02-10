@@ -5,7 +5,8 @@ public enum PriceFormingContinuationData {
 	TERMINATION(0),
 	TRADE(1),
 	AMENDMENT(2),
-	INCREASE(3);
+	INCREASE(3),
+	NOVATION(4);
 
 	private short value;
 
@@ -27,6 +28,8 @@ public enum PriceFormingContinuationData {
 				return AMENDMENT;
 			case "Increase":
 				return INCREASE;
+			case "Novation":
+				return NOVATION;
 			case "":
 				return null;
 			default:
