@@ -26,59 +26,70 @@ public class UPI {
 	public UPI(String taxonomy) throws InvalidTaxonomyException, EmptyTaxonomyException {
 		fullTaxonomy = taxonomy;
 		
-		if(taxonomy.equals(""))
+		if(taxonomy.equals("")) {
 			throw new EmptyTaxonomyException();
+		}
 		
-		String[] splitTaxonomy = fullTaxonomy.split(":");
+		String[] splitTaxonomy = taxonomy.split(":");
 		
 		try {
 			// If the taxonomy splits into > 5 parts or < 2 parts, we can't treat it as valid
-			if (splitTaxonomy.length >= 6) {
+			if (splitTaxonomy.length > 5 || splitTaxonomy.length < 2) {
 				throw new InvalidTaxonomyException(taxonomy);
 			}
-			// All asset classes have a base product, set this now
-			baseProduct = splitTaxonomy[1];
 			
-			// A foreign exchange or rates taxonomy may not necessarily have a sub-product, so 
-			// check for null before setting this
-			if (splitTaxonomy[2] != null) {
-				subProduct = splitTaxonomy[2];
-			}
-			
-			// Set the other fields dependent on asset class
+			// Set the fields dependent on asset class
 			switch (splitTaxonomy[0]) {
 			case "Commodity":
-				if (splitTaxonomy.length == 5) {
-					assetClass = AssetClass.COMMODITY;
-					baseProduct = splitTaxonomy[1];
-					subProduct = splitTaxonomy[2];
-					transactionType = splitTaxonomy[3];
-					settlementType = splitTaxonomy[4];
-				} else {
-					throw new InvalidTaxonomyException(taxonomy);
-				}
+				assetClass = AssetClass.COMMODITY;
+				baseProduct = splitTaxonomy[1];
+				subProduct = splitTaxonomy[2];
+				transactionType = splitTaxonomy[3];
+				settlementType = splitTaxonomy[4];
 				break;
 			case "Credit":
+				if (splitTaxonomy.length >= 5) {
+					throw new InvalidTaxonomyException(taxonomy);
+				}
 				assetClass = AssetClass.CREDIT;
+				baseProduct = splitTaxonomy[1];
+				subProduct = splitTaxonomy[2];
 				transactionType = splitTaxonomy[3];
 				break;
 			case "Equity":
+				if (splitTaxonomy.length >= 5) {
+					throw new InvalidTaxonomyException(taxonomy);
+				}
 				assetClass = AssetClass.EQUITY;
+				baseProduct= splitTaxonomy[1];
+				subProduct = splitTaxonomy[2];
 				transactionType = splitTaxonomy[3];
 				break;
-			case "ForeignExhange":
+			case "ForeignExchange":
+				if (splitTaxonomy.length >= 4) {
+					throw new InvalidTaxonomyException(taxonomy);
+				}
 				assetClass = AssetClass.FOREX;
+				baseProduct= splitTaxonomy[1];
+				if (splitTaxonomy.length != 2) {
+					subProduct = splitTaxonomy[2];
+				}
 				break;
-			case "Rates":
+			case "InterestRate":
+				if (splitTaxonomy.length >= 4) {
+					throw new InvalidTaxonomyException(taxonomy);
+				}
 				assetClass = AssetClass.RATES;
+				baseProduct= splitTaxonomy[1];
+				if (splitTaxonomy.length != 2) {
+					subProduct = splitTaxonomy[2];
+				}
 				break;
 			default:
 				throw new InvalidTaxonomyException(taxonomy);
 			} 
 		} catch (ArrayIndexOutOfBoundsException e) {
 			throw new InvalidTaxonomyException(taxonomy);
-		} catch (InvalidTaxonomyException e) {
-			System.err.println("The taxonomy: " + e.getMessage() + " is invalid.");
 		}
 	}
 	
