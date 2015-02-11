@@ -96,14 +96,50 @@ public class Database {
 	 * Adds a trade to the database
 	 *
 	 * @param trade a trade to be added to the database
-	 * @return true if the trade was successfully added
+	 * @return true if the database was successfully updated
 	 */
 	public boolean addTrade(Trade trade) {
+		HashMap<String, SQLField> DBNameValue = TradeFieldMapping.getMapping(trade);
+		Iterator<Entry<String, SQLField>> iterator = DBNameValue.entrySet().iterator();
+		
+		String executeString;
+		
+		if(trade.getAction().equals(trade.getAction().CANCEL)) {
+			deleteTrade(trade.getDisseminationID());
+			return true;
+		} else if(trade.getAction().equals(trade.getAction().CORRECT)) {
+			executeString = buildUpdateString(iterator, trade.getDisseminationID());
+		} else { // new entry
+			executeString = buildInsertString(iterator);
+		}
+
+		try {
+			PreparedStatement p = connection.prepareStatement(executeString);
+
+			iterator = DBNameValue.entrySet().iterator();
+			while (iterator.hasNext()) {
+				iterator.next().getValue().addToPreparedStatement(p);
+			}
+
+			p.execute();
+		} catch (SQLException e) {
+			System.err.println("Failed to insert/update row");
+			return false;
+		}
+
+		updateLastUpdateTime(trade);
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param iterator An iterator over a DB mapping
+	 * @return An SQL INSERT string
+	 */
+	private String buildInsertString(Iterator<Entry<String, SQLField>> iterator){
 		StringBuilder a = new StringBuilder("INSERT INTO data (");
 		StringBuilder b = new StringBuilder(") VALUES (");
 
-		HashMap<String, SQLField> DBNameValue = TradeFieldMapping.getMapping(trade);
-		Iterator<Entry<String, SQLField>> iterator = DBNameValue.entrySet().iterator();
 		int index = 1;
 		while (iterator.hasNext()) {
 			Entry<String, SQLField> mapEntry = iterator.next();
@@ -115,36 +151,56 @@ public class Database {
 		a.setLength(a.length()-2);
 		b.setLength(b.length()-2);
 		a.append(b).append(")");
-
-		try {
-			PreparedStatement p = connection.prepareStatement(a.toString());
-
-			iterator = DBNameValue.entrySet().iterator();
-			while (iterator.hasNext()) {
-				iterator.next().getValue().addToPreparedStatement(p);
-			}
-
-			p.execute();
-		} catch (SQLException e) {
-			System.err.println("Failed to insert row");
-			return false;
+		
+		return a.toString();
+	}
+	
+	/**
+	 * 
+	 * @param iterator An iterator over a DB mapping
+	 * @param origId The id of the trade to update
+	 * @return An SQL update string
+	 */
+	private String buildUpdateString(Iterator<Entry<String, SQLField>> iterator, long origId){
+		StringBuilder s = new StringBuilder("UPDATE data SET ");
+		
+		int index = 1;
+		
+		while (iterator.hasNext()) {
+			Entry<String, SQLField> mapEntry = iterator.next();
+			s.append(mapEntry.getKey()).append(" = ?, ");
+			mapEntry.getValue().index = index;
+			index++;
 		}
-
+		
+		s.setLength(s.length() - 2);
+		s.append(" WHERE id = ").append(origId);
+		
+		return s.toString();
+	}
+	
+	private void deleteTrade(long id){
+		
+	}
+	
+	/**
+	 * 
+	 * @param trade the trade to use to calculate the last update time
+	 */
+	private void updateLastUpdateTime(Trade trade){
 		java.util.Date thisUpdateTime = trade.getExecutionTimestamp(); // is this the right date?
 		java.util.Date lastUpdateTime = getLastUpdateTime();
+		
 		if (thisUpdateTime.after(lastUpdateTime)) {
 			try {
 				PreparedStatement ps = connection.prepareCall("UPDATE info SET value = ? WHERE key = last_update");
 				ps.setString(1, Long.toString(thisUpdateTime.getTime()));
 			} catch (SQLException e) {
 				System.err.println("Failed to update last update time");
-				return true;
 			}
 		}
-
-		return true;
 	}
-
+	
 	/**
 	 *
 	 * @return The time the database was last updated
