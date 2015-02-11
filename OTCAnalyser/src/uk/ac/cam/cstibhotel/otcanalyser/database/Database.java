@@ -33,13 +33,15 @@ public class Database {
 	private static String getDatabasePath(){
 		String os = System.getProperty("os.name");
 		
-		if(os.contains("Windows")){
-			return "C:\\Program Files (x86)/OTCAnalyser/database.db";
-		} else if (os.contains("Mac")){
-			return "~/Library/OTCAnalyser/database.db";
-		} else {
-			return "/usr/share/OTCAnalyser/database.db";
-		}
+		return "database.db";
+		
+//		if(os.contains("Windows")){
+//			return "C:\\Program Files (x86)/OTCAnalyser/database.db";
+//		} else if (os.contains("Mac")){
+//			return "~/Library/OTCAnalyser/database.db";
+//		} else {
+//			return "/usr/share/OTCAnalyser/database.db";
+//		}
 	}
 
 	public static Database getDB() {
