@@ -12,7 +12,7 @@ public class TaxonomySelector extends JPanel {
 	public JComboBox<String> BaseClass;
 	public JComboBox<String> SubClass;
 	private AssetChange assetChange;
-	private BaseProductChange baseProductChange;
+	BaseProductChange baseProductChange;
 	private static TaxonomySelector instance;
 	
 	public static TaxonomySelector getInstance() {
