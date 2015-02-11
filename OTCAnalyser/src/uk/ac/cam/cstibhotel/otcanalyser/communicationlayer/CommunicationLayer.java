@@ -90,7 +90,7 @@ public class CommunicationLayer {
 		s.setAssetClass(s.getUPI().getAssetClass());
 		
 		// Get the result from the database
-		SearchResult result = Database.search(s);
+		SearchResult result = Database.getDB().search(s);
 		
 		// Send it to each member of searchListeners
 		for (SearchListener l : searchListeners) {

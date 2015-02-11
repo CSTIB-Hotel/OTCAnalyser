@@ -27,12 +27,21 @@ public class Database {
 
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
 		Database d = getDB();
-		addTrade(new Trade());
+		db.addTrade(new Trade());
 	}
 
-	public static Database getDB() throws SQLException, ClassNotFoundException {
+	public static Database getDB() {
 		if (db==null) {
-			db = new Database("/Users/waiwaing/Library/OTCAnalyser/database.db");
+			try {
+				db = new Database("/Users/waiwaing/Library/OTCAnalyser/database.db");
+			} catch (SQLException ex) {
+				System.err.println("There was a severe database error");
+				System.exit(1); // TODO we probably don't want to actulaly quit
+			} catch (ClassNotFoundException e){
+				System.err.println("There was a severe database error");
+				System.exit(2); // TODO we probably don't want to actulaly quit
+			
+			}
 		}
 		return db;
 	}
@@ -42,36 +51,30 @@ public class Database {
 		connection = DriverManager.getConnection("jdbc:hsqldb:file:"+s);
 		connection.setAutoCommit(false);
 
-		Statement statement = connection.createStatement();  
-		try {
-			statement.execute("SET WRITE_DELAY FALSE"); //Always update data on disk
+		Statement statement = connection.createStatement();
+		statement.execute("SET WRITE_DELAY FALSE"); //Always update data on disk
 
-			StringBuilder dataTableCreator = new StringBuilder("CREATE TABLE data (");
-			HashMap<String, SQLField> DBNameDBType = TradeFieldMapping.getMapping(new Trade());
-			Iterator<Entry<String, SQLField>> i = DBNameDBType.entrySet().iterator();
-			while (i.hasNext()) {
-				Entry<String, SQLField> mapEntry = i.next();
-				dataTableCreator.append(mapEntry.getKey()).append(" ").append(mapEntry.getValue().getType()).append(", ");
-			}
-			dataTableCreator.setLength(dataTableCreator.length()-2);
-			dataTableCreator.append(");");
-			statement.execute(dataTableCreator.toString());
-
-			String infoTableCreator = "CREATE TABLE info ("
-					+"key VARCHAR(255), value VARCHAR(255)";
-			statement.execute(infoTableCreator);
-
-			PreparedStatement ps = connection.prepareStatement("INSERT INTO info (key, value) VALUES (?, ?)");
-			ps.setString(1, "last_update");
-			ps.setString(2, "0");
-			ps.executeQuery();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			statement.close();
+		StringBuilder dataTableCreator = new StringBuilder("CREATE TABLE data (");
+		HashMap<String, SQLField> DBNameDBType = TradeFieldMapping.getMapping(new Trade());
+		Iterator<Entry<String, SQLField>> i = DBNameDBType.entrySet().iterator();
+		while (i.hasNext()) {
+			Entry<String, SQLField> mapEntry = i.next();
+			dataTableCreator.append(mapEntry.getKey()).append(" ").append(mapEntry.getValue().getType()).append(", ");
 		}
+		dataTableCreator.setLength(dataTableCreator.length()-2);
+		dataTableCreator.append(");");
+		statement.execute(dataTableCreator.toString());
+
+		String infoTableCreator = "CREATE TABLE info ("
+				+"key VARCHAR(255), value VARCHAR(255)";
+		statement.execute(infoTableCreator);
+
+		PreparedStatement ps = connection.prepareStatement("INSERT INTO info (key, value) VALUES (?, ?)");
+		ps.setString(1, "last_update");
+		ps.setString(2, "0");
+		ps.executeQuery();
+
+		statement.close();
 
 	}
 
@@ -79,8 +82,9 @@ public class Database {
 	 * Adds a trade to the database
 	 *
 	 * @param trade a trade to be added to the database
+	 * @return true if the trade was successfully added
 	 */
-	public static boolean addTrade(Trade trade) {
+	public boolean addTrade(Trade trade) {
 		StringBuilder a = new StringBuilder("INSERT INTO data (");
 		StringBuilder b = new StringBuilder(") VALUES (");
 
@@ -97,8 +101,8 @@ public class Database {
 		a.setLength(a.length()-2);
 		b.setLength(b.length()-2);
 		a.append(b).append(")");
-		
-		try{
+
+		try {
 			PreparedStatement p = connection.prepareStatement(a.toString());
 
 			iterator = DBNameValue.entrySet().iterator();
@@ -107,7 +111,7 @@ public class Database {
 			}
 
 			p.execute();
-		} catch (SQLException e){
+		} catch (SQLException e) {
 			System.err.println("Failed to insert row");
 			return false;
 		}
@@ -115,15 +119,15 @@ public class Database {
 		java.util.Date thisUpdateTime = trade.getExecutionTimestamp(); // is this the right date?
 		java.util.Date lastUpdateTime = getLastUpdateTime();
 		if (thisUpdateTime.after(lastUpdateTime)) {
-			try{
+			try {
 				PreparedStatement ps = connection.prepareCall("UPDATE info SET value = ? WHERE key = last_update");
 				ps.setString(1, Long.toString(thisUpdateTime.getTime()));
-			} catch (SQLException e){
+			} catch (SQLException e) {
 				System.err.println("Failed to update last update time");
 				return true;
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -131,7 +135,7 @@ public class Database {
 	 *
 	 * @return The time the database was last updated
 	 */
-	public static java.util.Date getLastUpdateTime() {
+	public java.util.Date getLastUpdateTime() {
 		try {
 			Statement s = connection.createStatement();
 			s.execute("SELECT value FROM info WHERE key = last_update");
@@ -158,7 +162,7 @@ public class Database {
 	 private UPI upi;	
 	
 	 */
-	public static SearchResult search(Search s) {
+	public SearchResult search(Search s) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
 					+"tradeType = ? AND"
@@ -191,7 +195,7 @@ public class Database {
 	 *
 	 * @param s the search to save
 	 */
-	public static boolean saveSearch(Search s) {
+	public boolean saveSearch(Search s) {
 		return false;
 	}
 
@@ -199,7 +203,7 @@ public class Database {
 	 *
 	 * @return A list of previously saved searches
 	 */
-	public static List<Search> getSavedSearches() {
+	public List<Search> getSavedSearches() {
 		return null;
 	}
 
@@ -208,7 +212,7 @@ public class Database {
 	 * @param s The string to search against
 	 * @return A list of UPIs which have the parameter as a substring
 	 */
-	public static List<UPI> getMatchingUPI(String s) {
+	public List<UPI> getMatchingUPI(String s) {
 		List<UPI> UPIs = new ArrayList<>();
 
 		try {
@@ -233,7 +237,7 @@ public class Database {
 			return UPIs;
 		} catch (SQLException ex) {
 			System.err.println("Failed to fetch UPIs");
-			return UPIs;		
+			return UPIs;
 		}
 	}
 

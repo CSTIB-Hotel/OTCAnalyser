@@ -5,7 +5,7 @@ import java.util.Date;
 import uk.ac.cam.cstibhotel.otcanalyser.database.Database;
 
 public class NetworkLayer {
-    static Date lastUpdateDate = Database.getLastUpdateTime();
+    static Date lastUpdateDate = Database.getDB().getLastUpdateTime();
     static int lastSlice = 0; //the ID of the last received slice today, counting from 1
     static Date targetUpdateDate;
     
