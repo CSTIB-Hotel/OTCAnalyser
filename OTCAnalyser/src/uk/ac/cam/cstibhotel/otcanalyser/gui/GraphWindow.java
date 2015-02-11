@@ -1,9 +1,12 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
+
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.editor.ChartEditorManager;
 import org.jfree.data.time.ohlc.OHLCSeriesCollection;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +19,7 @@ public class GraphWindow extends CBLPanel{
     dataset = OHLCMaker.makeDataset(new ArrayList<Trade>(), "Trades", false);
     JFreeChart chart = OHLCMaker.makeChart("Trades", dataset);
     ChartPanel panel = new ChartPanel(chart); 
+    ChartEditorManager.setChartEditorFactory(new NewDefaultChartEditorFactory());
     panel.setFillZoomRectangle(true);
     panel.setMouseWheelEnabled(true);
     
