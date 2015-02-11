@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -27,12 +29,21 @@ public class Database {
 
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
 		Database d = getDB();
-		addTrade(new Trade());
+		db.addTrade(new Trade());
 	}
 
-	public static Database getDB() throws SQLException, ClassNotFoundException {
+	public static Database getDB() {
 		if (db==null) {
-			db = new Database("/Users/waiwaing/Library/OTCAnalyser/database.db");
+			try {
+				db = new Database("/Users/waiwaing/Library/OTCAnalyser/database.db");
+			} catch (SQLException ex) {
+				System.err.println("There was a severe database error");
+				System.exit(1); // TODO we probably don't want to actulaly quit
+			} catch (ClassNotFoundException e) {
+				System.err.println("There was a severe database error");
+				System.exit(2); // TODO we probably don't want to actulaly quit
+
+			}
 		}
 		return db;
 	}
@@ -42,50 +53,95 @@ public class Database {
 		connection = DriverManager.getConnection("jdbc:hsqldb:file:"+s);
 		connection.setAutoCommit(false);
 
-		Statement statement = connection.createStatement(); // TODO: probably want to convert to prepared statements 
+		connection.createStatement().execute("SET WRITE_DELAY FALSE"); // always update data on disk
+
+		createDataTable();
+		createInfoTable();
+	}
+
+	private void createDataTable() {
+		StringBuilder dataTableCreator = new StringBuilder("CREATE TABLE data (");
+
+		HashMap<String, SQLField> DBNameDBType = TradeFieldMapping.getMapping(new Trade());
+		Iterator<Entry<String, SQLField>> i = DBNameDBType.entrySet().iterator();
+
+		while (i.hasNext()) {
+			Entry<String, SQLField> mapEntry = i.next();
+			dataTableCreator.append(mapEntry.getKey()).append(" ").append(mapEntry.getValue().getType()).append(", ");
+		}
+
+		dataTableCreator.setLength(dataTableCreator.length()-2);
+		dataTableCreator.append(");");
+
 		try {
-			statement.execute("SET WRITE_DELAY FALSE"); //Always update data on disk
+			connection.createStatement().execute(dataTableCreator.toString());
+		} catch (SQLException e) {
+			// do nothing as this just means the data table already exists
+		}
+	}
 
-			StringBuilder dataTableCreator = new StringBuilder("CREATE TABLE data (");
-			HashMap<String, SQLField> DBNameDBType = TradeFieldMapping.getMapping(new Trade());
-			Iterator<Entry<String, SQLField>> i = DBNameDBType.entrySet().iterator();
-			while (i.hasNext()) {
-				Entry<String, SQLField> mapEntry = i.next();
-				dataTableCreator.append(mapEntry.getKey()).append(" ").append(mapEntry.getValue().getType()).append(", ");
-			}
-			dataTableCreator.setLength(dataTableCreator.length()-2);
-			dataTableCreator.append(");");
-			statement.execute(dataTableCreator.toString());
-
-			String infoTableCreator = "CREATE TABLE info ("
-					+"key VARCHAR(255), value VARCHAR(255)";
-			statement.execute(infoTableCreator);
+	private void createInfoTable() {
+		String infoTableCreator = "CREATE TABLE info ( key VARCHAR(255), value VARCHAR(255)";
+		try {
+			connection.createStatement().execute(infoTableCreator);
 
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO info (key, value) VALUES (?, ?)");
 			ps.setString(1, "last_update");
 			ps.setString(2, "0");
 			ps.executeQuery();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			statement.close();
+		} catch (SQLException e) {
+			// do nothing as this just means the info table already exists
 		}
-
 	}
 
 	/**
 	 * Adds a trade to the database
 	 *
 	 * @param trade a trade to be added to the database
+	 * @return true if the database was successfully updated
 	 */
-	public static boolean addTrade(Trade trade) {
+	public boolean addTrade(Trade trade) {
+		HashMap<String, SQLField> DBNameValue = TradeFieldMapping.getMapping(trade);
+		Iterator<Entry<String, SQLField>> iterator = DBNameValue.entrySet().iterator();
+		
+		String executeString;
+		
+		if(trade.getAction().equals(trade.getAction().CANCEL)) {
+			deleteTrade(trade.getDisseminationID());
+			return true;
+		} else if(trade.getAction().equals(trade.getAction().CORRECT)) {
+			executeString = buildUpdateString(iterator, trade.getDisseminationID());
+		} else { // new entry
+			executeString = buildInsertString(iterator);
+		}
+
+		try {
+			PreparedStatement p = connection.prepareStatement(executeString);
+
+			iterator = DBNameValue.entrySet().iterator();
+			while (iterator.hasNext()) {
+				iterator.next().getValue().addToPreparedStatement(p);
+			}
+
+			p.execute();
+		} catch (SQLException e) {
+			System.err.println("Failed to insert/update row");
+			return false;
+		}
+
+		updateLastUpdateTime(trade);
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param iterator An iterator over a DB mapping
+	 * @return An SQL INSERT string
+	 */
+	private String buildInsertString(Iterator<Entry<String, SQLField>> iterator){
 		StringBuilder a = new StringBuilder("INSERT INTO data (");
 		StringBuilder b = new StringBuilder(") VALUES (");
 
-		HashMap<String, SQLField> DBNameValue = TradeFieldMapping.getMapping(trade);
-		Iterator<Entry<String, SQLField>> iterator = DBNameValue.entrySet().iterator();
 		int index = 1;
 		while (iterator.hasNext()) {
 			Entry<String, SQLField> mapEntry = iterator.next();
@@ -98,40 +154,72 @@ public class Database {
 		b.setLength(b.length()-2);
 		a.append(b).append(")");
 		
-		try{
-			PreparedStatement p = connection.prepareStatement(a.toString());
-
-			iterator = DBNameValue.entrySet().iterator();
-			while (iterator.hasNext()) {
-				iterator.next().getValue().addToPreparedStatement(p);
-			}
-
-			p.execute();
-		} catch (SQLException e){
-			System.err.println("Failed to insert row");
-			return false;
-		}
-
-		java.util.Date thisUpdateTime = trade.getExecutionTimestamp(); // is this the right date?
-		java.util.Date lastUpdateTime = getLastUpdateTime();
-		if (thisUpdateTime.after(lastUpdateTime)) {
-			try{
-				PreparedStatement ps = connection.prepareCall("UPDATE info SET value = ? WHERE key = last_update");
-				ps.setString(1, Long.toString(thisUpdateTime.getTime()));
-			} catch (SQLException e){
-				System.err.println("Failed to update last update time");
-				return true;
-			}
+		return a.toString();
+	}
+	
+	/**
+	 * 
+	 * @param iterator An iterator over a DB mapping
+	 * @param origId The id of the trade to update
+	 * @return An SQL update string
+	 */
+	private String buildUpdateString(Iterator<Entry<String, SQLField>> iterator, long origId){
+		StringBuilder s = new StringBuilder("UPDATE data SET ");
+		
+		int index = 1;
+		
+		while (iterator.hasNext()) {
+			Entry<String, SQLField> mapEntry = iterator.next();
+			s.append(mapEntry.getKey()).append(" = ?, ");
+			mapEntry.getValue().index = index;
+			index++;
 		}
 		
+		s.setLength(s.length() - 2);
+		s.append(" WHERE id = ").append(origId);
+		
+		return s.toString();
+	}
+	
+	/**
+	 * 
+	 * @param id The id of the trade to delete
+	 * @return Whether the deletion was successful
+	 */
+	private boolean deleteTrade(long id){
+		String deletionString = "DELETE FROM data WHERE id = " + id;
+		try {
+			connection.createStatement().execute(deletionString);
+		} catch (SQLException ex) {
+			System.err.println("Error deleting a trade");
+			return false;
+		}
 		return true;
 	}
-
+	
+	/**
+	 * 
+	 * @param trade the trade to use to calculate the last update time
+	 */
+	private void updateLastUpdateTime(Trade trade){
+		java.util.Date thisUpdateTime = trade.getExecutionTimestamp(); // is this the right date?
+		java.util.Date lastUpdateTime = getLastUpdateTime();
+		
+		if (thisUpdateTime.after(lastUpdateTime)) {
+			try {
+				PreparedStatement ps = connection.prepareCall("UPDATE info SET value = ? WHERE key = last_update");
+				ps.setString(1, Long.toString(thisUpdateTime.getTime()));
+			} catch (SQLException e) {
+				System.err.println("Failed to update last update time");
+			}
+		}
+	}
+	
 	/**
 	 *
 	 * @return The time the database was last updated
 	 */
-	public static java.util.Date getLastUpdateTime() {
+	public java.util.Date getLastUpdateTime() {
 		try {
 			Statement s = connection.createStatement();
 			s.execute("SELECT value FROM info WHERE key = last_update");
@@ -158,7 +246,7 @@ public class Database {
 	 private UPI upi;	
 	
 	 */
-	public static SearchResult search(Search s) {
+	public SearchResult search(Search s) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
 					+"tradeType = ? AND"
@@ -191,7 +279,7 @@ public class Database {
 	 *
 	 * @param s the search to save
 	 */
-	public static boolean saveSearch(Search s) {
+	public boolean saveSearch(Search s) {
 		return false;
 	}
 
@@ -199,7 +287,7 @@ public class Database {
 	 *
 	 * @return A list of previously saved searches
 	 */
-	public static List<Search> getSavedSearches() {
+	public List<Search> getSavedSearches() {
 		return null;
 	}
 
@@ -208,7 +296,7 @@ public class Database {
 	 * @param s The string to search against
 	 * @return A list of UPIs which have the parameter as a substring
 	 */
-	public static List<UPI> getMatchingUPI(String s) {
+	public List<UPI> getMatchingUPI(String s) {
 		List<UPI> UPIs = new ArrayList<>();
 
 		try {
@@ -233,7 +321,7 @@ public class Database {
 			return UPIs;
 		} catch (SQLException ex) {
 			System.err.println("Failed to fetch UPIs");
-			return UPIs;		
+			return UPIs;
 		}
 	}
 

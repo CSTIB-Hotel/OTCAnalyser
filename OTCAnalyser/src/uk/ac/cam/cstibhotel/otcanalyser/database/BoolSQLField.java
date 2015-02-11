@@ -19,10 +19,11 @@ public class BoolSQLField extends SQLField {
 
 	@Override
 	public void addToPreparedStatement(PreparedStatement p) throws SQLException {
-		if (fieldValue == null)
+		if (fieldValue == null) {
 			p.setNull(index, Types.BOOLEAN);
-		else
+		} else {
 			p.setBoolean(index, fieldValue);
+		}
 	}
 	
 }
