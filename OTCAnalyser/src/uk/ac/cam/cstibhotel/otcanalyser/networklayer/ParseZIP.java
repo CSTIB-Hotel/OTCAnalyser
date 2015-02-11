@@ -3,6 +3,7 @@ package uk.ac.cam.cstibhotel.otcanalyser.networklayer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -239,7 +240,7 @@ public class ParseZIP {
 		return tradeOut;
 	}
 	
-	public static LinkedList<Trade> downloadData(String zipFile, String splitBy, String secondarySplitBy) throws IOException {
+	public static LinkedList<Trade> downloadData(String zipFile, String splitBy, String secondarySplitBy) throws IOException, MalformedURLException {
 		String line;
 		int i = 0;
 		LinkedList<Trade> dataOut = new LinkedList<Trade>();
@@ -295,12 +296,12 @@ public class ParseZIP {
 	
 	public static void main(String[] args) {
 		try {
-			ParseZIP.downloadData("https://kgc0418-tdw-data-0.s3.amazonaws.com/slices/CUMULATIVE_CREDITS_2015_02_04.zip","\",\"", ",");
+			ParseZIP.downloadData("hgc0418-tdw-data-0.s3.amazonaws.com/slices/CUMULATIVE_CREDITS_2015_02_04.zip","\",\"", ",");
 			System.out.println(Integer.parseInt("1,234".replace(",","")));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (MalformedURLException e){}
+		catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 	}
 
 }
