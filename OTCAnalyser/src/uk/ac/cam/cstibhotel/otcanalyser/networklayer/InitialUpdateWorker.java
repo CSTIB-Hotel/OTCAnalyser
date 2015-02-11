@@ -48,7 +48,7 @@ public class InitialUpdateWorker extends Thread {
     				try {
 						List<Trade> newTrades = ParseZIP.downloadData(s, NetworkLayer.splitter, NetworkLayer.secondarySplitter);
 						for (Trade t : newTrades) {
-							Database.addTrade(t);
+							Database.getDB().addTrade(t);
 						}
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
