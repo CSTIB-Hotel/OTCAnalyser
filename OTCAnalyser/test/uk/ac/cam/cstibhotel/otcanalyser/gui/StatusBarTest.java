@@ -1,4 +1,4 @@
-package uk.ac.cam.cstibhotel.otcanalyser.trade;
+package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import uk.ac.cam.cstibhotel.otcanalyser.gui.StatusBar;
 import static org.junit.Assert.assertEquals;
