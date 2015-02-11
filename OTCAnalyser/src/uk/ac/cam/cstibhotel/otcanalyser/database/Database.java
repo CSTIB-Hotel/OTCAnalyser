@@ -37,10 +37,10 @@ public class Database {
 			} catch (SQLException ex) {
 				System.err.println("There was a severe database error");
 				System.exit(1); // TODO we probably don't want to actulaly quit
-			} catch (ClassNotFoundException e){
+			} catch (ClassNotFoundException e) {
 				System.err.println("There was a severe database error");
 				System.exit(2); // TODO we probably don't want to actulaly quit
-			
+
 			}
 		}
 		return db;
@@ -51,31 +51,45 @@ public class Database {
 		connection = DriverManager.getConnection("jdbc:hsqldb:file:"+s);
 		connection.setAutoCommit(false);
 
-		Statement statement = connection.createStatement();
-		statement.execute("SET WRITE_DELAY FALSE"); //Always update data on disk
+		connection.createStatement().execute("SET WRITE_DELAY FALSE"); // always update data on disk
 
+		createDataTable();
+		createInfoTable();
+	}
+
+	private void createDataTable() {
 		StringBuilder dataTableCreator = new StringBuilder("CREATE TABLE data (");
+
 		HashMap<String, SQLField> DBNameDBType = TradeFieldMapping.getMapping(new Trade());
 		Iterator<Entry<String, SQLField>> i = DBNameDBType.entrySet().iterator();
+
 		while (i.hasNext()) {
 			Entry<String, SQLField> mapEntry = i.next();
 			dataTableCreator.append(mapEntry.getKey()).append(" ").append(mapEntry.getValue().getType()).append(", ");
 		}
+
 		dataTableCreator.setLength(dataTableCreator.length()-2);
 		dataTableCreator.append(");");
-		statement.execute(dataTableCreator.toString());
 
-		String infoTableCreator = "CREATE TABLE info ("
-				+"key VARCHAR(255), value VARCHAR(255)";
-		statement.execute(infoTableCreator);
+		try {
+			connection.createStatement().execute(dataTableCreator.toString());
+		} catch (SQLException e) {
+			// do nothing as this just means the data table already exists
+		}
+	}
 
-		PreparedStatement ps = connection.prepareStatement("INSERT INTO info (key, value) VALUES (?, ?)");
-		ps.setString(1, "last_update");
-		ps.setString(2, "0");
-		ps.executeQuery();
+	private void createInfoTable() {
+		String infoTableCreator = "CREATE TABLE info ( key VARCHAR(255), value VARCHAR(255)";
+		try {
+			connection.createStatement().execute(infoTableCreator);
 
-		statement.close();
-
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO info (key, value) VALUES (?, ?)");
+			ps.setString(1, "last_update");
+			ps.setString(2, "0");
+			ps.executeQuery();
+		} catch (SQLException e) {
+			// do nothing as this just means the info table already exists
+		}
 	}
 
 	/**
