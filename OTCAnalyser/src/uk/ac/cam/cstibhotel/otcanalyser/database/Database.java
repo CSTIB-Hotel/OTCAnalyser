@@ -15,8 +15,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -29,13 +27,25 @@ public class Database {
 
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
 		Database d = getDB();
-		db.addTrade(new Trade());
+	//	db.addTrade(new Trade());
+	}
+	
+	private static String getDatabasePath(){
+		String os = System.getProperty("os.name");
+		
+		if(os.contains("Windows")){
+			return "C:\\Program Files/OTCAnalyser/database.db";
+		} else if (os.contains("Mac")){
+			return "~/Library/OTCAnalyser/database.db";
+		} else {
+			return "/usr/share/OTCAnalyser/database.db";
+		}
 	}
 
 	public static Database getDB() {
 		if (db==null) {
 			try {
-				db = new Database("/Users/waiwaing/Library/OTCAnalyser/database.db");
+				db = new Database();
 			} catch (SQLException ex) {
 				System.err.println("There was a severe database error");
 				System.exit(1); // TODO we probably don't want to actulaly quit
@@ -48,9 +58,9 @@ public class Database {
 		return db;
 	}
 
-	private Database(String s) throws SQLException, ClassNotFoundException {
+	private Database() throws SQLException, ClassNotFoundException {
 		Class.forName("org.hsqldb.jdbcDriver");
-		connection = DriverManager.getConnection("jdbc:hsqldb:file:"+s);
+		connection = DriverManager.getConnection("jdbc:hsqldb:file:" + getDatabasePath());
 		connection.setAutoCommit(false);
 
 		connection.createStatement().execute("SET WRITE_DELAY FALSE"); // always update data on disk
