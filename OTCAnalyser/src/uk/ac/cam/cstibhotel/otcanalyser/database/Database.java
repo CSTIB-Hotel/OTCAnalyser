@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -179,8 +181,20 @@ public class Database {
 		return s.toString();
 	}
 	
-	private void deleteTrade(long id){
-		
+	/**
+	 * 
+	 * @param id The id of the trade to delete
+	 * @return Whether the deletion was successful
+	 */
+	private boolean deleteTrade(long id){
+		String deletionString = "DELETE FROM data WHERE id = " + id;
+		try {
+			connection.createStatement().execute(deletionString);
+		} catch (SQLException ex) {
+			System.err.println("Error deleting a trade");
+			return false;
+		}
+		return true;
 	}
 	
 	/**
