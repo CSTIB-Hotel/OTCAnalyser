@@ -34,7 +34,7 @@ public class Database {
 		String os = System.getProperty("os.name");
 		
 		if(os.contains("Windows")){
-			return "C:\\Program Files/OTCAnalyser/database.db";
+			return "C:\\Program Files (x86)/OTCAnalyser/database.db";
 		} else if (os.contains("Mac")){
 			return "~/Library/OTCAnalyser/database.db";
 		} else {
