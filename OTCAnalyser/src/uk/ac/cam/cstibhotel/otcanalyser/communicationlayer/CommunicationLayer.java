@@ -1,5 +1,7 @@
 package uk.ac.cam.cstibhotel.otcanalyser.communicationlayer;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,7 +40,7 @@ public class CommunicationLayer {
 	}
 	
 	// Creates a Search and then sends it to the database
-	public static void search() {
+	public static void search() throws ParseException {
 		Search s = new Search();
 
 		String tradeType = (String) SearchWindow.getInstance().TradeType.getSelectedItem();
@@ -60,21 +62,25 @@ public class CommunicationLayer {
 		s.setCurrency(SearchWindow.getInstance().currency.getText());
 		
 		int day = (int) SearchWindow.getInstance().StartDate.Day.getSelectedItem();
-		int month = (int) SearchWindow.getInstance().StartDate.Months.getSelectedItem();
-		int year = (int) SearchWindow.getInstance().StartDate.Year.getSelectedItem();
+		String monthString = (String) SearchWindow.getInstance().StartDate.Months.getSelectedItem();
 		Calendar cal = Calendar.getInstance();
+		cal.setTime(new SimpleDateFormat("MMM").parse(monthString));
+		int month = cal.get(Calendar.MONTH) + 1;
+		int year = (int) SearchWindow.getInstance().StartDate.Year.getSelectedItem();
 		cal.set(year, month, day);
 		Date startTime = cal.getTime();
 		s.setStartTime(startTime);
 		
 		day = (int) SearchWindow.getInstance().EndDate.Day.getSelectedItem();
-		month = (int) SearchWindow.getInstance().EndDate.Months.getSelectedItem();
+		monthString = (String) SearchWindow.getInstance().EndDate.Months.getSelectedItem();
+		cal.setTime(new SimpleDateFormat("MMM").parse(monthString));
+		month = cal.get(Calendar.MONTH) + 1;
 		year = (int) SearchWindow.getInstance().EndDate.Year.getSelectedItem();
 		cal.set(year, month, day);
 		Date endTime = cal.getTime();
 		s.setEndTime(endTime);
 		
-		String fullTaxonomy = null;
+		String fullTaxonomy = "";
 		fullTaxonomy += SearchWindow.getInstance().tax.Asset.getSelectedItem();
 		fullTaxonomy += ":";
 		fullTaxonomy += SearchWindow.getInstance().tax.BaseClass.getSelectedItem();
