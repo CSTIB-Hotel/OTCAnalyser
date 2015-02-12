@@ -1,6 +1,5 @@
 package uk.ac.cam.cstibhotel.otcanalyser.trade;
 
-import java.util.Currency;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;

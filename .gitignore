@@ -32,3 +32,7 @@ manifest.mf
 database.db.log
 
 database.db.properties
+
+~/Library/OTCAnalyser/database.db.script
+
+database.db.script
