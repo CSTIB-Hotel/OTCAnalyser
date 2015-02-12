@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import uk.ac.cam.cstibhotel.otcanalyser.database.Database;
+import uk.ac.cam.cstibhotel.otcanalyser.gui.StatusBar;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 
 public class InitialUpdateWorker extends Thread {
@@ -53,7 +54,7 @@ public class InitialUpdateWorker extends Thread {
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
-						e.printStackTrace();
+						StatusBar.setMessage("Error: Could not download data for " + formatDate, 1);
 					}
     				
     				

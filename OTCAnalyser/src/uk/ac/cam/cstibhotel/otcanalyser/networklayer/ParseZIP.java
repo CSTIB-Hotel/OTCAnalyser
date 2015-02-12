@@ -118,7 +118,7 @@ public class ParseZIP {
 			//SETTLEMENT_CURRENCY
 			try {
 				Currency c = Currency.getInstance(tradeIn[13]);
-				tradeOut.setSettlementCurrency(c);
+				tradeOut.setSettlementCurrency(c.getDisplayName());
 			} catch (IllegalArgumentException e){
 				//Illegal currency entry, not ISO 4217, it stays "GBP"
 				//TODO: What does this mean that this field is empty? Why GBP the default?
@@ -192,7 +192,7 @@ public class ParseZIP {
 			//OPTION_CURRENCY
 			try {
 				Currency c = Currency.getInstance(tradeIn[36]);
-				tradeOut.setOptionCurrency(c);
+				tradeOut.setOptionCurrency(c.getDisplayName());
 			} catch (IllegalArgumentException e){
 				//Illegal currency entry, not ISO 4217, it stays "GBP"
 				//TODO: What does this mean that this field is empty? Why GBP the default?

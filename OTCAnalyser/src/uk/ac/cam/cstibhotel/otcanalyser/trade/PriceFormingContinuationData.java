@@ -31,7 +31,7 @@ public enum PriceFormingContinuationData {
 				return INCREASE;
 			case "Novation":
 				return NOVATION;
-			case "Partialtermination":
+			case "PartialTermination":
 				return PARTIALTERMINATION;
 			case "":
 				return null;
