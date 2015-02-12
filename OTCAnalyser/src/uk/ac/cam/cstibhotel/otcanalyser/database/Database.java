@@ -270,9 +270,10 @@ public class Database {
 				timeString = rs.getString(1);
 				Date temp = new Date(Long.parseLong(timeString));
 				System.out.println(temp.toString());
-				Calendar c = Calendar.getInstance();
-				c.set(2014, 0, 0);
-				return c.getTime();
+				//Calendar c = Calendar.getInstance();
+				//c.set(2014, 0, 0);
+				//return c.getTime();
+				return temp;
 			} else {
 				throw new RuntimeException("no data");
 			}
