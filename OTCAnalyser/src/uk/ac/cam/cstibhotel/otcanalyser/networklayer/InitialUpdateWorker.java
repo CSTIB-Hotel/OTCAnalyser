@@ -15,7 +15,7 @@ public class InitialUpdateWorker extends Thread {
 	@Override
 	public void run() {
     	System.out.println("NetworkLayer: initial update requested");
-        synchronized(NetworkLayer.lastUpdateDate) {
+        synchronized(NetworkLayer.targetUpdateDate) {
         	System.out.println("NetworkLayer: initial update started");
         	
         	Date now = new Date();
@@ -25,7 +25,7 @@ public class InitialUpdateWorker extends Thread {
         	NetworkLayer.targetUpdateDate = target.getTime();
         	
         	Calendar lastUpdate = Calendar.getInstance();
-        	lastUpdate.setTime(NetworkLayer.lastUpdateDate);
+        	lastUpdate.setTime(Database.getDB().getLastUpdateTime());
         	
         	while (target.get(Calendar.YEAR) != lastUpdate.get(Calendar.YEAR) ||
         			target.get(Calendar.MONTH) + 1 != lastUpdate.get(Calendar.MONTH) + 1 ||
@@ -70,7 +70,7 @@ public class InitialUpdateWorker extends Thread {
         		//todo: implement exception throwing policy
         		
         		//todo: only if successful
-    			NetworkLayer.lastUpdateDate = lastUpdate.getTime();
+    			//NetworkLayer.lastUpdateDate = lastUpdate.getTime();
     			System.out.println("NetworkLayer: current version is " + lastUpdate.get(Calendar.YEAR) + " "+
         			(lastUpdate.get(Calendar.MONTH) + 1) + " " + lastUpdate.get(Calendar.DAY_OF_MONTH));
     			StatusBar.setMessage("NetworkLayer: current version is " + lastUpdate.get(Calendar.YEAR) + " "+
