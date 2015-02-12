@@ -33,6 +33,8 @@ public enum PriceFormingContinuationData {
 				return NOVATION;
 			case "PartialTermination":
 				return PARTIALTERMINATION;
+			case "Partialtermination":
+				return PARTIALTERMINATION;
 			case "":
 				return null;
 			default:

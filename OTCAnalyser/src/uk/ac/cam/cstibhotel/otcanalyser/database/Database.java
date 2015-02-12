@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -267,7 +268,8 @@ public class Database {
 			ResultSet rs = s.getResultSet();
 			if(rs.next()){
 				timeString = rs.getString(1);
-				System.out.println(timeString);
+				Date temp = new Date(Long.parseLong(timeString));
+				System.out.println(temp.toString());
 				Calendar c = Calendar.getInstance();
 				c.set(2014, 0, 0);
 				return c.getTime();
