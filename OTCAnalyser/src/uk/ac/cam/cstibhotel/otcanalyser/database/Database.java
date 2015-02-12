@@ -28,16 +28,14 @@ public class Database {
 	
 	private static String getDatabasePath(){
 		String os = System.getProperty("os.name");
-		
-		return "database.db";
-		
-//		if(os.contains("Windows")){
-//			return "C:\\Program Files/OTCAnalyser/database.db";
-//		} else if (os.contains("Mac")){
-//			return "~/Library/OTCAnalyser/database.db";
-//		} else {
-//			return "/usr/share/OTCAnalyser/database.db";
-//		}
+				
+		if(os.contains("Windows")){
+			return "C:\\Program Files/OTCAnalyser/database.db";
+		} else if (os.contains("Mac")){
+			return "~/Library/OTCAnalyser/database.db";
+		} else {
+			return "/usr/share/OTCAnalyser/database.db";
+		}
 	}
 
 	public static Database getDB() {
