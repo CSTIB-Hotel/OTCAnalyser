@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 
 /**
  *
@@ -27,7 +28,7 @@ public class Database {
 
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
 		Database d = getDB();
-	//	db.addTrade(new Trade());
+		db.addTrade(new Trade());
 	}
 	
 	private static String getDatabasePath(){
@@ -36,7 +37,7 @@ public class Database {
 		return "database.db";
 		
 //		if(os.contains("Windows")){
-//			return "C:\\Program Files (x86)/OTCAnalyser/database.db";
+//			return "C:\\Program Files/OTCAnalyser/database.db";
 //		} else if (os.contains("Mac")){
 //			return "~/Library/OTCAnalyser/database.db";
 //		} else {
@@ -118,10 +119,10 @@ public class Database {
 		
 		String executeString;
 		
-		if(trade.getAction().equals(trade.getAction().CANCEL)) {
+		if(trade.getAction().equals(Action.CANCEL)) {
 			deleteTrade(trade.getDisseminationID());
 			return true;
-		} else if(trade.getAction().equals(trade.getAction().CORRECT)) {
+		} else if(trade.getAction().equals(Action.CORRECT)) {
 			executeString = buildUpdateString(iterator, trade.getDisseminationID());
 		} else { // new entry
 			executeString = buildInsertString(iterator);
@@ -290,6 +291,7 @@ public class Database {
 	/**
 	 *
 	 * @param s the search to save
+	 * @return true if the search was successfully saved
 	 */
 	public boolean saveSearch(Search s) {
 		return false;

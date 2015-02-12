@@ -29,3 +29,6 @@ nbproject/project.xml
 manifest.mf
 /build/
 /dist/
+database.db.log
+
+database.db.properties
