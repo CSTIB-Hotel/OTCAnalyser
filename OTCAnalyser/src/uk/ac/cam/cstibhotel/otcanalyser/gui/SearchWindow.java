@@ -97,6 +97,7 @@ public class SearchWindow extends JPanel {
 			this.add(currency);
 			currency.setVisible(true);
 			SearchButton = new JButton("Search");
+			SearchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 			this.add(SearchButton);
 			SearchButton.setVisible(true);
 	}
