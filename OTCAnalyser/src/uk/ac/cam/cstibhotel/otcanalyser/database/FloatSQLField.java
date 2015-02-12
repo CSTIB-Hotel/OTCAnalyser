@@ -2,12 +2,13 @@ package uk.ac.cam.cstibhotel.otcanalyser.database;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 
 public class FloatSQLField extends SQLField {
 	
-	private final double fieldValue;
+	private final Double fieldValue;
 
-	public FloatSQLField(double fieldValue) {
+	public FloatSQLField(Double fieldValue) {
 		this.fieldValue = fieldValue;
 	}
 	
@@ -18,7 +19,10 @@ public class FloatSQLField extends SQLField {
 
 	@Override
 	public void addToPreparedStatement(PreparedStatement p) throws SQLException {
-		p.setDouble(index, fieldValue);
+		if (fieldValue == null)
+			p.setNull(index, Types.DOUBLE);
+		else
+			p.setDouble(index, fieldValue);
 	}
 
 	
