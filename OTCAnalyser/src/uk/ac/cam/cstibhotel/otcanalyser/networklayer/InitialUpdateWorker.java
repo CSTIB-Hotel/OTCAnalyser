@@ -60,6 +60,7 @@ public class InitialUpdateWorker extends Thread {
     				
     				
     			}
+    			System.out.println("GOT TO THIS POINT");
         		/*}
         		catch () {
         			
