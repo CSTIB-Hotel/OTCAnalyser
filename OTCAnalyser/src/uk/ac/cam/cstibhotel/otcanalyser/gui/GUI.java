@@ -12,6 +12,7 @@ public class GUI extends JFrame {
 	
 	public static GUI gui;
 	static SearchWindow searchWindow;
+	DataViewer dataViewer;
 	
 	public static GUI getInstance() {
 		if (gui==null) {
@@ -22,7 +23,7 @@ public class GUI extends JFrame {
 	
 	public GUI() {
 		setTitle("OTC Analyser");
-		setSize(800,600);
+		setSize(1000,600);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		searchWindow = SearchWindow.getInstance();
 		add(searchWindow,BorderLayout.WEST);
@@ -30,6 +31,9 @@ public class GUI extends JFrame {
 		statusBar = StatusBar.getInstance();
 		add(statusBar,BorderLayout.SOUTH);
 		statusBar.setVisible(true);
+		dataViewer = DataViewer.dataViewer;
+		this.add(dataViewer);
+		dataViewer.setVisible(true);
 		this.setVisible(true);
 	}
 	
