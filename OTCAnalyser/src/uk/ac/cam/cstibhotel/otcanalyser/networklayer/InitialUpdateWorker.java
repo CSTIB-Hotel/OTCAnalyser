@@ -55,6 +55,7 @@ public class InitialUpdateWorker extends Thread {
 						e.printStackTrace();
 					} catch (IOException e) {
 						StatusBar.setMessage("Error: Could not download data for " + formatDate, 1);
+						e.printStackTrace();
 					}
     				
     				
@@ -72,6 +73,8 @@ public class InitialUpdateWorker extends Thread {
     			NetworkLayer.lastUpdateDate = lastUpdate.getTime();
     			System.out.println("NetworkLayer: current version is " + lastUpdate.get(Calendar.YEAR) + " "+
         			(lastUpdate.get(Calendar.MONTH) + 1) + " " + lastUpdate.get(Calendar.DAY_OF_MONTH));
+    			StatusBar.setMessage("NetworkLayer: current version is " + lastUpdate.get(Calendar.YEAR) + " "+
+            			(lastUpdate.get(Calendar.MONTH) + 1) + " " + lastUpdate.get(Calendar.DAY_OF_MONTH), 1);
         	}
         	System.out.println("NetworkLayer: initial update completed");
         }

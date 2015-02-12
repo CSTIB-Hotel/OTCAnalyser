@@ -36,7 +36,7 @@ public class Database {
 		String os = System.getProperty("os.name");
 				
 		if(os.contains("Windows")){
-			return "C:\\Program Files/OTCAnalyser/database.db";
+			return "database.db";
 		} else if (os.contains("Mac")){
 			return "~/Library/OTCAnalyser/database.db";
 		} else {
@@ -269,7 +269,7 @@ public class Database {
 				timeString = rs.getString(1);
 				System.out.println(timeString);
 				Calendar c = Calendar.getInstance();
-				c.set(2013, 1, 1);
+				c.set(2014, 0, 0);
 				return c.getTime();
 			} else {
 				throw new RuntimeException("no data");
