@@ -27,6 +27,7 @@ public class SearchWindow extends JPanel {
 	private JLabel currencyDescriptor;
 	public JTextField currency;
 	public JButton SearchButton;
+	private SearchButtonListener listener;
 	
 	private static SearchWindow instance;
 	
@@ -90,6 +91,8 @@ public class SearchWindow extends JPanel {
 			SearchButton = new JButton("Search");
 			this.add(SearchButton);
 			SearchButton.setVisible(true);
+			listener = new SearchButtonListener();
+			SearchButton.addActionListener(listener);
 	}
 	
 }
