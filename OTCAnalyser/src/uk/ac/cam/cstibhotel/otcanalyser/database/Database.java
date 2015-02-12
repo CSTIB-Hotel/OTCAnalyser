@@ -25,11 +25,6 @@ public class Database {
 
 	private static Database db;
 	private static Connection connection;
-
-	public static void main(String[] args) throws SQLException, ClassNotFoundException {
-		Database d = getDB();
-		db.addTrade(new Trade());
-	}
 	
 	private static String getDatabasePath(){
 		String os = System.getProperty("os.name");
@@ -50,11 +45,11 @@ public class Database {
 			try {
 				db = new Database();
 			} catch (SQLException ex) {
-				System.err.println("There was a severe database error");
-				System.exit(1); // TODO we probably don't want to actulaly quit
+				System.err.println("There was a severe database error, class 1");
+			//	System.exit(1); // TODO we probably don't want to actulaly quit
 			} catch (ClassNotFoundException e) {
-				System.err.println("There was a severe database error");
-				System.exit(2); // TODO we probably don't want to actulaly quit
+				System.err.println("There was a severe database error, class 2");
+			//	System.exit(2); // TODO we probably don't want to actulaly quit
 
 			}
 		}
@@ -70,6 +65,16 @@ public class Database {
 
 		createDataTable();
 		createInfoTable();
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				try {
+					connection.createStatement().execute("SHUTDOWN");
+				} catch (SQLException ex) {
+					System.err.println("Database shutdown failed");
+				}
+			}
+		});
 	}
 
 	private void createDataTable() {
@@ -94,16 +99,27 @@ public class Database {
 	}
 
 	private void createInfoTable() {
-		String infoTableCreator = "CREATE TABLE info ( key VARCHAR(255), value VARCHAR(255)";
+		String infoTableCreator = "CREATE TABLE info ( key VARCHAR(255), vvalue VARCHAR(255) )";
 		try {
-			connection.createStatement().execute(infoTableCreator);
-
-			PreparedStatement ps = connection.prepareStatement("INSERT INTO info (key, value) VALUES (?, ?)");
-			ps.setString(1, "last_update");
-			ps.setString(2, "0");
-			ps.executeQuery();
+			connection.createStatement().execute(infoTableCreator);			
+			connection.createStatement().execute("INSERT INTO info (key, vvalue) VALUES ('last_update', '0')");
+			commit();
 		} catch (SQLException e) {
 			// do nothing as this just means the info table already exists
+			// todo check error message to make sure that we throw any other errors
+		}
+	}
+	
+	/**
+	 * 
+	 * @return true if the current transaction was successfully committed
+	 */
+	private boolean commit(){
+		try {
+			connection.createStatement().execute("COMMIT;");
+			return true;
+		} catch (SQLException ex) {
+			return false;
 		}
 	}
 
@@ -135,15 +151,15 @@ public class Database {
 			while (iterator.hasNext()) {
 				iterator.next().getValue().addToPreparedStatement(p);
 			}
-
+			
 			p.execute();
+			
 		} catch (SQLException e) {
 			System.err.println("Failed to insert/update row");
 			return false;
 		}
 
-		updateLastUpdateTime(trade);
-		return true;
+		return updateLastUpdateTime(trade) && commit();
 	}
 	
 	/**
@@ -207,25 +223,28 @@ public class Database {
 			System.err.println("Error deleting a trade");
 			return false;
 		}
-		return true;
+		return commit();
 	}
 	
 	/**
 	 * 
 	 * @param trade the trade to use to calculate the last update time
 	 */
-	private void updateLastUpdateTime(Trade trade){
+	private boolean updateLastUpdateTime(Trade trade){
 		java.util.Date thisUpdateTime = trade.getExecutionTimestamp(); // is this the right date?
 		java.util.Date lastUpdateTime = getLastUpdateTime();
-		
+				
 		if (thisUpdateTime.after(lastUpdateTime)) {
 			try {
-				PreparedStatement ps = connection.prepareCall("UPDATE info SET value = ? WHERE key = last_update");
+				PreparedStatement ps = connection.prepareCall("UPDATE info SET vvalue = ? WHERE key = 'last_update'");
 				ps.setString(1, Long.toString(thisUpdateTime.getTime()));
+				ps.execute();
 			} catch (SQLException e) {
 				System.err.println("Failed to update last update time");
 			}
 		}
+		
+		return commit();
 	}
 	
 	/**
@@ -235,9 +254,19 @@ public class Database {
 	public java.util.Date getLastUpdateTime() {
 		try {
 			Statement s = connection.createStatement();
-			s.execute("SELECT value FROM info WHERE key = last_update");
-			String timeString = s.getResultSet().getString(1);
-			return new java.util.Date(Long.getLong(timeString));
+			s.execute("SELECT vvalue FROM info WHERE key = 'last_update'");
+		
+			
+			String timeString;
+			
+			ResultSet rs = s.getResultSet();
+			if(rs.next()){
+				timeString = rs.getString(1);
+			} else {
+				throw new RuntimeException("no data");
+			}
+			
+			return new java.util.Date(Long.parseLong(timeString));
 		} catch (SQLException ex) {
 			System.err.println("Could not get the last update time");
 			return new java.util.Date(0);
@@ -337,6 +366,11 @@ public class Database {
 			System.err.println("Failed to fetch UPIs");
 			return UPIs;
 		}
+	}
+	
+	// this method exists only for testing to allow arbitrary SQL queries to be run
+	public Connection getConnection(){
+		return connection;
 	}
 
 }
