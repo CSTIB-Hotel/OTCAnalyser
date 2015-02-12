@@ -10,6 +10,6 @@ public interface SearchListener {
 	 * Called by the communication layer when a search result is available. This function
 	 * should dictate how this result is handled.
 	 */	
-	SearchResult getSearchResult(SearchResult s);
+	void getSearchResult(SearchResult s);
 
 }

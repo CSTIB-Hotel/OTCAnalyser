@@ -4,7 +4,10 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
-public class GUI extends JFrame {
+import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchListener;
+import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
+
+public class GUI extends JFrame implements SearchListener {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -37,8 +40,9 @@ public class GUI extends JFrame {
 		this.setVisible(true);
 	}
 	
-	public static void main (String[] args) {
-		getInstance();
+	@Override
+	public void getSearchResult(SearchResult s) {
+		DataViewer.addTrades(s.getResultData());
 	}
 
 }
