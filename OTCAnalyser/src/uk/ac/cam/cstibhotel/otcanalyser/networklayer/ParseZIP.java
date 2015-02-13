@@ -116,19 +116,7 @@ public class ParseZIP {
 			tradeOut.setDayCountConvention(tradeIn[12]);
 			
 			//SETTLEMENT_CURRENCY
-			try {
-				if(tradeIn[13].equals("")){
-					tradeOut.setSettlementCurrency(null);
-				}
-				else{
-					Currency c = Currency.getInstance(tradeIn[13]);
-					tradeOut.setSettlementCurrency(c.getDisplayName());
-				}
-			} catch (IllegalArgumentException e){
-				e.printStackTrace();
-				//Illegal currency entry, not ISO 4217, it stays "GBP"
-				//TODO: What does this mean that this field is empty? Why GBP the default?
-			}
+			tradeOut.setSettlementCurrency(tradeIn[13]);
 			
 			//ASSET_CLASS
 			tradeOut.setAssetClass(AssetClass.parseAssetC(tradeIn[14]));
@@ -196,19 +184,7 @@ public class ParseZIP {
 			tradeOut.setOptionFamily(tradeIn[35]);
 			
 			//OPTION_CURRENCY
-			try {
-				if(tradeIn[36].equals("")){
-					tradeOut.setOptionCurrency(null);
-				}
-				else{
-					Currency c = Currency.getInstance(tradeIn[36]);
-					tradeOut.setOptionCurrency(c.getDisplayName());
-				}
-			} catch (IllegalArgumentException e){
-				System.err.println("Illegal currency");
-				//Illegal currency entry, not ISO 4217, it stays "GBP"
-				//TODO: What does this mean that this field is empty? Why GBP the default?
-			}
+			tradeOut.setOptionCurrency(tradeIn[35]);
 			
 			//OPTION_PREMIUM
 			tradeOut.setOptionPremium(parseDouble(tradeIn[37]));
