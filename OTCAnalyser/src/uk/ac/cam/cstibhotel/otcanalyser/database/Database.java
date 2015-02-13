@@ -310,7 +310,7 @@ public class Database {
 	 */
 	public SearchResult search(Search s) {
 		try {
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
+	/*		PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
 					+"tradeType = ? AND "
 					+"assetClass = ? AND "
 					+"underlyingAsset1 LIKE ? AND "
@@ -328,7 +328,8 @@ public class Database {
 			ps.setString(6, "%" + s.getCurrency() + "%");
 			ps.setTimestamp(7, new Timestamp(s.getStartTime().getTime()));
 			ps.setTimestamp(8, new Timestamp(s.getEndTime().getTime()));
-		//	ps.setString(9, "%" + s.getUPI().toString() + "%");
+		//	ps.setString(9, "%" + s.getUPI().toString() + "%");*/
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM data");
 			ResultSet rs = ps.executeQuery();
 			
 			// TODO no idea what time is for
