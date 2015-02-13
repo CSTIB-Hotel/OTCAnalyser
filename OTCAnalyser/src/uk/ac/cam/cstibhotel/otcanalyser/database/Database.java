@@ -152,7 +152,7 @@ public class Database {
 			
 			if(trade.getAction().equals(Action.CANCEL)) {
 				deleteTrade(trade.getDisseminationID());
-				return true;
+				break; // TODO
 			} else if(trade.getAction().equals(Action.CORRECT)) {
 				executeString = buildUpdateString(iterator, trade.getDisseminationID());
 			} else { // new entry
@@ -310,7 +310,7 @@ public class Database {
 	 */
 	public SearchResult search(Search s) {
 		try {
-	/*		PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
 					+"tradeType = ? AND "
 					+"assetClass = ? AND "
 					+"underlyingAsset1 LIKE ? AND "
@@ -329,7 +329,7 @@ public class Database {
 			ps.setTimestamp(7, new Timestamp(s.getStartTime().getTime()));
 			ps.setTimestamp(8, new Timestamp(s.getEndTime().getTime()));
 		//	ps.setString(9, "%" + s.getUPI().toString() + "%");*/
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM data");
+	//		PreparedStatement ps = connection.prepareStatement("SELECT * FROM data");
 			ResultSet rs = ps.executeQuery();
 			
 			// TODO no idea what time is for
@@ -392,7 +392,7 @@ public class Database {
 
 			return new SearchResult(trades, 0);
 		} catch (SQLException ex) {
-			ex.printStackTrace();
+			System.out.println(ex.getMessage());
 			System.err.println("Search failed");
 			return new SearchResult(new LinkedList<Trade>(), 0);
 		}
