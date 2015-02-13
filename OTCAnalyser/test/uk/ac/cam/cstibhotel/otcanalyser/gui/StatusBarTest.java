@@ -16,6 +16,6 @@ public class StatusBarTest {
 		StatusBar.setMessage("testing3", 1);
 		assertEquals(StatusBar.textArea.getText(),"testing2");
 		StatusBar.reset();
-		assertEquals(StatusBar.textArea.getText(),"");
+		assertEquals(StatusBar.textArea.getText(),"No errors");
 	}
 }

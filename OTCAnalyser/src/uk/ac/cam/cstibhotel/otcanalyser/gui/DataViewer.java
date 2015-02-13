@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
 
 public class DataViewer extends JTabbedPane {
+	
   private static final long serialVersionUID = 1L;
   private DataWindow data;
   private GraphWindow graph;
@@ -29,6 +30,7 @@ public class DataViewer extends JTabbedPane {
     
   }
   
+  //add trades to the DataViewer
   public static void addTrades(List<Trade> trades) {
     for (Trade t : trades) {
       dataViewer.data.getTable().addRow(t);
@@ -36,15 +38,18 @@ public class DataViewer extends JTabbedPane {
     dataViewer.graph.addTradesToDatasets(trades);
   }
   
+  //clear trades - call before adding new trades
   public static void clearTrades() {
   	dataViewer.data = new DataWindow();
   	dataViewer.graph = new GraphWindow();
   }
   
+  //add analysis
   public static void addAnalysis (String analysis) {
 	  dataViewer.analysis.addAnalysis(analysis);
   }
   
+  //add titled analysis
   public static void addAnalysis (String analysis, String title) {
 	  dataViewer.analysis.addAnalysis(analysis, title);
   }
