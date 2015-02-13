@@ -18,6 +18,23 @@ public enum AssetClass {
 		return value;
 	}
 	
+	public static AssetClass lookup(int i){
+		switch(i){
+			case 0:
+				return COMMODITY;
+			case 1:
+				return CREDIT;
+			case 2:
+				return EQUITY;
+			case 3:
+				return FOREX;
+			case 4:
+				return RATES;
+			default:
+				throw new IllegalArgumentException();
+		}
+	}
+	
 	public static AssetClass parseAssetC(String s) throws AssetClassFormatException{
 		switch(s){
 			case "CO":

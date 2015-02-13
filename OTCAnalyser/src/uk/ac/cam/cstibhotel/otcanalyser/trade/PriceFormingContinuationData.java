@@ -19,6 +19,25 @@ public enum PriceFormingContinuationData {
 		return value;
 	}
 	
+	public static PriceFormingContinuationData lookup(int i){
+		switch(i){
+			case 0:
+				return TERMINATION;
+			case 1:
+				return TRADE;
+			case 2:
+				return AMENDMENT;
+			case 3:
+				return INCREASE;
+			case 4: 
+				return NOVATION;
+			case 5:
+				return PARTIALTERMINATION;
+			default:
+				throw new IllegalArgumentException();
+		}
+	}
+	
 	public static PriceFormingContinuationData parsePFCD(String s) throws PFCDFormatException{
 		switch(s){
 			case "Termination":
