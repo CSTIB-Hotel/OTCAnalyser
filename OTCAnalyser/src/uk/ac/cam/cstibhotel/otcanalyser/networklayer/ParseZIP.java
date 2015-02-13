@@ -75,7 +75,7 @@ public class ParseZIP {
 	//TODO: implement this bit
 	private static Trade stringVectorToTrade(String[] tradeIn){
 		Trade tradeOut = new Trade();
-		DateFormat df = new SimpleDateFormat("yyy-MM-dd");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		DateFormat etf = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss");
 		//Setting fields in tradeOut appropriately
 		try{
@@ -116,14 +116,19 @@ public class ParseZIP {
 			tradeOut.setDayCountConvention(tradeIn[12]);
 			
 			//SETTLEMENT_CURRENCY
-			/*try {
-				Currency c = Currency.getInstance(tradeIn[13]);
-				tradeOut.setSettlementCurrency(c.getDisplayName());
+			try {
+				if(tradeIn[13].equals("")){
+					tradeOut.setSettlementCurrency(null);
+				}
+				else{
+					Currency c = Currency.getInstance(tradeIn[13]);
+					tradeOut.setSettlementCurrency(c.getDisplayName());
+				}
 			} catch (IllegalArgumentException e){
 				e.printStackTrace();
 				//Illegal currency entry, not ISO 4217, it stays "GBP"
 				//TODO: What does this mean that this field is empty? Why GBP the default?
-			}*/
+			}
 			
 			//ASSET_CLASS
 			tradeOut.setAssetClass(AssetClass.parseAssetC(tradeIn[14]));
@@ -191,14 +196,19 @@ public class ParseZIP {
 			tradeOut.setOptionFamily(tradeIn[35]);
 			
 			//OPTION_CURRENCY
-			/*try {
-				Currency c = Currency.getInstance(tradeIn[36]);
-				tradeOut.setOptionCurrency(c.getDisplayName());
+			try {
+				if(tradeIn[36].equals("")){
+					tradeOut.setOptionCurrency(null);
+				}
+				else{
+					Currency c = Currency.getInstance(tradeIn[36]);
+					tradeOut.setOptionCurrency(c.getDisplayName());
+				}
 			} catch (IllegalArgumentException e){
-				e.printStackTrace();
+				System.err.println("Illegal currency");
 				//Illegal currency entry, not ISO 4217, it stays "GBP"
 				//TODO: What does this mean that this field is empty? Why GBP the default?
-			}*/
+			}
 			
 			//OPTION_PREMIUM
 			tradeOut.setOptionPremium(parseDouble(tradeIn[37]));
