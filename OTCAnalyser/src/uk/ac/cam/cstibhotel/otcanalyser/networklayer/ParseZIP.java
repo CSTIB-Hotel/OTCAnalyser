@@ -232,11 +232,11 @@ public class ParseZIP {
 		} catch (InvalidTaxonomyException e) {
 			System.err.println("The taxonomy: "+ e.getMessage()+" is invalid. in ParseZIP.java");
 		} catch (PFCDFormatException e) {
-			e.printStackTrace();
+			System.err.println("A trade was found to have invalid PFCD.");
 		} catch (NumberFormatException e){ //thrown by praseDouble: price notation + additional price notation
 			e.printStackTrace();
 		} catch (EmptyTaxonomyException e) {
-			e.printStackTrace();
+			System.err.println("A trade was found to have an empty taxonomy.");
 		}
 		
 		return tradeOut;
@@ -300,16 +300,6 @@ public class ParseZIP {
  		}
  		
  		return dataOut;
-	}
-	
-	public static void main(String[] args) {
-		try {
-			ParseZIP.downloadData("hgc0418-tdw-data-0.s3.amazonaws.com/slices/CUMULATIVE_CREDITS_2015_02_04.zip","\",\"", ",");
-			System.out.println(Integer.parseInt("1,234".replace(",","")));
-		} catch (MalformedURLException e){}
-		catch (IOException e) {
-			e.printStackTrace();
-		} 
 	}
 
 }
