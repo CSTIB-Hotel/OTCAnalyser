@@ -9,7 +9,7 @@ public class TextStrings {
 	static final String[] Assets = {"Credit","Interest","Commodity","Foreign Exchange","Equity"};
 	
 	static final String[] CreditBaseProducts = {"Single Name","Index Tranche","Index", "Total Return Swap","Swaptions","Exotic"};
-	static final String[] CreditSingleNameSubProducts = {"ABS","Corporate","Recovery CDS","Loans","Muni","Sovereign","ABS"};
+	static final String[] CreditSingleNameSubProducts = {"ABS","Corporate","Recovery CDS","Loans","Muni","Sovereign"};
 	static final String[] CreditIndexTrancheSubProducts = {"CDX","LCDX","MCDX","CDX Structured Tranche","iTraxx","iTraxx Structured Trade","ABX"};
 	static final String[] CreditIndexSubProducts = {"CDX","LCDX","MCDX","iTraxx","ABX","CMBX","IOS","MBX","PO","PrimeX","TRX"};
 	static final String[] CreditSwaptionsSubProducts = {"iTraxx","Muni","CDX","MCDX","Sovereign","Corporate"};

@@ -285,7 +285,7 @@ public class Database {
 				timeString = rs.getString(1);
 				if (Long.parseLong(timeString) == 0L) {
 					Calendar c = Calendar.getInstance();
-					c.set(2014, 0, 0);
+					c.set(2015, 0, 0);
 					//System.out.println(c.getTime().toString());
 					return c.getTime();
 				}
