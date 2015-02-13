@@ -11,12 +11,29 @@ public enum Collateralization {
     private short value;
 
     private Collateralization(int value) {
-	this.value = (short) value;
+		this.value = (short) value;
     }
 
     public short getValue() {
-	return value;
+		return value;
     }
+	
+	public static Collateralization lookup(int i){
+		switch(i){
+			case 0:
+				return UC;
+			case 1:
+				return PC;
+			case 2:
+				return FC;
+			case 3:
+				return OC;
+			case 4:
+				return BLANK;
+			default:
+				throw new IllegalArgumentException();
+		}
+	}
     
     public static Collateralization parseColl(String s) throws CollateralizationFormatException{
     	switch(s){

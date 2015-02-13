@@ -19,9 +19,13 @@ import java.util.Map.Entry;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.AssetClass;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.Collateralization;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.EmptyTaxonomyException;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.PriceFormingContinuationData;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.TradeType;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 /**
@@ -65,6 +69,7 @@ public class Database {
 	private Database() throws SQLException, ClassNotFoundException {
 		Class.forName("org.hsqldb.jdbcDriver");
 		connection = DriverManager.getConnection("jdbc:hsqldb:file:" + getDatabasePath());
+		//for memory mapped would have "jdbc:hsqldb:mem:."
 		connection.setAutoCommit(false);
 
 		connection.createStatement().execute("SET WRITE_DELAY FALSE"); // always update data on disk
@@ -135,37 +140,44 @@ public class Database {
 	 * @param trade a trade to be added to the database
 	 * @return true if the database was successfully updated
 	 */
-	public boolean addTrade(Trade trade) {
-		HashMap<String, SQLField> DBNameValue = TradeFieldMapping.getMapping(trade);
-		Iterator<Entry<String, SQLField>> iterator = DBNameValue.entrySet().iterator();
+	public boolean addTrade(List<Trade> trades) {
 		
-		String executeString;
 		
-		if(trade.getAction().equals(Action.CANCEL)) {
-			deleteTrade(trade.getDisseminationID());
-			return true;
-		} else if(trade.getAction().equals(Action.CORRECT)) {
-			executeString = buildUpdateString(iterator, trade.getDisseminationID());
-		} else { // new entry
-			executeString = buildInsertString(iterator);
-		}
-
-		try {
-			PreparedStatement p = connection.prepareStatement(executeString);
-
-			iterator = DBNameValue.entrySet().iterator();
-			while (iterator.hasNext()) {
-				iterator.next().getValue().addToPreparedStatement(p);
+		for (Trade trade : trades) {
+			
+			HashMap<String, SQLField> DBNameValue = TradeFieldMapping.getMapping(trade);
+			Iterator<Entry<String, SQLField>> iterator = DBNameValue.entrySet().iterator();
+			
+			String executeString;
+			
+			if(trade.getAction().equals(Action.CANCEL)) {
+				deleteTrade(trade.getDisseminationID());
+				return true;
+			} else if(trade.getAction().equals(Action.CORRECT)) {
+				executeString = buildUpdateString(iterator, trade.getDisseminationID());
+			} else { // new entry
+				executeString = buildInsertString(iterator);
+			}
+	
+			try {
+				PreparedStatement p = connection.prepareStatement(executeString);
+	
+				iterator = DBNameValue.entrySet().iterator();
+				while (iterator.hasNext()) {
+					iterator.next().getValue().addToPreparedStatement(p);
+				}
+				
+				p.execute();
+				
+			} catch (SQLException e) {
+				System.err.println("Failed to insert/update row");
+				return false;
 			}
 			
-			p.execute();
-			
-		} catch (SQLException e) {
-			System.err.println("Failed to insert/update row");
-			return false;
+			updateLastUpdateTime(trade);
 		}
 
-		return updateLastUpdateTime(trade) && commit();
+		return commit();
 	}
 	
 	/**
@@ -229,7 +241,7 @@ public class Database {
 			System.err.println("Error deleting a trade");
 			return false;
 		}
-		return commit();
+		return true; // commit();
 	}
 	
 	/**
@@ -239,7 +251,10 @@ public class Database {
 	private boolean updateLastUpdateTime(Trade trade){
 		java.util.Date thisUpdateTime = trade.getExecutionTimestamp(); // is this the right date?
 		java.util.Date lastUpdateTime = getLastUpdateTime();
-				
+		
+		if (thisUpdateTime == null)
+			return true;
+		
 		if (thisUpdateTime.after(lastUpdateTime)) {
 			try {
 				PreparedStatement ps = connection.prepareCall("UPDATE info SET vvalue = ? WHERE key = 'last_update'");
@@ -250,7 +265,7 @@ public class Database {
 			}
 		}
 		
-		return commit();
+		return true;// commit();
 	}
 	
 	/**
@@ -275,7 +290,7 @@ public class Database {
 					return c.getTime();
 				}
 				Date temp = new Date(Long.parseLong(timeString));
-				System.out.println(temp.toString());
+				//System.out.println(temp.toString());
 				return temp;
 			} else {
 				throw new RuntimeException("no data");
@@ -293,40 +308,91 @@ public class Database {
 	 * @param s the search parameters
 	 * @return all data matching the search
 	 */
-	/*
-	 private TradeType tradeType;
-	 private AssetClass assetClass;
-	 private String asset;
-	 private int minPrice, maxPrice;
-	 private Currency currency;
-	 private Date startTime, endTime;
-	 private UPI upi;	
-	
-	 */
 	public SearchResult search(Search s) {
 		try {
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
-					+"tradeType = ? AND"
-					+"assetClass = ? AND"
-					+"taxonomy = ? AND"
-					+"optionStrikePrice >= ? AND"
-					+"optionStrikePrice <= ? AND"
-					+"currency = ? AND"
-					+"startTime >= ? AND"
-					+"endTime <= ? AND"
-					+"1 = 1");
+	/*		PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
+					+"tradeType = ? AND "
+					+"assetClass = ? AND "
+					+"underlyingAsset1 LIKE ? AND "
+					+"optionStrikePrice >= ? AND "
+					+"optionStrikePrice <= ? AND "
+					+"settlementCurrency LIKE ? AND "
+					+"executionTime >= ? AND "
+					+"executionTime <= ?");
+				//	+"taxonomy LIKE ?");
 			ps.setShort(1, s.getTradeType().getValue());
 			ps.setShort(2, s.getAssetClass().getValue());
-			ps.setString(3, s.getAsset());
+			ps.setString(3, "%" + s.getAsset() + "%");
 			ps.setFloat(4, s.getMinPrice());
 			ps.setFloat(5, s.getMaxPrice());
-			ps.setString(6, s.getCurrency());
+			ps.setString(6, "%" + s.getCurrency() + "%");
 			ps.setTimestamp(7, new Timestamp(s.getStartTime().getTime()));
 			ps.setTimestamp(8, new Timestamp(s.getEndTime().getTime()));
-			ps.execute();
+		//	ps.setString(9, "%" + s.getUPI().toString() + "%");*/
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM data");
+			ResultSet rs = ps.executeQuery();
+			
+			// TODO no idea what time is for
+			List<Trade> trades = new LinkedList<>();
+			
+			while(rs.next()){
+				Trade t = new Trade();
+				
+				t.setDisseminationID(rs.getLong("id"));
+				t.setOriginalDisseminationID(rs.getLong("origId"));
+				t.setAction(Action.lookup(rs.getShort("action")));
+				t.setExecutionTimestamp(rs.getTimestamp("executionTime"));
+				t.setCleared(rs.getBoolean("cleared"));
+				t.setCollateralization(Collateralization.lookup(rs.getShort("collat")));
+				t.setEndUserException(rs.getBoolean("endUserException"));
+				t.setBespoke(rs.getBoolean("bespoke"));
+				t.setExecutionVenue(rs.getBoolean("executionVenue"));
+				t.setBlockTrades(rs.getBoolean("blockTrades"));
+				t.setEffectiveDate(rs.getDate("effectiveDate"));
+				t.setEndDate(rs.getDate("endDate"));
+				t.setDayCountConvention(rs.getString("dayCountConvention"));
+				t.setSettlementCurrency(rs.getString("settlementCurrency"));
+				t.setTradeType(TradeType.lookup(rs.getShort("tradeType")));
+				t.setAssetClass(AssetClass.lookup(rs.getShort("assetClass")));
+				// t.setSubAssetClass(); // todo
+				// t.setTaxonomy(); // todo
+				t.setPriceFormingContinuationData(PriceFormingContinuationData.lookup(rs.getShort("priceFormingContinuationData")));
+				t.setUnderlyingAsset1(rs.getString("underlyingAsset1"));
+				t.setUnderlyingAsset2(rs.getString("underlyingAsset2"));
+				t.setPriceNotationType(rs.getString("priceNotationType"));
+				t.setPriceNotation(rs.getDouble("priceNotation"));
+				t.setAdditionalPriceNotationType(rs.getString("additionalPriceNotationType"));
+				t.setAdditionalPriceNotation(rs.getDouble("additionalPriceNotation"));
+				t.setNotionalCurrency1(rs.getString("notionalCurrency1"));
+				t.setNotionalCurrency2(rs.getString("notionalCurrency2"));
+				t.setRoundedNotionalAmount1(rs.getString("roundedNotionalAmount1"));
+				t.setRoundedNotionalAmount2(rs.getString("roundedNotionalAmount2"));
+				t.setPaymentFrequency1(rs.getString("paymentFrequency1"));
+				t.setPaymentFrequency2(rs.getString("paymentFrequency2"));
+				t.setResetFrequency1(rs.getString("resetFrequency1"));
+				t.setResetFrequency2(rs.getString("resetFrequency2"));
+				t.setEmbeddedOption(rs.getString("embeddedOption"));
+				t.setOptionStrikePrice(rs.getDouble("optionStrikePrice"));
+				t.setOptionType(rs.getString("optionType"));
+				t.setOptionFamily(rs.getString("optionFamily"));
+				t.setOptionCurrency(rs.getString("optionCurrency"));
+				t.setOptionPremium(rs.getDouble("optionPremium"));
+				t.setOptionLockPeriod(rs.getDate("optionLockPeriod"));
+				t.setOptionExpirationDate(rs.getDate("optionExpirationDate"));
+				t.setPriceNotation2Type(rs.getString("priceNotation2Type"));
+				t.setPriceNotation2(rs.getDouble("priceNotation2"));
+				t.setPriceNotation3Type(rs.getString("priceNotation3Type"));
+				t.setPriceNotation3(rs.getDouble("priceNotation3"));
+				
+				
+				trades.add(t);
+			}
+			
+			System.out.println(trades.size());
 
-			return null;
+			return new SearchResult(trades, 0);
 		} catch (SQLException ex) {
+			ex.printStackTrace();
 			System.err.println("Search failed");
 			return new SearchResult(new LinkedList<Trade>(), 0);
 		}
