@@ -311,14 +311,14 @@ public class Database {
 	public SearchResult search(Search s) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
-					+"tradeType = ? AND"
-					+"assetClass = ? AND"
-					+"underlyingAsset1 LIKE ? AND"
-					+"optionStrikePrice >= ? AND"
-					+"optionStrikePrice <= ? AND"
-					+"currency LIKE ? AND"
-					+"startTime >= ? AND"
-					+"endTime <= ?");
+					+"tradeType = ? AND "
+					+"assetClass = ? AND "
+					+"underlyingAsset1 LIKE ? AND "
+					+"optionStrikePrice >= ? AND "
+					+"optionStrikePrice <= ? AND "
+					+"settlementCurrency LIKE ? AND "
+					+"executionTime >= ? AND "
+					+"executionTime <= ?");
 				//	+"taxonomy LIKE ?");
 			ps.setShort(1, s.getTradeType().getValue());
 			ps.setShort(2, s.getAssetClass().getValue());
@@ -386,9 +386,12 @@ public class Database {
 				
 				trades.add(t);
 			}
+			
+			System.out.println(trades.size());
 
 			return new SearchResult(trades, 0);
 		} catch (SQLException ex) {
+			ex.printStackTrace();
 			System.err.println("Search failed");
 			return new SearchResult(new LinkedList<Trade>(), 0);
 		}
