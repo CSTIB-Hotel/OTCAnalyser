@@ -37,17 +37,9 @@ public class Database {
 	private static Database db;
 	private static Connection connection;
 	
-	private static String getDatabasePath(){
-		String os = System.getProperty("os.name");
-				
-		if(os.contains("Windows")){
-			return "database.db";
-		} else if (os.contains("Mac")){
-			return "~/Library/OTCAnalyser/database.db";
-		} else {
-			// Temporary fix for MCS linux
-			return "database.db";
-		}
+	private static String getDatabasePath() {
+		// Local file path regardless of OS
+		return "database.db";
 	}
 
 	public static Database getDB() {
@@ -55,12 +47,11 @@ public class Database {
 			try {
 				db = new Database();
 			} catch (SQLException ex) {
-				System.err.println("There was a severe database error, class 1");
-			//	System.exit(1); // TODO we probably don't want to actulaly quit
+				System.err.println("There was a fatal database error, class 1");
+				System.exit(1);
 			} catch (ClassNotFoundException e) {
-				System.err.println("There was a severe database error, class 2");
-			//	System.exit(2); // TODO we probably don't want to actulaly quit
-
+				System.err.println("Error: Could not locate database driver");
+				System.exit(2);
 			}
 		}
 		return db;
@@ -152,7 +143,7 @@ public class Database {
 			
 			if(trade.getAction().equals(Action.CANCEL)) {
 				deleteTrade(trade.getDisseminationID());
-				return true;
+				break;
 			} else if(trade.getAction().equals(Action.CORRECT)) {
 				executeString = buildUpdateString(iterator, trade.getDisseminationID());
 			} else { // new entry
@@ -277,26 +268,21 @@ public class Database {
 			Statement s = connection.createStatement();
 			s.execute("SELECT vvalue FROM info WHERE key = 'last_update'");
 		
-			
 			String timeString;
 			
 			ResultSet rs = s.getResultSet();
-			if(rs.next()){
+			if (rs.next()) {
 				timeString = rs.getString(1);
 				if (Long.parseLong(timeString) == 0L) {
 					Calendar c = Calendar.getInstance();
-					c.set(2015, 0, 0);
-					//System.out.println(c.getTime().toString());
+					// First available data is from 28th February 2013
+					c.set(2013, 1, 27);
 					return c.getTime();
 				}
-				Date temp = new Date(Long.parseLong(timeString));
-				//System.out.println(temp.toString());
-				return temp;
+				return new Date(Long.parseLong(timeString));
 			} else {
 				throw new RuntimeException("no data");
 			}
-			
-			//return new java.util.Date(Long.parseLong(timeString));
 		} catch (SQLException ex) {
 			System.err.println("Could not get the last update time");
 			return new java.util.Date(0);
