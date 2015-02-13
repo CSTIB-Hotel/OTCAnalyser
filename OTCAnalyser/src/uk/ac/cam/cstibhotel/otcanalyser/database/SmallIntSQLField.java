@@ -2,12 +2,13 @@ package uk.ac.cam.cstibhotel.otcanalyser.database;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 
 public class SmallIntSQLField extends SQLField {
 
-	private final short fieldValue;
+	private final Short fieldValue;
 
-	public SmallIntSQLField(short fieldValue) {
+	public SmallIntSQLField(Short fieldValue) {
 		this.fieldValue = fieldValue;
 	}
 	
@@ -18,7 +19,10 @@ public class SmallIntSQLField extends SQLField {
 
 	@Override
 	public void addToPreparedStatement(PreparedStatement p) throws SQLException {
-		p.setShort(index, fieldValue);
+		if (fieldValue == null)
+			p.setNull(index, Types.SMALLINT);
+		else
+			p.setShort(index, fieldValue);
 	}
 	
 }

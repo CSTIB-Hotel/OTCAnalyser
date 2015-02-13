@@ -1,21 +1,28 @@
 package uk.ac.cam.cstibhotel.otcanalyser.database;
 
-import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.EmptyTaxonomyException;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
-
-import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
-import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+
+import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
+import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.EmptyTaxonomyException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 /**
  *
@@ -30,11 +37,12 @@ public class Database {
 		String os = System.getProperty("os.name");
 				
 		if(os.contains("Windows")){
-			return "C:\\Program Files/OTCAnalyser/database.db";
+			return "database.db";
 		} else if (os.contains("Mac")){
 			return "~/Library/OTCAnalyser/database.db";
 		} else {
-			return "/usr/share/OTCAnalyser/database.db";
+			// Temporary fix for MCS linux
+			return "database.db";
 		}
 	}
 
@@ -260,11 +268,20 @@ public class Database {
 			ResultSet rs = s.getResultSet();
 			if(rs.next()){
 				timeString = rs.getString(1);
+				if (Long.parseLong(timeString) == 0L) {
+					Calendar c = Calendar.getInstance();
+					c.set(2014, 0, 0);
+					//System.out.println(c.getTime().toString());
+					return c.getTime();
+				}
+				Date temp = new Date(Long.parseLong(timeString));
+				System.out.println(temp.toString());
+				return temp;
 			} else {
 				throw new RuntimeException("no data");
 			}
 			
-			return new java.util.Date(Long.parseLong(timeString));
+			//return new java.util.Date(Long.parseLong(timeString));
 		} catch (SQLException ex) {
 			System.err.println("Could not get the last update time");
 			return new java.util.Date(0);

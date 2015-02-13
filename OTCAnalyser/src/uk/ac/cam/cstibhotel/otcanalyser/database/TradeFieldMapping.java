@@ -32,7 +32,7 @@ public class TradeFieldMapping {
 		DBNameDBType.put("id", new BigIntSQLField(t.getDisseminationID()));
 		DBNameDBType.put("origId", new BigIntSQLField(t.getOriginalDisseminationID()));
 		DBNameDBType.put("action", new SmallIntSQLField(t.getAction().getValue()));
-		DBNameDBType.put("executionTime", new TimestampSQLField(t.getExecutionTimestamp().getTime()));
+		DBNameDBType.put("executionTime", new TimestampSQLField((t.getExecutionTimestamp() == null) ? null : t.getExecutionTimestamp().getTime()));
 		DBNameDBType.put("cleared", new BoolSQLField(t.isCleared()));
 		DBNameDBType.put("collat", new SmallIntSQLField(t.getCollateralization().getValue()));
 		DBNameDBType.put("endUserException", new BoolSQLField(t.isEndUserException()));

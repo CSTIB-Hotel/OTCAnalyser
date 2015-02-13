@@ -118,7 +118,7 @@ public class ParseZIP {
 			//SETTLEMENT_CURRENCY
 			try {
 				Currency c = Currency.getInstance(tradeIn[13]);
-				tradeOut.setSettlementCurrency(c);
+				tradeOut.setSettlementCurrency(c.getDisplayName());
 			} catch (IllegalArgumentException e){
 				//Illegal currency entry, not ISO 4217, it stays "GBP"
 				//TODO: What does this mean that this field is empty? Why GBP the default?
@@ -192,7 +192,7 @@ public class ParseZIP {
 			//OPTION_CURRENCY
 			try {
 				Currency c = Currency.getInstance(tradeIn[36]);
-				tradeOut.setOptionCurrency(c);
+				tradeOut.setOptionCurrency(c.getDisplayName());
 			} catch (IllegalArgumentException e){
 				//Illegal currency entry, not ISO 4217, it stays "GBP"
 				//TODO: What does this mean that this field is empty? Why GBP the default?
@@ -242,6 +242,7 @@ public class ParseZIP {
 	
 	public static LinkedList<Trade> downloadData(String zipFile, String splitBy, String secondarySplitBy) throws IOException, MalformedURLException {
 		String line;
+		String prevLine = "";
 		int i = 0;
 		LinkedList<Trade> dataOut = new LinkedList<Trade>();
 		
@@ -253,6 +254,11 @@ public class ParseZIP {
 		
 		//reading line by line
 		while((line = br.readLine()) != null){
+			System.out.println("PREV: " + prevLine);
+			System.out.println("LINE: " + line);
+			if (prevLine.equals(line)) {
+				break;
+			}
  			//do not read the first line
 			if(i!=0){
 				//fix quotes around dissemination ID
@@ -282,7 +288,22 @@ public class ParseZIP {
 
  				dataOut.add(stringVectorToTrade(tradeIn));
  			}
+			prevLine = line;
  			i++;
+ 			
+ 			/*
+ 			 * *****************************************************************
+ 			 * TODO This code is complete shit
+ 			 * *****************************************************************
+ 			 */
+ 			if (i > 100) break;
+ 			/*
+ 			 * *****************************************************************
+ 			 * END OF SHIT
+ 			 * *****************************************************************
+ 			 */
+ 			
+ 			//System.out.println("GOT TO THIS POINT");
  		}
 		
  		try {

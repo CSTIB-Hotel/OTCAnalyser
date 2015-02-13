@@ -2,12 +2,13 @@ package uk.ac.cam.cstibhotel.otcanalyser.database;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 
 public class BigIntSQLField extends SQLField{
 	
-	private final long fieldValue;
+	private final Long fieldValue;
 
-	public BigIntSQLField(long fieldValue) {
+	public BigIntSQLField(Long fieldValue) {
 		this.fieldValue = fieldValue;
 	}
 
@@ -18,7 +19,10 @@ public class BigIntSQLField extends SQLField{
 
 	@Override
 	public void addToPreparedStatement(PreparedStatement p) throws SQLException {
-		p.setLong(index, fieldValue);		
+		if (fieldValue == null)
+			p.setNull(index, Types.BIGINT);
+		else
+			p.setLong(index, fieldValue);		
 	}
 	
 }
