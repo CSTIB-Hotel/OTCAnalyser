@@ -65,6 +65,7 @@ public class Database {
 	private Database() throws SQLException, ClassNotFoundException {
 		Class.forName("org.hsqldb.jdbcDriver");
 		connection = DriverManager.getConnection("jdbc:hsqldb:file:" + getDatabasePath());
+		//for memory mapped would have "jdbc:hsqldb:mem:."
 		connection.setAutoCommit(false);
 
 		connection.createStatement().execute("SET WRITE_DELAY FALSE"); // always update data on disk
@@ -135,37 +136,44 @@ public class Database {
 	 * @param trade a trade to be added to the database
 	 * @return true if the database was successfully updated
 	 */
-	public boolean addTrade(Trade trade) {
-		HashMap<String, SQLField> DBNameValue = TradeFieldMapping.getMapping(trade);
-		Iterator<Entry<String, SQLField>> iterator = DBNameValue.entrySet().iterator();
+	public boolean addTrade(List<Trade> trades) {
 		
-		String executeString;
 		
-		if(trade.getAction().equals(Action.CANCEL)) {
-			deleteTrade(trade.getDisseminationID());
-			return true;
-		} else if(trade.getAction().equals(Action.CORRECT)) {
-			executeString = buildUpdateString(iterator, trade.getDisseminationID());
-		} else { // new entry
-			executeString = buildInsertString(iterator);
-		}
-
-		try {
-			PreparedStatement p = connection.prepareStatement(executeString);
-
-			iterator = DBNameValue.entrySet().iterator();
-			while (iterator.hasNext()) {
-				iterator.next().getValue().addToPreparedStatement(p);
+		for (Trade trade : trades) {
+			
+			HashMap<String, SQLField> DBNameValue = TradeFieldMapping.getMapping(trade);
+			Iterator<Entry<String, SQLField>> iterator = DBNameValue.entrySet().iterator();
+			
+			String executeString;
+			
+			if(trade.getAction().equals(Action.CANCEL)) {
+				deleteTrade(trade.getDisseminationID());
+				return true;
+			} else if(trade.getAction().equals(Action.CORRECT)) {
+				executeString = buildUpdateString(iterator, trade.getDisseminationID());
+			} else { // new entry
+				executeString = buildInsertString(iterator);
+			}
+	
+			try {
+				PreparedStatement p = connection.prepareStatement(executeString);
+	
+				iterator = DBNameValue.entrySet().iterator();
+				while (iterator.hasNext()) {
+					iterator.next().getValue().addToPreparedStatement(p);
+				}
+				
+				p.execute();
+				
+			} catch (SQLException e) {
+				System.err.println("Failed to insert/update row");
+				return false;
 			}
 			
-			p.execute();
-			
-		} catch (SQLException e) {
-			System.err.println("Failed to insert/update row");
-			return false;
+			updateLastUpdateTime(trade);
 		}
 
-		return updateLastUpdateTime(trade) && commit();
+		return commit();
 	}
 	
 	/**
@@ -229,7 +237,7 @@ public class Database {
 			System.err.println("Error deleting a trade");
 			return false;
 		}
-		return commit();
+		return true; // commit();
 	}
 	
 	/**
@@ -239,7 +247,10 @@ public class Database {
 	private boolean updateLastUpdateTime(Trade trade){
 		java.util.Date thisUpdateTime = trade.getExecutionTimestamp(); // is this the right date?
 		java.util.Date lastUpdateTime = getLastUpdateTime();
-				
+		
+		if (thisUpdateTime == null)
+			return true;
+		
 		if (thisUpdateTime.after(lastUpdateTime)) {
 			try {
 				PreparedStatement ps = connection.prepareCall("UPDATE info SET vvalue = ? WHERE key = 'last_update'");
@@ -250,7 +261,7 @@ public class Database {
 			}
 		}
 		
-		return commit();
+		return true;// commit();
 	}
 	
 	/**
@@ -275,7 +286,7 @@ public class Database {
 					return c.getTime();
 				}
 				Date temp = new Date(Long.parseLong(timeString));
-				System.out.println(temp.toString());
+				//System.out.println(temp.toString());
 				return temp;
 			} else {
 				throw new RuntimeException("no data");

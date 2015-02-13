@@ -116,13 +116,14 @@ public class ParseZIP {
 			tradeOut.setDayCountConvention(tradeIn[12]);
 			
 			//SETTLEMENT_CURRENCY
-			try {
+			/*try {
 				Currency c = Currency.getInstance(tradeIn[13]);
 				tradeOut.setSettlementCurrency(c.getDisplayName());
 			} catch (IllegalArgumentException e){
+				e.printStackTrace();
 				//Illegal currency entry, not ISO 4217, it stays "GBP"
 				//TODO: What does this mean that this field is empty? Why GBP the default?
-			}
+			}*/
 			
 			//ASSET_CLASS
 			tradeOut.setAssetClass(AssetClass.parseAssetC(tradeIn[14]));
@@ -190,13 +191,14 @@ public class ParseZIP {
 			tradeOut.setOptionFamily(tradeIn[35]);
 			
 			//OPTION_CURRENCY
-			try {
+			/*try {
 				Currency c = Currency.getInstance(tradeIn[36]);
 				tradeOut.setOptionCurrency(c.getDisplayName());
 			} catch (IllegalArgumentException e){
+				e.printStackTrace();
 				//Illegal currency entry, not ISO 4217, it stays "GBP"
 				//TODO: What does this mean that this field is empty? Why GBP the default?
-			}
+			}*/
 			
 			//OPTION_PREMIUM
 			tradeOut.setOptionPremium(parseDouble(tradeIn[37]));
@@ -254,8 +256,6 @@ public class ParseZIP {
 		
 		//reading line by line
 		while((line = br.readLine()) != null){
-			System.out.println("PREV: " + prevLine);
-			System.out.println("LINE: " + line);
 			if (prevLine.equals(line)) {
 				break;
 			}
@@ -289,26 +289,13 @@ public class ParseZIP {
  				dataOut.add(stringVectorToTrade(tradeIn));
  			}
 			prevLine = line;
- 			i++;
- 			
- 			/*
- 			 * *****************************************************************
- 			 * TODO This code is complete shit
- 			 * *****************************************************************
- 			 */
- 			if (i > 100) break;
- 			/*
- 			 * *****************************************************************
- 			 * END OF SHIT
- 			 * *****************************************************************
- 			 */
- 			
- 			//System.out.println("GOT TO THIS POINT");
+			i++;
  		}
 		
  		try {
  			br.close();
  		} catch (IOException IOEx) {
+ 			IOEx.printStackTrace();
  			//safe to ignore
  		}
  		
