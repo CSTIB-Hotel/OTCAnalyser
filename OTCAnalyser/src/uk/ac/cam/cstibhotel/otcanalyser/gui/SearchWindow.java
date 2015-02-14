@@ -2,12 +2,15 @@ package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import java.awt.Component;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
 
 public class SearchWindow extends JPanel {
 	
@@ -29,6 +32,7 @@ public class SearchWindow extends JPanel {
 	private JLabel currencyDescriptor;
 	public JTextField currency;
 	public JButton SearchButton;
+	public SaveWindow saveWindow;
 	
 	private static SearchWindow instance;
 	
@@ -38,8 +42,7 @@ public class SearchWindow extends JPanel {
 	}
 	
 	private SearchWindow() {
-			setSize(200,100); // default size is 0,0
-			setLocation(100,200); // default is 0,0 (top left corner)
+			setSize(200,100);
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			TaxonomySelectorDescriptor =  new CenteredJLabel("Select a taxonomy");
 			this.add(TaxonomySelectorDescriptor);
@@ -93,6 +96,9 @@ public class SearchWindow extends JPanel {
 			SearchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 			this.add(SearchButton);
 			SearchButton.setVisible(true);
+			saveWindow = SaveWindow.getInstance();
+			this.add(saveWindow);
+			saveWindow.setVisible(true);
 	}
 	
 }
