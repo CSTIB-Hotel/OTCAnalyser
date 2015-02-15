@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.EmptyStackException;
 import java.util.LinkedList;
 import java.util.zip.ZipInputStream;
 
@@ -85,7 +86,6 @@ public class ParseZIP {
 			//Parsing the execution timestamp date
 			tradeOut.setExecutionTimestamp(parseDate(etf,tradeIn[3]));
 			
-			
 			//Cleared
 			tradeOut.setCleared(convertToBool("C", "U", tradeIn[4]));
 			
@@ -110,7 +110,6 @@ public class ParseZIP {
 			//END_DATE
 			tradeOut.setEndDate(parseDate(df,tradeIn[11]));
 		
-			
 			//DAY_COUNT_CONVENTION
 			tradeOut.setDayCountConvention(tradeIn[12]);
 			
@@ -121,10 +120,23 @@ public class ParseZIP {
 			tradeOut.setAssetClass(AssetClass.parseAssetC(tradeIn[14]));
 			
 			//SUB_ASSET_CLASS tradeIn[15]
+			tradeOut.setSubAssetClass(tradeIn[15]);
 			
 			//UPI ie: taxonomy 
-			tradeOut.setTaxonomy(new UPI(tradeIn[16]));
-			
+			if(tradeIn[16].equals("")){
+				UPI taxonomy = new UPI("Commodity:Metals");
+				taxonomy.setAssetClass(tradeOut.getAssetClass());
+				if(tradeOut.getSubAssetClass().equals("")){
+					throw new InvalidTaxonomyException("Empty Sub asset class - Could not create a new taxonomy");
+				}
+				else{
+					taxonomy.setBaseProduct(tradeOut.getSubAssetClass());
+					tradeOut.setTaxonomy(taxonomy);
+				}
+			}
+			else{
+				tradeOut.setTaxonomy(new UPI(tradeIn[16]));
+			}
 			//PRICE_FORMING_CONT_DATA
 			tradeOut.setPriceFormingContinuationData(PriceFormingContinuationData.parsePFCD(tradeIn[17]));
 			
@@ -220,8 +232,9 @@ public class ParseZIP {
 			System.err.println("A trade was found to have invalid PFCD.");
 		} catch (NumberFormatException e){ //thrown by praseDouble: price notation + additional price notation
 			e.printStackTrace();
-		} catch (EmptyTaxonomyException e) {
-			System.err.println("A trade was found to have an empty taxonomy.");
+		} catch (EmptyTaxonomyException e){
+			//cant really occur, safe to ingore, but stacktraceprintincluded
+			e.printStackTrace();
 		}
 		
 		return tradeOut;
