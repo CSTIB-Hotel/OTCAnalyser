@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import uk.ac.cam.cstibhotel.otcanalyser.database.Database;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.SearchWindow;
@@ -64,7 +65,7 @@ public class CommunicationLayer {
 		int day = (int) SearchWindow.getInstance().StartDate.Day.getSelectedItem();
 		String monthString = (String) SearchWindow.getInstance().StartDate.Months.getSelectedItem();
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(new SimpleDateFormat("MMM").parse(monthString));
+		cal.setTime(new SimpleDateFormat("MMM", Locale.ENGLISH).parse(monthString));
 		int month = cal.get(Calendar.MONTH) + 1;
 		int year = (int) SearchWindow.getInstance().StartDate.Year.getSelectedItem();
 		cal.set(year, month, day);
@@ -73,7 +74,7 @@ public class CommunicationLayer {
 		
 		day = (int) SearchWindow.getInstance().EndDate.Day.getSelectedItem();
 		monthString = (String) SearchWindow.getInstance().EndDate.Months.getSelectedItem();
-		cal.setTime(new SimpleDateFormat("MMM").parse(monthString));
+		cal.setTime(new SimpleDateFormat("MMM", Locale.ENGLISH).parse(monthString));
 		month = cal.get(Calendar.MONTH) + 1;
 		year = (int) SearchWindow.getInstance().EndDate.Year.getSelectedItem();
 		cal.set(year, month, day);
