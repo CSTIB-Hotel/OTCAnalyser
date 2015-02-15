@@ -10,6 +10,22 @@ import org.junit.Test;
  */
 public class UPITest {
 	
+	@Test
+	public void testNewUPI() throws InvalidTaxonomyException,
+		EmptyTaxonomyException {
+		UPI toTest1 = new UPI("Commodity:Metals");
+		UPI toTest2 = new UPI("ForeignExchange:Metals");
+		UPI toTest3 = new UPI("Credit:Metals");
+		UPI toTest4 = new UPI("InterestRate:Metals");
+		UPI toTest5 = new UPI("Equity:Metals");
+		assertEquals(toTest1.getAssetClass(), AssetClass.COMMODITY);
+		assertEquals(toTest2.getAssetClass(), AssetClass.FOREX);
+		assertEquals(toTest3.getAssetClass(), AssetClass.CREDIT);
+		assertEquals(toTest4.getAssetClass(), AssetClass.RATES);
+		assertEquals(toTest5.getAssetClass(), AssetClass.EQUITY);
+		
+	}
+	
 	// Test a valid commodity taxonomy (full 5 terms)
 	@Test
 	public void testValidCommodityTaxonomy() throws InvalidTaxonomyException,
