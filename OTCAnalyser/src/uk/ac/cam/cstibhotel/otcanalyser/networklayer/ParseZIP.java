@@ -1,8 +1,11 @@
 package uk.ac.cam.cstibhotel.otcanalyser.networklayer;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -12,6 +15,8 @@ import java.util.Date;
 import java.util.EmptyStackException;
 import java.util.LinkedList;
 import java.util.zip.ZipInputStream;
+
+import javax.print.PrintException;
 
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.ActionFormatException;
@@ -34,6 +39,8 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
  */
 
 public class ParseZIP {
+	
+	private final static String ERROR_LOG_PATH = "networklayer/error.log";
 	
 	private static Boolean convertToBool(String tv, String fv, String input) {
 		if(input.equals(tv)){
@@ -70,6 +77,20 @@ public class ParseZIP {
 		} catch ( ParseException e ) {
 			return null;
 		}
+	}
+	
+	private static void logError(Exception ie){
+		Date now = new Date();
+		try{
+			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(ERROR_LOG_PATH, true)));
+			out.println(now+" - "+ie.getClass().getName()+" occured. - "+ie.getMessage());
+			out.close();
+			
+		}
+		catch (IOException e){
+			e.printStackTrace();
+		}
+		
 	}
 	
 	//TODO: implement this bit
@@ -221,20 +242,20 @@ public class ParseZIP {
 			
 			
 		} catch(ActionFormatException e){
-			e.printStackTrace();
+			logError(e);
 		} catch(CollateralizationFormatException e){
-			e.printStackTrace();
+			logError(e);
 		} catch(AssetClassFormatException e){
-			e.printStackTrace();
+			logError(e);
 		} catch (InvalidTaxonomyException e) {
-			System.err.println("The taxonomy: "+ e.getMessage()+" is invalid. in ParseZIP.java");
+			logError(e);
 		} catch (PFCDFormatException e) {
-			System.err.println("A trade was found to have invalid PFCD.");
+			logError(e);
 		} catch (NumberFormatException e){ //thrown by praseDouble: price notation + additional price notation
-			e.printStackTrace();
+			logError(e);
 		} catch (EmptyTaxonomyException e){
 			//cant really occur, safe to ingore, but stacktraceprintincluded
-			e.printStackTrace();
+			logError(e);
 		}
 		
 		return tradeOut;
@@ -299,5 +320,5 @@ public class ParseZIP {
  		
  		return dataOut;
 	}
-
+	
 }
