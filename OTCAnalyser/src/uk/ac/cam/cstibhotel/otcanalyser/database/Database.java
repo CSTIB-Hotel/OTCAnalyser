@@ -47,6 +47,7 @@ public class Database {
 			try {
 				db = new Database();
 			} catch (SQLException ex) {
+				ex.printStackTrace();
 				System.err.println("There was a fatal database error, class 1");
 				System.exit(1);
 			} catch (ClassNotFoundException e) {

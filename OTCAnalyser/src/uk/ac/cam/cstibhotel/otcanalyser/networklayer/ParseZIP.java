@@ -242,20 +242,20 @@ public class ParseZIP {
 			
 			
 		} catch(ActionFormatException e){
-			logError(e);
+			e.printStackTrace();
 		} catch(CollateralizationFormatException e){
-			logError(e);
+			e.printStackTrace();
 		} catch(AssetClassFormatException e){
-			logError(e);
+			e.printStackTrace();
 		} catch (InvalidTaxonomyException e) {
-			logError(e);
+			e.printStackTrace();
 		} catch (PFCDFormatException e) {
-			logError(e);
+			e.printStackTrace();
 		} catch (NumberFormatException e){ //thrown by praseDouble: price notation + additional price notation
-			logError(e);
+			e.printStackTrace();
 		} catch (EmptyTaxonomyException e){
 			//cant really occur, safe to ingore, but stacktraceprintincluded
-			logError(e);
+			e.printStackTrace();
 		}
 		
 		return tradeOut;

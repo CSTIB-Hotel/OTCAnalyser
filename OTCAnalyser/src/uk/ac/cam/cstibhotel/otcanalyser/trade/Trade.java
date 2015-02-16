@@ -71,7 +71,7 @@ public class Trade {
 		settlementCurrency = "";
 		tradeType = TradeType.OPTION;
 		assetClass = AssetClass.COMMODITY;
-		subAssetClass = null;
+		subAssetClass = "";
 		try {
 			taxonomy = new UPI("ForeignExchange:ForeignExchange:Bar");
 		} catch (InvalidTaxonomyException ex) {

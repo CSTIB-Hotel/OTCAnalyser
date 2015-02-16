@@ -44,7 +44,11 @@ public enum PriceFormingContinuationData {
 				return TERMINATION;
 			case "Trade":
 				return TRADE;
+			case "TRADE":
+				return TRADE;
 			case "Amendment":
+				return AMENDMENT;
+			case "AMENDMENT":
 				return AMENDMENT;
 			case "Increase":
 				return INCREASE;
