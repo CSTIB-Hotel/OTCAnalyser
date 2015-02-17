@@ -47,7 +47,9 @@ public class TradeFieldMapping {
 		DBNameDBType.put("assetClass", new SmallIntSQLField(t.getAssetClass().getValue()));
 		DBNameDBType.put("subAssetClass", new VarCharSQLField(255, t.getSubAssetClass().toString())); // TODO write subassetclass
 		DBNameDBType.put("taxonomy", new VarCharSQLField(255, t.getTaxonomy().toString())); // TODO write UPI
-		DBNameDBType.put("priceFormingContinuationData", new SmallIntSQLField(t.getPriceFormingContinuationData().getValue()));
+		if(t.getPriceFormingContinuationData() != null){ // TODO fix this
+			DBNameDBType.put("priceFormingContinuationData", new SmallIntSQLField(t.getPriceFormingContinuationData().getValue()));
+		}
 		DBNameDBType.put("underlyingAsset1", new VarCharSQLField(255, t.getUnderlyingAsset1()));
 		DBNameDBType.put("underlyingAsset2", new VarCharSQLField(255, t.getUnderlyingAsset2()));
 		DBNameDBType.put("priceNotationType", new VarCharSQLField(255, t.getPriceNotationType()));
