@@ -14,6 +14,7 @@ public class TaxonomySelector extends JPanel {
 	private AssetChange assetChange;
 	BaseProductChange baseProductChange;
 	private static TaxonomySelector instance;
+	public JComboBox<String> settlementType;
 	
 	public static TaxonomySelector getInstance() {
 		if (instance==null) instance = new TaxonomySelector();
@@ -31,13 +32,16 @@ public class TaxonomySelector extends JPanel {
 		baseProductChange  = new BaseProductChange(this);
 		BaseClass.addActionListener(baseProductChange);
 		SubClass = new JComboBox<String>(TextStrings.CreditSingleNameSubProducts);
+		settlementType = new JComboBox<String> (TextStrings.SettlementTypes);
+		assetChange.updateAssetClass();
 		baseProductChange.updateBaseClass();
 		Asset.setVisible(true);
 		BaseClass.setVisible(true);
-		SubClass.setVisible(true);
+		SubClass.setVisible(true);;
 		this.add(Asset,BorderLayout.WEST);
 		this.add(BaseClass);
 		this.add(SubClass,BorderLayout.EAST);
+		this.add(settlementType);
 	}
 
 }
