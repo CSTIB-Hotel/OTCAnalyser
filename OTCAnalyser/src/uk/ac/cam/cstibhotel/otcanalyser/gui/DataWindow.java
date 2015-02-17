@@ -63,4 +63,8 @@ public class DataWindow extends CBLPanel implements ActionListener, ItemListener
     }
   }
   
+  public void clear() {
+	  table.setModel(new DataTableModel(new ArrayList<Trade>()));
+  }
+  
 }

@@ -39,8 +39,8 @@ public class DataViewer extends JTabbedPane {
   
   //clear trades - call before adding new trades
   public static void clearTrades() {
-  	dataViewer.data = new DataWindow();
-  	dataViewer.graph = new GraphWindow();
+  	dataViewer.data.clear();
+  	dataViewer.graph.clear();
   }
   
   //add analysis

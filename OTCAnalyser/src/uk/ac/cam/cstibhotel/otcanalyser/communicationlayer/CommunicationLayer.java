@@ -82,26 +82,41 @@ public class CommunicationLayer {
 		s.setEndTime(endTime);
 		
 		String fullTaxonomy = "";
-		fullTaxonomy += SearchWindow.getInstance().tax.Asset.getSelectedItem();
+		/*
+		 * Can't just use getSelectedItem(), because UPI isn't expecting
+		 * "Foreign Exchange" but rather "ForeignExchange" and not "Interest"
+		 * but "InterestRate"!
+		 */
+		if (SearchWindow.getInstance().tax.Asset.getSelectedIndex() != 1 &&
+			SearchWindow.getInstance().tax.Asset.getSelectedIndex() != 3) {
+			fullTaxonomy += SearchWindow.getInstance().tax.Asset.getSelectedItem();
+			System.out.println(SearchWindow.getInstance().tax.Asset.getSelectedItem());
+		} else if (SearchWindow.getInstance().tax.Asset.getSelectedIndex() == 1) {
+			fullTaxonomy += "InterestRate";
+		} else {
+			fullTaxonomy += "ForeignExchange";
+		}
 		fullTaxonomy += ":";
 		fullTaxonomy += SearchWindow.getInstance().tax.BaseClass.getSelectedItem();
 		fullTaxonomy += ":";
 		fullTaxonomy += SearchWindow.getInstance().tax.SubClass.getSelectedItem();
 		try {
 			UPI taxonomy = new UPI(fullTaxonomy);
+			
+			// Only set UPI and get UPI after it's guaranteed that there is one (no exceptions)
 			s.setUPI(taxonomy);
+			s.setAssetClass(s.getUPI().getAssetClass());
+			
+			// Only search after the UPI for s has been set!
+			// Get the result from the database
+			SearchResult result = Database.getDB().search(s);
+			
+			// Send it to each member of searchListeners
+			for (SearchListener l : searchListeners) {
+				l.getSearchResult(result);
+			}
 		} catch (InvalidTaxonomyException | EmptyTaxonomyException e) {
 			StatusBar.setMessage("Error: Invalid taxonomy " + fullTaxonomy, 1);
-		}
-		
-		s.setAssetClass(s.getUPI().getAssetClass());
-		
-		// Get the result from the database
-		SearchResult result = Database.getDB().search(s);
-		
-		// Send it to each member of searchListeners
-		for (SearchListener l : searchListeners) {
-			l.getSearchResult(result);
 		}
 	}
 	
