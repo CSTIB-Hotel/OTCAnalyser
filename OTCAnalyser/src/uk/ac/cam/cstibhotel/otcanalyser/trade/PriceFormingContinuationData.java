@@ -47,6 +47,7 @@ public enum PriceFormingContinuationData {
 	public static PriceFormingContinuationData parsePFCD(String s) throws PFCDFormatException{
 		s = s.toLowerCase();
 		s = s.replace("-", "");
+		s = s.replace(" ", "");
 		switch(s){
 			case "termination":
 				return TERMINATION;
