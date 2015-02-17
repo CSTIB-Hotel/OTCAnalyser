@@ -9,7 +9,9 @@ public enum PriceFormingContinuationData {
 	NOVATION(4),
 	PARTIALTERMINATION(5),
 	EXIT(6),
-	EXERCISE(7);
+	EXERCISE(7),
+	GLOBALCANCEL(8),
+	AMEND(9);
 
 	private short value;
 
@@ -39,6 +41,10 @@ public enum PriceFormingContinuationData {
 				return EXIT;
 			case 7:
 				return EXERCISE;
+			case 8:
+				return GLOBALCANCEL;
+			case 9:
+				return AMEND;
 			default:
 				throw new IllegalArgumentException();
 		}
@@ -67,6 +73,10 @@ public enum PriceFormingContinuationData {
 				return EXIT;
 			case "exercise":
 				return EXERCISE;
+			case "globalcancel":
+				return GLOBALCANCEL;
+			case "amend":
+				return AMEND;
 			case "":
 				return null;
 			default:
