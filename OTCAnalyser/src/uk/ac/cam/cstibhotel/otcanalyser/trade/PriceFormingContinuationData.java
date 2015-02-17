@@ -7,7 +7,8 @@ public enum PriceFormingContinuationData {
 	AMENDMENT(2),
 	INCREASE(3),
 	NOVATION(4),
-	PARTIALTERMINATION(5);
+	PARTIALTERMINATION(5),
+	EXIT(6);
 
 	private short value;
 
@@ -33,6 +34,8 @@ public enum PriceFormingContinuationData {
 				return NOVATION;
 			case 5:
 				return PARTIALTERMINATION;
+			case 6:
+				return EXIT;
 			default:
 				throw new IllegalArgumentException();
 		}
@@ -40,6 +43,7 @@ public enum PriceFormingContinuationData {
 	
 	public static PriceFormingContinuationData parsePFCD(String s) throws PFCDFormatException{
 		s = s.toLowerCase();
+		s = s.replace("-", "");
 		switch(s){
 			case "termination":
 				return TERMINATION;
@@ -53,10 +57,10 @@ public enum PriceFormingContinuationData {
 				return NOVATION;
 			case "novationtrade":
 				return NOVATION;
-			case "novation-trade":
-				return NOVATION;
 			case "partialtermination":
 				return PARTIALTERMINATION;
+			case "exit":
+				return EXIT;
 			case "":
 				return null;
 			default:
