@@ -3,6 +3,7 @@ package uk.ac.cam.cstibhotel.otcanalyser.database;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
 
 public class TimestampSQLField extends SQLField{
 
@@ -19,7 +20,10 @@ public class TimestampSQLField extends SQLField{
 
 	@Override
 	public void addToPreparedStatement(PreparedStatement p) throws SQLException {
-		p.setTimestamp(index, fieldValue);
+		if (fieldValue == null)
+			p.setNull(index, Types.TIMESTAMP);
+		else
+			p.setTimestamp(index, fieldValue);
 	}
 	
 }

@@ -8,13 +8,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import uk.ac.cam.cstibhotel.otcanalyser.database.Database;
+import uk.ac.cam.cstibhotel.otcanalyser.gui.StatusBar;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 
 public class InitialUpdateWorker extends Thread {
 	@Override
 	public void run() {
     	System.out.println("NetworkLayer: initial update requested");
-        synchronized(NetworkLayer.lastUpdateDate) {
+        synchronized(NetworkLayer.targetUpdateDate) {
         	System.out.println("NetworkLayer: initial update started");
         	
         	Date now = new Date();
@@ -24,7 +25,8 @@ public class InitialUpdateWorker extends Thread {
         	NetworkLayer.targetUpdateDate = target.getTime();
         	
         	Calendar lastUpdate = Calendar.getInstance();
-        	lastUpdate.setTime(NetworkLayer.lastUpdateDate);
+        	lastUpdate.setTime(Database.getDB().getLastUpdateTime());
+        	lastUpdate.add(Calendar.DATE, -1);
         	
         	while (target.get(Calendar.YEAR) != lastUpdate.get(Calendar.YEAR) ||
         			target.get(Calendar.MONTH) + 1 != lastUpdate.get(Calendar.MONTH) + 1 ||
@@ -47,30 +49,24 @@ public class InitialUpdateWorker extends Thread {
     			for (String s : zipURLString) {
     				try {
 						List<Trade> newTrades = ParseZIP.downloadData(s, NetworkLayer.splitter, NetworkLayer.secondarySplitter);
-						for (Trade t : newTrades) {
-							Database.getDB().addTrade(t);
-						}
+						Database.getDB().addTrade(newTrades);
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
+						StatusBar.setMessage("Error: Could not download data for " + formatDate, 1);
 						e.printStackTrace();
 					}
-    				
-    				
     			}
-        		/*}
-        		catch () {
-        			
-        		}*/
+
         		//todo: do the download and update
         		//todo: figure out a way to get url
         		//todo: implement fail/retry policy
         		//todo: implement exception throwing policy
-        		
-        		//todo: only if successful
-    			NetworkLayer.lastUpdateDate = lastUpdate.getTime();
+
     			System.out.println("NetworkLayer: current version is " + lastUpdate.get(Calendar.YEAR) + " "+
         			(lastUpdate.get(Calendar.MONTH) + 1) + " " + lastUpdate.get(Calendar.DAY_OF_MONTH));
+    			StatusBar.setMessage("NetworkLayer: current version is " + lastUpdate.get(Calendar.YEAR) + " "+
+            			(lastUpdate.get(Calendar.MONTH) + 1) + " " + lastUpdate.get(Calendar.DAY_OF_MONTH), 1);
         	}
         	System.out.println("NetworkLayer: initial update completed");
         }

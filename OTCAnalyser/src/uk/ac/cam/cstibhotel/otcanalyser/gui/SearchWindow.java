@@ -46,36 +46,42 @@ public class SearchWindow extends JPanel {
 			setSize(200,100);
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			TaxonomySelectorDescriptor =  new CenteredJLabel("Select a taxonomy");
+
 			this.add(TaxonomySelectorDescriptor);
 			TaxonomySelectorDescriptor.setVisible(true);
 			tax = TaxonomySelector.getInstance();
 			this.add(tax);
 			tax.setVisible(true);
 			UnderLyingAssetDescriptor = new CenteredJLabel("Underlying Asset (optional)");
+
 			this.add(UnderLyingAssetDescriptor);
 			UnderLyingAssetDescriptor.setVisible(true);
 			UnderLyingAsset = new JTextField();
 			this.add(UnderLyingAsset);
 			UnderLyingAsset.setVisible(true);
 			TradeTypeDescriptor = new CenteredJLabel("Select trade type");
+
 			this.add(TradeTypeDescriptor);
 			TradeTypeDescriptor.setVisible(true);
 			TradeType = new JComboBox<String>(TextStrings.TradeType);
 			this.add(TradeType);
 			TradeType.setVisible(true);
 			StartDateDescriptor = new CenteredJLabel("Select start date");
+
 			this.add(StartDateDescriptor);
 			StartDateDescriptor.setVisible(true);
 			StartDate = new DateSelector();
 			this.add(StartDate);
 			StartDate.setVisible(true);
 			EndDateDescriptor = new CenteredJLabel("Select end date");
+
 			this.add(EndDateDescriptor);
 			EndDateDescriptor.setVisible(true);
 			EndDate = new DateSelector();
 			this.add(EndDate);
 			EndDate.setVisible(true);
 			minValueDescriptor = new CenteredJLabel("Select minimum price");
+
 			this.add(minValueDescriptor);
 			minValueDescriptor.setVisible(true);
 			minValue = new JSpinner();

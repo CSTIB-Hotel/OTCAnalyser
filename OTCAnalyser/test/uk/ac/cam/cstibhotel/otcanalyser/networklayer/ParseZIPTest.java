@@ -1,7 +1,5 @@
 package uk.ac.cam.cstibhotel.otcanalyser.networklayer;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 
