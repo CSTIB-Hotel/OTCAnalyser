@@ -2,12 +2,16 @@ package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import java.awt.Component;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
 
 public class SearchWindow extends JPanel {
 	
@@ -23,13 +27,13 @@ public class SearchWindow extends JPanel {
 	private JLabel TradeTypeDescriptor;
 	public JComboBox<String> TradeType;
 	private JLabel minValueDescriptor;
-	public JTextField minValue;
+	public JSpinner minValue;
 	private JLabel maxValueDescriptor;
 	public JTextField maxValue;
 	private JLabel currencyDescriptor;
 	public JTextField currency;
 	public JButton SearchButton;
-	private SearchButtonListener listener;
+	public SaveWindow saveWindow;
 	
 	private static SearchWindow instance;
 	
@@ -38,16 +42,8 @@ public class SearchWindow extends JPanel {
 		return instance;
 	}
 	
-	private class CenteredJLabel extends JLabel{
-		public CenteredJLabel(String s) {
-			super(s);
-			this.setAlignmentX(Component.CENTER_ALIGNMENT);
-		}
-	}
-	
 	private SearchWindow() {
-			setSize(200,100); // default size is 0,0
-			setLocation(100,200); // default is 0,0 (top left corner)
+			setSize(200,100);
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			TaxonomySelectorDescriptor =  new CenteredJLabel("Select a taxonomy");
 
@@ -88,7 +84,7 @@ public class SearchWindow extends JPanel {
 
 			this.add(minValueDescriptor);
 			minValueDescriptor.setVisible(true);
-			minValue = new JTextField();
+			minValue = new JSpinner();
 			this.add(minValue);
 			minValue.setVisible(true);
 			maxValueDescriptor = new CenteredJLabel("Select maximum price");
@@ -107,8 +103,9 @@ public class SearchWindow extends JPanel {
 			SearchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 			this.add(SearchButton);
 			SearchButton.setVisible(true);
-			listener = new SearchButtonListener();
-			SearchButton.addActionListener(listener);
+			saveWindow = SaveWindow.getInstance();
+			this.add(saveWindow);
+			saveWindow.setVisible(true);
 	}
 	
 }

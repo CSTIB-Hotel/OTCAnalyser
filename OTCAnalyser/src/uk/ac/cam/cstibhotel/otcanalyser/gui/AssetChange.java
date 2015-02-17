@@ -16,20 +16,26 @@ public class AssetChange implements ActionListener {
 		this.tax = tax;
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void updateAssetClass() {
+		tax.settlementType.setVisible(false);
 		String selectedAsset = (String) tax.Asset.getSelectedItem();
 		String[] AssetBaseClasses={""};
 		switch (selectedAsset) {
-			case ("Credit"): AssetBaseClasses = TextStrings.CreditBaseProducts;
+			case ("Credit"): 
+					AssetBaseClasses = TextStrings.CreditBaseProducts;
+					break;
+			case ("Interest"):
+				AssetBaseClasses = TextStrings.InterestBaseProducts;
 				break;
-			case ("Interest"): AssetBaseClasses = TextStrings.InterestBaseProducts;
+			case ("Commodity"):
+				AssetBaseClasses = TextStrings.CommodityBaseProducts;
+				tax.settlementType.setVisible(true);
+				System.out.println("Executing");
+			case ("Foreign Exchange"):
+				AssetBaseClasses = TextStrings.ForexBaseProducts;
 				break;
-			case ("Commodity"): AssetBaseClasses = TextStrings.CommodityBaseProducts;
-				break;
-			case ("Foreign Exchange"): AssetBaseClasses = TextStrings.ForexBaseProducts;
-				break;
-			case ("Equity"): AssetBaseClasses = TextStrings.EquityBaseProducts;
+			case ("Equity"):
+				AssetBaseClasses = TextStrings.EquityBaseProducts;
 				break;
 			default:break;
 		}
@@ -41,6 +47,11 @@ public class AssetChange implements ActionListener {
 		}
 		TaxonomySelector.baseClassflag = true;
 		tax.baseProductChange.updateBaseClass();
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		updateAssetClass();
 	}
 
 }
