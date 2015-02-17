@@ -26,6 +26,17 @@ public class UPITest {
 		
 	}
 	
+	@Test
+	public void testValidCommodityTaxonomy2() throws InvalidTaxonomyException,
+			EmptyTaxonomyException {
+		UPI toTest = new UPI("Commodity:Index:Option:Cash");
+		assertEquals(toTest.getAssetClass(), AssetClass.COMMODITY);
+		assertEquals(toTest.getBaseProduct(), "Index");
+		assertEquals(toTest.getSubProduct(), null);
+		assertEquals(toTest.getTransactionType(), "Option");
+		assertEquals(toTest.getSettlementType(), "Cash");
+	}
+	
 	// Test a valid commodity taxonomy (full 5 terms)
 	@Test
 	public void testValidCommodityTaxonomy() throws InvalidTaxonomyException,
