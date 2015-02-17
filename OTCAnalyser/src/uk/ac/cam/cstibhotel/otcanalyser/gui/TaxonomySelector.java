@@ -31,6 +31,7 @@ public class TaxonomySelector extends JPanel {
 		baseProductChange  = new BaseProductChange(this);
 		BaseClass.addActionListener(baseProductChange);
 		SubClass = new JComboBox<String>(TextStrings.CreditSingleNameSubProducts);
+		baseProductChange.updateBaseClass();
 		Asset.setVisible(true);
 		BaseClass.setVisible(true);
 		SubClass.setVisible(true);
