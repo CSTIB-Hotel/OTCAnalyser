@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
@@ -26,7 +27,7 @@ public class SearchWindow extends JPanel {
 	private JLabel TradeTypeDescriptor;
 	public JComboBox<String> TradeType;
 	private JLabel minValueDescriptor;
-	public JTextField minValue;
+	public JSpinner minValue;
 	private JLabel maxValueDescriptor;
 	public JTextField maxValue;
 	private JLabel currencyDescriptor;
@@ -77,7 +78,7 @@ public class SearchWindow extends JPanel {
 			minValueDescriptor = new CenteredJLabel("Select minimum price");
 			this.add(minValueDescriptor);
 			minValueDescriptor.setVisible(true);
-			minValue = new JTextField();
+			minValue = new JSpinner();
 			this.add(minValue);
 			minValue.setVisible(true);
 			maxValueDescriptor = new CenteredJLabel("Select maximum price");
