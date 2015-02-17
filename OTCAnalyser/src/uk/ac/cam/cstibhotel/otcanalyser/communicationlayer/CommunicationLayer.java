@@ -64,7 +64,7 @@ public class CommunicationLayer {
 		String monthString = (String) SearchWindow.getInstance().StartDate.Months.getSelectedItem();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new SimpleDateFormat("MMM", Locale.ENGLISH).parse(monthString));
-		int month = cal.get(Calendar.MONTH) + 1;
+		int month = cal.get(Calendar.MONTH);
 		int year = (int) SearchWindow.getInstance().StartDate.Year.getSelectedItem();
 		cal.set(year, month, day);
 		Date startTime = cal.getTime();
@@ -73,7 +73,7 @@ public class CommunicationLayer {
 		day = (int) SearchWindow.getInstance().EndDate.Day.getSelectedItem();
 		monthString = (String) SearchWindow.getInstance().EndDate.Months.getSelectedItem();
 		cal.setTime(new SimpleDateFormat("MMM", Locale.ENGLISH).parse(monthString));
-		month = cal.get(Calendar.MONTH) + 1;
+		month = cal.get(Calendar.MONTH);
 		year = (int) SearchWindow.getInstance().EndDate.Year.getSelectedItem();
 		cal.set(year, month, day);
 		Date endTime = cal.getTime();
