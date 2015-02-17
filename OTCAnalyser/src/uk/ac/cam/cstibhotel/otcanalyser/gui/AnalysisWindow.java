@@ -1,10 +1,7 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
-import java.awt.BorderLayout;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
