@@ -8,7 +8,8 @@ public enum PriceFormingContinuationData {
 	INCREASE(3),
 	NOVATION(4),
 	PARTIALTERMINATION(5),
-	EXIT(6);
+	EXIT(6),
+	EXERCISE(7);
 
 	private short value;
 
@@ -36,6 +37,8 @@ public enum PriceFormingContinuationData {
 				return PARTIALTERMINATION;
 			case 6:
 				return EXIT;
+			case 7:
+				return EXERCISE;
 			default:
 				throw new IllegalArgumentException();
 		}
@@ -61,6 +64,8 @@ public enum PriceFormingContinuationData {
 				return PARTIALTERMINATION;
 			case "exit":
 				return EXIT;
+			case "exercise":
+				return EXERCISE;
 			case "":
 				return null;
 			default:
