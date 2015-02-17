@@ -2,20 +2,22 @@ package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import java.awt.Component;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.border.EtchedBorder;
+
+import org.jdesktop.swingx.autocomplete.*;
 
 public class SearchWindow extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
+	String[] data = {"USD", "GBP", "EUR", "POO"};
+	JList<String> myList = new JList<String>(data);
 	private JLabel TaxonomySelectorDescriptor;
 	public TaxonomySelector tax;
 	private JLabel UnderLyingAssetDescriptor;
@@ -29,7 +31,7 @@ public class SearchWindow extends JPanel {
 	private JLabel minValueDescriptor;
 	public JSpinner minValue;
 	private JLabel maxValueDescriptor;
-	public JTextField maxValue;
+	public JSpinner maxValue;
 	private JLabel currencyDescriptor;
 	public JTextField currency;
 	public JButton SearchButton;
@@ -90,13 +92,14 @@ public class SearchWindow extends JPanel {
 			maxValueDescriptor = new CenteredJLabel("Select maximum price");
 			this.add(maxValueDescriptor);
 			maxValueDescriptor.setVisible(true);
-			maxValue = new JTextField();
+			maxValue = new JSpinner();
 			this.add(maxValue);
 			maxValue.setVisible(true);
 			currencyDescriptor = new CenteredJLabel("Select a currency");
 			this.add(currencyDescriptor);
 			currencyDescriptor.setVisible(true);
 			currency = new JTextField();
+			Configurator.enableAutoCompletion(myList,currency);
 			this.add(currency);
 			currency.setVisible(true);
 			SearchButton = new JButton("Search");
