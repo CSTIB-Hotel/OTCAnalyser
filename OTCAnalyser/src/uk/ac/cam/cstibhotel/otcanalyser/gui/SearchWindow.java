@@ -29,7 +29,7 @@ public class SearchWindow extends JPanel {
 	private JLabel minValueDescriptor;
 	public JSpinner minValue;
 	private JLabel maxValueDescriptor;
-	public JTextField maxValue;
+	public JSpinner maxValue;
 	private JLabel currencyDescriptor;
 	public JTextField currency;
 	public JButton SearchButton;
@@ -90,7 +90,7 @@ public class SearchWindow extends JPanel {
 			maxValueDescriptor = new CenteredJLabel("Select maximum price");
 			this.add(maxValueDescriptor);
 			maxValueDescriptor.setVisible(true);
-			maxValue = new JTextField();
+			maxValue = new JSpinner();
 			this.add(maxValue);
 			maxValue.setVisible(true);
 			currencyDescriptor = new CenteredJLabel("Select a currency");
