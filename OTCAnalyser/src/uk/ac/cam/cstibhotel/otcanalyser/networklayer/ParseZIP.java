@@ -63,6 +63,9 @@ public class ParseZIP {
 		if(input.equals("")){
 			return null;
 		}
+		else if(input.equals("N/A")){
+			return null;
+		}
 		else{
 			return Double.parseDouble(input.replace(",",""));
 		}
@@ -141,11 +144,12 @@ public class ParseZIP {
 			tradeOut.setSubAssetClass(tradeIn[15]);
 			
 			//UPI ie: taxonomy 
-			if(tradeIn[16].equals("")){
+			if(tradeIn[16].equals("") || tradeIn[16].equals("NA")){
 				UPI taxonomy = new UPI("Commodity:Metals");
 				taxonomy.setAssetClass(tradeOut.getAssetClass());
 				if(tradeOut.getSubAssetClass().equals("")){
-					throw new InvalidTaxonomyException("Empty Sub asset class - Could not create a new taxonomy");
+					//returning null Trade, if failed to create taxonomy from scratch
+					return null;
 				}
 				else{
 					taxonomy.setBaseProduct(tradeOut.getSubAssetClass());
@@ -312,8 +316,12 @@ public class ParseZIP {
 					if (fixed[j].endsWith("\""))
 						fixed[j] = fixed[j].substring(0, fixed[j].length() - 1);
 				}
-
- 				dataOut.add(stringVectorToTrade(fixed));
+				
+				//checking if return Trade is not null.
+				Trade t = stringVectorToTrade(fixed);
+				if(t != null){
+					dataOut.add(t);
+				}
  			}
 			prevLine = line;
 			i++;
