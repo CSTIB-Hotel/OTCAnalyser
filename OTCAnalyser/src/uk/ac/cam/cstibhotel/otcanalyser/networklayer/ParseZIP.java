@@ -12,11 +12,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.EmptyStackException;
 import java.util.LinkedList;
 import java.util.zip.ZipInputStream;
-
-import javax.print.PrintException;
 
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.ActionFormatException;
@@ -239,8 +236,6 @@ public class ParseZIP {
 			//PRICE_NOTATION3
 			tradeOut.setPriceNotation3(parseDouble(tradeIn[43]));
 			
-			
-			
 		} catch(ActionFormatException e){
 			e.printStackTrace();
 		} catch(CollateralizationFormatException e){
@@ -288,24 +283,37 @@ public class ParseZIP {
 				}
 				
 				String[] tradeIn = line.split(splitBy);
-				
-				/*
-				 * TODO: research normal # of fields
-				 * currently it is around 45-48
-				 */
-				
 				if (tradeIn.length < 10)
 					tradeIn = line.split(secondarySplitBy);
 				
-				for (int j = 0; j < tradeIn.length; j++) {
+				//remove quotes around dissemination ID
+				if (tradeIn[0].startsWith("\""))
+					tradeIn[0] = tradeIn[0].substring(1, tradeIn[0].length());
+				if (tradeIn[0].endsWith("\""))
+					tradeIn[0] = tradeIn[0].substring(0, tradeIn[0].length() - 1);
+				
+				
+				String[] fixed = new String[44];
+				int j = 0;
+				for (int fill = 0; fill<44; fill++) {
+					if (tradeIn.length > j) {
+						fixed[fill] = tradeIn[j++];
+						while (((fixed[fill].length() - fixed[fill].replace("\"", "").length()) % 2 != 0) && (tradeIn.length > j)) {
+							fixed[fill] += tradeIn[j++];
+						}
+					} else
+						fixed[fill] = "";
+				}
+				
+				for (j = 0; j < fixed.length; j++) {
 					//remove quotes
-					if (tradeIn[j].startsWith("\""))
-						tradeIn[j] = tradeIn[j].substring(1, tradeIn[j].length());
-					if (tradeIn[j].endsWith("\""))
-						tradeIn[j] = tradeIn[j].substring(0, tradeIn[j].length() - 1);
+					if (fixed[j].startsWith("\""))
+						fixed[j] = fixed[j].substring(1, fixed[j].length());
+					if (fixed[j].endsWith("\""))
+						fixed[j] = fixed[j].substring(0, fixed[j].length() - 1);
 				}
 
- 				dataOut.add(stringVectorToTrade(tradeIn));
+ 				dataOut.add(stringVectorToTrade(fixed));
  			}
 			prevLine = line;
 			i++;
