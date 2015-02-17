@@ -10,10 +10,8 @@ import java.util.Locale;
 import uk.ac.cam.cstibhotel.otcanalyser.database.Database;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.SearchWindow;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.StatusBar;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.EmptyTaxonomyException;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.AssetClass;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.TradeType;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 public class CommunicationLayer {
 	
@@ -87,14 +85,25 @@ public class CommunicationLayer {
 		fullTaxonomy += SearchWindow.getInstance().tax.BaseClass.getSelectedItem();
 		fullTaxonomy += ":";
 		fullTaxonomy += SearchWindow.getInstance().tax.SubClass.getSelectedItem();
-		try {
-			UPI taxonomy = new UPI(fullTaxonomy);
-			s.setUPI(taxonomy);
-		} catch (InvalidTaxonomyException | EmptyTaxonomyException e) {
-			StatusBar.setMessage("Error: Invalid taxonomy " + fullTaxonomy, 1);
-		}
+		s.setUPI(fullTaxonomy);
 		
-		s.setAssetClass(s.getUPI().getAssetClass());
+		// Set the asset class based on the value in the drop-down box
+		switch ((String) SearchWindow.getInstance().tax.Asset.getSelectedItem()) {
+		case "Credit":
+			s.setAssetClass(AssetClass.CREDIT);
+			break;
+		case "Interest":
+			s.setAssetClass(AssetClass.RATES);
+			break;
+		case "Commodity":
+			s.setAssetClass(AssetClass.COMMODITY);
+			break;
+		case "Foreign Exchange":
+			s.setAssetClass(AssetClass.FOREX);
+			break;
+		case "Equity":
+			s.setAssetClass(AssetClass.EQUITY);
+		}
 		
 		// Get the result from the database
 		SearchResult result = Database.getDB().search(s);
