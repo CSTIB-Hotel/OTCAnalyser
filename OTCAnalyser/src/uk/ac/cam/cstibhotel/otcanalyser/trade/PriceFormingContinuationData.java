@@ -39,24 +39,23 @@ public enum PriceFormingContinuationData {
 	}
 	
 	public static PriceFormingContinuationData parsePFCD(String s) throws PFCDFormatException{
+		s = s.toLowerCase();
 		switch(s){
-			case "Termination":
+			case "termination":
 				return TERMINATION;
-			case "Trade":
+			case "trade":
 				return TRADE;
-			case "TRADE":
-				return TRADE;
-			case "Amendment":
+			case "amendment":
 				return AMENDMENT;
-			case "AMENDMENT":
-				return AMENDMENT;
-			case "Increase":
+			case "increase":
 				return INCREASE;
-			case "Novation":
+			case "novation":
 				return NOVATION;
-			case "PartialTermination":
-				return PARTIALTERMINATION;
-			case "Partialtermination":
+			case "novationtrade":
+				return NOVATION;
+			case "novation-trade":
+				return NOVATION;
+			case "partialtermination":
 				return PARTIALTERMINATION;
 			case "":
 				return null;
