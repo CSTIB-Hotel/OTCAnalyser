@@ -3,6 +3,7 @@ package uk.ac.cam.cstibhotel.otcanalyser.database;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +32,26 @@ public class TradeFieldMapping {
 		DBNameDBType.put("id", new BigIntSQLField(t.getDisseminationID()));
 		DBNameDBType.put("origId", new BigIntSQLField(t.getOriginalDisseminationID()));
 		DBNameDBType.put("action", new SmallIntSQLField(t.getAction().getValue()));
+		
+		/// DEBUG START
+		
+		if(t.getExecutionTimestamp() != null){
+			if(t.getExecutionTimestamp().before(new java.util.Date(1357041600))){
+				System.out.println("Passed date before 2013"); 
+				if(t.getAction().equals(uk.ac.cam.cstibhotel.otcanalyser.trade.Action.NEW)){
+					System.out.println("Corresponding action is NEW");
+				} else if (t.getAction().equals(t.getAction().CORRECT)){
+					System.out.println("Corresponding action is CORRECT");
+				} else if (t.getAction().equals(t.getAction().CANCEL)){
+					System.out.println("Corresponding action is CANCEL");
+				} else {
+					System.out.println("Corresponding action is unknown...");
+				}
+			}
+		}
+		
+		/// DEBUG END
+		
 		DBNameDBType.put("executionTime", (t.getExecutionTimestamp() == null) ? null : 
 			new TimestampSQLField(t.getExecutionTimestamp().getTime()));
 		DBNameDBType.put("cleared", new BoolSQLField(t.isCleared()));
