@@ -10,10 +10,8 @@ import java.util.Locale;
 import uk.ac.cam.cstibhotel.otcanalyser.database.Database;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.SearchWindow;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.StatusBar;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.EmptyTaxonomyException;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.AssetClass;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.TradeType;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 public class CommunicationLayer {
 	
@@ -66,7 +64,7 @@ public class CommunicationLayer {
 		String monthString = (String) SearchWindow.getInstance().StartDate.Months.getSelectedItem();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new SimpleDateFormat("MMM", Locale.ENGLISH).parse(monthString));
-		int month = cal.get(Calendar.MONTH) + 1;
+		int month = cal.get(Calendar.MONTH);
 		int year = (int) SearchWindow.getInstance().StartDate.Year.getSelectedItem();
 		cal.set(year, month, day);
 		Date startTime = cal.getTime();
@@ -75,7 +73,7 @@ public class CommunicationLayer {
 		day = (int) SearchWindow.getInstance().EndDate.Day.getSelectedItem();
 		monthString = (String) SearchWindow.getInstance().EndDate.Months.getSelectedItem();
 		cal.setTime(new SimpleDateFormat("MMM", Locale.ENGLISH).parse(monthString));
-		month = cal.get(Calendar.MONTH) + 1;
+		month = cal.get(Calendar.MONTH);
 		year = (int) SearchWindow.getInstance().EndDate.Year.getSelectedItem();
 		cal.set(year, month, day);
 		Date endTime = cal.getTime();
@@ -100,23 +98,32 @@ public class CommunicationLayer {
 		fullTaxonomy += SearchWindow.getInstance().tax.BaseClass.getSelectedItem();
 		fullTaxonomy += ":";
 		fullTaxonomy += SearchWindow.getInstance().tax.SubClass.getSelectedItem();
-		try {
-			UPI taxonomy = new UPI(fullTaxonomy);
-			
-			// Only set UPI and get UPI after it's guaranteed that there is one (no exceptions)
-			s.setUPI(taxonomy);
-			s.setAssetClass(s.getUPI().getAssetClass());
-			
-			// Only search after the UPI for s has been set!
-			// Get the result from the database
-			SearchResult result = Database.getDB().search(s);
-			
-			// Send it to each member of searchListeners
-			for (SearchListener l : searchListeners) {
-				l.getSearchResult(result);
-			}
-		} catch (InvalidTaxonomyException | EmptyTaxonomyException e) {
-			StatusBar.setMessage("Error: Invalid taxonomy " + fullTaxonomy, 1);
+		s.setUPI(fullTaxonomy);
+		
+		// Set the asset class based on the value in the drop-down box
+		switch ((String) SearchWindow.getInstance().tax.Asset.getSelectedItem()) {
+		case "Credit":
+			s.setAssetClass(AssetClass.CREDIT);
+			break;
+		case "Interest":
+			s.setAssetClass(AssetClass.RATES);
+			break;
+		case "Commodity":
+			s.setAssetClass(AssetClass.COMMODITY);
+			break;
+		case "Foreign Exchange":
+			s.setAssetClass(AssetClass.FOREX);
+			break;
+		case "Equity":
+			s.setAssetClass(AssetClass.EQUITY);
+		}
+		
+		// Get the result from the database
+		SearchResult result = Database.getDB().search(s);
+		
+		// Send it to each member of searchListeners
+		for (SearchListener l : searchListeners) {
+			l.getSearchResult(result);
 		}
 	}
 	

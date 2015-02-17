@@ -2,7 +2,6 @@ package uk.ac.cam.cstibhotel.otcanalyser.communicationlayer;
 
 import uk.ac.cam.cstibhotel.otcanalyser.trade.AssetClass;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.TradeType;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 import java.util.Date;
 
@@ -14,14 +13,14 @@ public class Search {
 	private int minPrice, maxPrice;
 	private String currency;
 	private Date startTime, endTime;
-	private UPI upi;
+	private String upi;
 	
 	public Search() {
 		super();
 	}
 	
 	public Search(TradeType t, AssetClass ac, String asset, int minP, int maxP, String c,
-				Date st, Date et, UPI upi) {
+				Date st, Date et, String upi) {
 		this.tradeType = t;
 		this.assetClass = ac;
 		this.asset = asset;
@@ -97,11 +96,11 @@ public class Search {
 		this.endTime = endTime;
 	}
 
-	public UPI getUPI() {
+	public String getUPI() {
 		return upi;
 	}
 
-	public void setUPI(UPI upi) {
+	public void setUPI(String upi) {
 		this.upi = upi;
 	}
 	
