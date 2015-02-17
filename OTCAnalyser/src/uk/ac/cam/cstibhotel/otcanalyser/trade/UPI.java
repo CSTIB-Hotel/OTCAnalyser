@@ -26,6 +26,8 @@ public class UPI {
 	public UPI(String taxonomy) throws InvalidTaxonomyException, EmptyTaxonomyException {
 		fullTaxonomy = taxonomy;
 		
+		taxonomy = taxonomy.replace(" ", "");
+		
 		if(taxonomy.equals("")) {
 			throw new EmptyTaxonomyException();
 		}

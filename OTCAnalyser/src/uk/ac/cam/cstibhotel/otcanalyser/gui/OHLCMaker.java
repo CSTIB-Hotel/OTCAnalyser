@@ -16,7 +16,6 @@ import org.jfree.data.xy.OHLCDataset;
 import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 //makes an OHLC chart based on execution timestamps and rounded notional amount 1 per day

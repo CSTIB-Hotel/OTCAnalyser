@@ -1,8 +1,11 @@
 package uk.ac.cam.cstibhotel.otcanalyser.networklayer;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -11,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.zip.ZipInputStream;
-import java.util.Currency;
 
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.ActionFormatException;
@@ -34,6 +36,8 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
  */
 
 public class ParseZIP {
+	
+	private final static String ERROR_LOG_PATH = "networklayer/error.log";
 	
 	private static Boolean convertToBool(String tv, String fv, String input) {
 		if(input.equals(tv)){
@@ -59,6 +63,9 @@ public class ParseZIP {
 		if(input.equals("")){
 			return null;
 		}
+		else if(input.equals("N/A")){
+			return null;
+		}
 		else{
 			return Double.parseDouble(input.replace(",",""));
 		}
@@ -72,10 +79,24 @@ public class ParseZIP {
 		}
 	}
 	
+	private static void logError(Exception ie){
+		Date now = new Date();
+		try{
+			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(ERROR_LOG_PATH, true)));
+			out.println(now+" - "+ie.getClass().getName()+" occured. - "+ie.getMessage());
+			out.close();
+			
+		}
+		catch (IOException e){
+			e.printStackTrace();
+		}
+		
+	}
+	
 	//TODO: implement this bit
 	private static Trade stringVectorToTrade(String[] tradeIn){
 		Trade tradeOut = new Trade();
-		DateFormat df = new SimpleDateFormat("yyy-MM-dd");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		DateFormat etf = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss");
 		//Setting fields in tradeOut appropriately
 		try{
@@ -85,7 +106,6 @@ public class ParseZIP {
 			
 			//Parsing the execution timestamp date
 			tradeOut.setExecutionTimestamp(parseDate(etf,tradeIn[3]));
-			
 			
 			//Cleared
 			tradeOut.setCleared(convertToBool("C", "U", tradeIn[4]));
@@ -111,28 +131,34 @@ public class ParseZIP {
 			//END_DATE
 			tradeOut.setEndDate(parseDate(df,tradeIn[11]));
 		
-			
 			//DAY_COUNT_CONVENTION
 			tradeOut.setDayCountConvention(tradeIn[12]);
 			
 			//SETTLEMENT_CURRENCY
-			/*try {
-				Currency c = Currency.getInstance(tradeIn[13]);
-				tradeOut.setSettlementCurrency(c.getDisplayName());
-			} catch (IllegalArgumentException e){
-				e.printStackTrace();
-				//Illegal currency entry, not ISO 4217, it stays "GBP"
-				//TODO: What does this mean that this field is empty? Why GBP the default?
-			}*/
+			tradeOut.setSettlementCurrency(tradeIn[13]);
 			
 			//ASSET_CLASS
 			tradeOut.setAssetClass(AssetClass.parseAssetC(tradeIn[14]));
 			
 			//SUB_ASSET_CLASS tradeIn[15]
+			tradeOut.setSubAssetClass(tradeIn[15]);
 			
 			//UPI ie: taxonomy 
-			tradeOut.setTaxonomy(new UPI(tradeIn[16]));
-			
+			if(tradeIn[16].equals("") || tradeIn[16].equals("NA")){
+				UPI taxonomy = new UPI("Commodity:Metals");
+				taxonomy.setAssetClass(tradeOut.getAssetClass());
+				if(tradeOut.getSubAssetClass().equals("")){
+					//returning null Trade, if failed to create taxonomy from scratch
+					return null;
+				}
+				else{
+					taxonomy.setBaseProduct(tradeOut.getSubAssetClass());
+					tradeOut.setTaxonomy(taxonomy);
+				}
+			}
+			else{
+				tradeOut.setTaxonomy(new UPI(tradeIn[16]));
+			}
 			//PRICE_FORMING_CONT_DATA
 			tradeOut.setPriceFormingContinuationData(PriceFormingContinuationData.parsePFCD(tradeIn[17]));
 			
@@ -191,14 +217,7 @@ public class ParseZIP {
 			tradeOut.setOptionFamily(tradeIn[35]);
 			
 			//OPTION_CURRENCY
-			/*try {
-				Currency c = Currency.getInstance(tradeIn[36]);
-				tradeOut.setOptionCurrency(c.getDisplayName());
-			} catch (IllegalArgumentException e){
-				e.printStackTrace();
-				//Illegal currency entry, not ISO 4217, it stays "GBP"
-				//TODO: What does this mean that this field is empty? Why GBP the default?
-			}*/
+			tradeOut.setOptionCurrency(tradeIn[35]);
 			
 			//OPTION_PREMIUM
 			tradeOut.setOptionPremium(parseDouble(tradeIn[37]));
@@ -221,8 +240,6 @@ public class ParseZIP {
 			//PRICE_NOTATION3
 			tradeOut.setPriceNotation3(parseDouble(tradeIn[43]));
 			
-			
-			
 		} catch(ActionFormatException e){
 			e.printStackTrace();
 		} catch(CollateralizationFormatException e){
@@ -230,13 +247,14 @@ public class ParseZIP {
 		} catch(AssetClassFormatException e){
 			e.printStackTrace();
 		} catch (InvalidTaxonomyException e) {
-			System.err.println("The taxonomy: "+ e.getMessage()+" is invalid. in ParseZIP.java");
+			e.printStackTrace();
 		} catch (PFCDFormatException e) {
-			System.err.println("A trade was found to have invalid PFCD.");
+			e.printStackTrace();
 		} catch (NumberFormatException e){ //thrown by praseDouble: price notation + additional price notation
 			e.printStackTrace();
-		} catch (EmptyTaxonomyException e) {
-			System.err.println("A trade was found to have an empty taxonomy.");
+		} catch (EmptyTaxonomyException e){
+			//cant really occur, safe to ingore, but stacktraceprintincluded
+			e.printStackTrace();
 		}
 		
 		return tradeOut;
@@ -269,24 +287,41 @@ public class ParseZIP {
 				}
 				
 				String[] tradeIn = line.split(splitBy);
-				
-				/*
-				 * TODO: research normal # of fields
-				 * currently it is around 45-48
-				 */
-				
 				if (tradeIn.length < 10)
 					tradeIn = line.split(secondarySplitBy);
 				
-				for (int j = 0; j < tradeIn.length; j++) {
-					//remove quotes
-					if (tradeIn[j].startsWith("\""))
-						tradeIn[j] = tradeIn[j].substring(1, tradeIn[j].length());
-					if (tradeIn[j].endsWith("\""))
-						tradeIn[j] = tradeIn[j].substring(0, tradeIn[j].length() - 1);
+				//remove quotes around dissemination ID
+				if (tradeIn[0].startsWith("\""))
+					tradeIn[0] = tradeIn[0].substring(1, tradeIn[0].length());
+				if (tradeIn[0].endsWith("\""))
+					tradeIn[0] = tradeIn[0].substring(0, tradeIn[0].length() - 1);
+				
+				
+				String[] fixed = new String[44];
+				int j = 0;
+				for (int fill = 0; fill<44; fill++) {
+					if (tradeIn.length > j) {
+						fixed[fill] = tradeIn[j++];
+						while (((fixed[fill].length() - fixed[fill].replace("\"", "").length()) % 2 != 0) && (tradeIn.length > j)) {
+							fixed[fill] += tradeIn[j++];
+						}
+					} else
+						fixed[fill] = "";
 				}
-
- 				dataOut.add(stringVectorToTrade(tradeIn));
+				
+				for (j = 0; j < fixed.length; j++) {
+					//remove quotes
+					if (fixed[j].startsWith("\""))
+						fixed[j] = fixed[j].substring(1, fixed[j].length());
+					if (fixed[j].endsWith("\""))
+						fixed[j] = fixed[j].substring(0, fixed[j].length() - 1);
+				}
+				
+				//checking if return Trade is not null.
+				Trade t = stringVectorToTrade(fixed);
+				if(t != null){
+					dataOut.add(t);
+				}
  			}
 			prevLine = line;
 			i++;
@@ -301,5 +336,5 @@ public class ParseZIP {
  		
  		return dataOut;
 	}
-
+	
 }
