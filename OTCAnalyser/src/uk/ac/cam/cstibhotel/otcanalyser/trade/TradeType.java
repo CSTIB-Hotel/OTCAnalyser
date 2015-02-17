@@ -15,5 +15,18 @@ public enum TradeType {
     public short getValue() {
     	return value;
     }
+	
+	public static TradeType lookup(int i){
+		switch(i){
+			case 0:
+				return SWAP;
+			case 1:
+				return OPTION;
+			case 2:
+				return BOTH;
+			default:
+				throw new IllegalArgumentException();
+		}
+	}
 
 }

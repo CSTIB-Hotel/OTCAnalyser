@@ -44,7 +44,7 @@ public class PriceFormingContinuationDataTest {
 	// Tries to parse a valid TERMINATION PFCD
 	@Test
 	public void testValidPartialTermination() throws PFCDFormatException {
-		assertEquals(PriceFormingContinuationData.parsePFCD("Partialtermination"),
+		assertEquals(PriceFormingContinuationData.parsePFCD("PartialTermination"),
 				PriceFormingContinuationData.PARTIALTERMINATION);
 	}
 	

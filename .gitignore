@@ -15,7 +15,7 @@ hs_err_pid*
 build.xml
 
 lib/junit/junit-3.8.2-api.zip
-
+lib/jfreechart-1.0/
 lib/nblibraries.properties
 
 nbproject/build-impl.xml
@@ -36,3 +36,5 @@ database.db.properties
 ~/Library/OTCAnalyser/database.db.script
 
 database.db.script
+
+*.lck

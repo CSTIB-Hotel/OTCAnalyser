@@ -24,7 +24,7 @@ public class Trade {
 	private String settlementCurrency;
 	private TradeType tradeType;
 	private AssetClass assetClass;
-	private SubAssetClass subAssetClass;
+	private String subAssetClass;
 	private UPI taxonomy;
 	private PriceFormingContinuationData priceFormingContinuationData;
 	private String underlyingAsset1;
@@ -70,7 +70,7 @@ public class Trade {
 		settlementCurrency = "";
 		tradeType = TradeType.OPTION;
 		assetClass = AssetClass.COMMODITY;
-		subAssetClass = new SubAssetClass();
+		subAssetClass = "";
 		try {
 			taxonomy = new UPI("ForeignExchange:ForeignExchange:Bar");
 		} catch (InvalidTaxonomyException ex) {
@@ -158,7 +158,7 @@ public class Trade {
 		this.assetClass = assetClass;
 	}
 
-	public void setSubAssetClass(SubAssetClass subAssetClass) {
+	public void setSubAssetClass(String subAssetClass) {
 		this.subAssetClass = subAssetClass;
 	}
 
@@ -340,7 +340,7 @@ public class Trade {
 		return assetClass;
 	}
 
-	public SubAssetClass getSubAssetClass() {
+	public String getSubAssetClass() {
 		return subAssetClass;
 	}
 

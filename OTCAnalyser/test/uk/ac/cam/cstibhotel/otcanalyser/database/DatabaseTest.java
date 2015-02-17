@@ -1,13 +1,21 @@
 package uk.ac.cam.cstibhotel.otcanalyser.database;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
 import org.junit.Ignore;
+import org.junit.Test;
+
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
@@ -54,7 +62,9 @@ public class DatabaseTest {
 		trade.setDisseminationID(128);
 				
 		Database instance = Database.getDB();
-		boolean result = instance.addTrade(trade);
+		List<Trade> trades = new LinkedList<Trade>();
+		trades.add(trade);
+		boolean result = instance.addTrade(trades);
 		assertTrue(result);
 		
 		Connection c = instance.getConnection();
@@ -72,7 +82,9 @@ public class DatabaseTest {
 		trade.setDisseminationID(127);
 				
 		Database instance = Database.getDB();
-		boolean result = instance.addTrade(trade);
+		List<Trade> trades = new LinkedList<Trade>();
+		trades.add(trade);
+		boolean result = instance.addTrade(trades);
 		assertTrue(result);
 	}
 	
@@ -91,7 +103,9 @@ public class DatabaseTest {
 		trade.setDisseminationID(127);
 		
 		Database instance = Database.getDB();
-		boolean result = instance.addTrade(trade);
+		List<Trade> trades = new LinkedList<Trade>();
+		trades.add(trade);
+		boolean result = instance.addTrade(trades);
 		assertTrue(result);
 		
 		Connection c = instance.getConnection();
@@ -118,7 +132,9 @@ public class DatabaseTest {
 		trade.setDisseminationID(127);
 		
 		Database instance = Database.getDB();
-		boolean result = instance.addTrade(trade);
+		List<Trade> trades = new LinkedList<Trade>();
+		trades.add(trade);
+		boolean result = instance.addTrade(trades);
 		assertTrue(result);
 		
 		Connection c = instance.getConnection();

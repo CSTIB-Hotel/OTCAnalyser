@@ -16,6 +16,19 @@ public enum Action {
 		return value;
 	}
 	
+	public static Action lookup(int i){
+		switch(i){
+			case 0:
+				return NEW;
+			case 1:
+				return CANCEL;
+			case 2:
+				return CORRECT;
+			default:
+				throw new IllegalArgumentException();
+		}
+	}
+	
 	public static Action parseAct(String s) throws ActionFormatException{
 		switch(s){
 			case "NEW":
