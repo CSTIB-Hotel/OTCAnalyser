@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,6 +18,7 @@ import java.util.Map.Entry;
 
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.DBAnalysis;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.AssetClass;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Collateralization;
@@ -298,6 +298,8 @@ public class Database {
 	 */
 	public SearchResult search(Search s) {
 		try {
+			//analysis
+			DBAnalysis.getMaxPricePerMonth(s, connection, DBAnalysis.EXECUTION_TIME);
 			PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
 					+"tradeType = ? AND "
 					+"assetClass = ? AND "
