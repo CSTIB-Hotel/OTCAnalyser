@@ -320,62 +320,13 @@ public class Database {
 	//		PreparedStatement ps = connection.prepareStatement("SELECT * FROM data");
 			ResultSet rs = ps.executeQuery();
 			
-			// TODO no idea what time is for
 			List<Trade> trades = new LinkedList<>();
 			
 			while(rs.next()){
-				Trade t = new Trade();
-				
-				t.setDisseminationID(rs.getLong("id"));
-				t.setOriginalDisseminationID(rs.getLong("origId"));
-				t.setAction(Action.lookup(rs.getShort("action")));
-				t.setExecutionTimestamp(rs.getTimestamp("executionTime"));
-				t.setCleared(rs.getBoolean("cleared"));
-				t.setCollateralization(Collateralization.lookup(rs.getShort("collat")));
-				t.setEndUserException(rs.getBoolean("endUserException"));
-				t.setBespoke(rs.getBoolean("bespoke"));
-				t.setExecutionVenue(rs.getBoolean("executionVenue"));
-				t.setBlockTrades(rs.getBoolean("blockTrades"));
-				t.setEffectiveDate(rs.getDate("effectiveDate"));
-				t.setEndDate(rs.getDate("endDate"));
-				t.setDayCountConvention(rs.getString("dayCountConvention"));
-				t.setSettlementCurrency(rs.getString("settlementCurrency"));
-				t.setTradeType(TradeType.lookup(rs.getShort("tradeType")));
-				t.setAssetClass(AssetClass.lookup(rs.getShort("assetClass")));
-				// t.setSubAssetClass(); // todo
-				// t.setTaxonomy(); // todo
-				t.setPriceFormingContinuationData(PriceFormingContinuationData.lookup(rs.getShort("priceFormingContinuationData")));
-				t.setUnderlyingAsset1(rs.getString("underlyingAsset1"));
-				t.setUnderlyingAsset2(rs.getString("underlyingAsset2"));
-				t.setPriceNotationType(rs.getString("priceNotationType"));
-				t.setPriceNotation(rs.getDouble("priceNotation"));
-				t.setAdditionalPriceNotationType(rs.getString("additionalPriceNotationType"));
-				t.setAdditionalPriceNotation(rs.getDouble("additionalPriceNotation"));
-				t.setNotionalCurrency1(rs.getString("notionalCurrency1"));
-				t.setNotionalCurrency2(rs.getString("notionalCurrency2"));
-				t.setRoundedNotionalAmount1(rs.getString("roundedNotionalAmount1"));
-				t.setRoundedNotionalAmount2(rs.getString("roundedNotionalAmount2"));
-				t.setPaymentFrequency1(rs.getString("paymentFrequency1"));
-				t.setPaymentFrequency2(rs.getString("paymentFrequency2"));
-				t.setResetFrequency1(rs.getString("resetFrequency1"));
-				t.setResetFrequency2(rs.getString("resetFrequency2"));
-				t.setEmbeddedOption(rs.getString("embeddedOption"));
-				t.setOptionStrikePrice(rs.getDouble("optionStrikePrice"));
-				t.setOptionType(rs.getString("optionType"));
-				t.setOptionFamily(rs.getString("optionFamily"));
-				t.setOptionCurrency(rs.getString("optionCurrency"));
-				t.setOptionPremium(rs.getDouble("optionPremium"));
-				t.setOptionLockPeriod(rs.getDate("optionLockPeriod"));
-				t.setOptionExpirationDate(rs.getDate("optionExpirationDate"));
-				t.setPriceNotation2Type(rs.getString("priceNotation2Type"));
-				t.setPriceNotation2(rs.getDouble("priceNotation2"));
-				t.setPriceNotation3Type(rs.getString("priceNotation3Type"));
-				t.setPriceNotation3(rs.getDouble("priceNotation3"));
-				
-				
-				trades.add(t);
+				trades.add(TradeFieldMapping.makeObjectFromRecord(rs));
 			}
-			
+
+			// TODO no idea what time is for
 			System.out.println(trades.size());
 
 			return new SearchResult(trades, 0);
