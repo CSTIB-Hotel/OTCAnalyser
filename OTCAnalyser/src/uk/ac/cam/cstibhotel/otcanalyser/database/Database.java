@@ -442,4 +442,13 @@ public class Database {
 		return connection;
 	}
 
+	public static void main(String[] args) throws SQLException {
+		Connection c = Database.getDB().getConnection();
+		Statement s = c.createStatement();
+		ResultSet rs = s.executeQuery("SELECT settlementCurrency FROM data GROUP BY settlementCurrency");
+		while(rs.next()){
+			System.out.println(rs.getString(1));
+		}
+	}
+	
 }
