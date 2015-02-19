@@ -12,7 +12,7 @@ public class UPIStrings {
 	public static final String[] Assets = {"Credit","InterestRate","Commodity","ForeignExchange",
 			"Equity"};
 
-	public static final String[] CreditBaseProducts = {"All","SingleName","IndexTranche","Index",
+	public static final String[] CreditBaseProducts = {"%","SingleName","IndexTranche","Index",
 			"TotalReturnSwap","Swaptions","Exotic"};
 	
 	public static final String[][] CreditSubProducts = {
@@ -26,7 +26,7 @@ public class UPIStrings {
 		{"Corporate","StructuredCDS","Other"}
 		};
 	
-	public static final String[] InterestBaseProducts = {"All","IRSwap","FRA","CapFloor",
+	public static final String[] InterestBaseProducts = {"%","IRSwap","FRA","CapFloor",
 			"CrossCurrency","Option","Exotic"};
 	
 	public static final String[][] InterestSubProducts = {
@@ -39,7 +39,7 @@ public class UPIStrings {
 		{}
 	};
 
-	public static final String[] CommodityBaseProducts = {"All","Metals","Energy","Index",
+	public static final String[] CommodityBaseProducts = {"%","Metals","Energy","Index",
 			"Agriculture","Environmental","Freight","MultiCommodityExotic"};
 	
 	public static final String[][] CommoditySubProducts = {
@@ -53,7 +53,7 @@ public class UPIStrings {
 		{}
 	};
 	
-	public static final String[] ForexBaseProducts = {"All","Spot","NDF","NDO","Forward",
+	public static final String[] ForexBaseProducts = {"%","Spot","NDF","NDO","Forward",
 			"VanillaOption","SimpleExotic","ComplexExotic"};
 	
 	public static final String[][] ForexSubProducts = {
@@ -67,7 +67,7 @@ public class UPIStrings {
 		{}
 	};
 	
-	public static final String[] EquityBaseProducts = {"All","Swap","PortfolioSwap",
+	public static final String[] EquityBaseProducts = {"%","Swap","PortfolioSwap",
 			"ContractForDifference","Option","Forward","Other"};
 	
 	public static final String[][] EquitySubProducts = {
