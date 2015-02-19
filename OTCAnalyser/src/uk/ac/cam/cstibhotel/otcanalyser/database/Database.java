@@ -164,7 +164,8 @@ public class Database {
 	 * @return true if the database was successfully updated
 	 */
 	public boolean addTrade(List<Trade> trades) {
-
+		boolean success = true;
+		
 		for (Trade trade : trades) {
 
 			HashMap<String, SQLField> DBNameValue = TradeFieldMapping.getMapping(trade);
@@ -173,33 +174,36 @@ public class Database {
 			String executeString;
 
 			if (trade.getAction().equals(Action.CANCEL)) {
-				deleteTrade(trade.getDisseminationID());
-				break; // TODO
+				boolean v = deleteTrade(trade.getDisseminationID());
+				success &= v; // do not combine this with the above as Java will short-circuit boolean evaluation
+				break; 
 			} else if (trade.getAction().equals(Action.CORRECT)) {
 				executeString = buildUpdateString(iterator, trade.getDisseminationID());
-			} else { // new entry
+			} else { // equals(Action.NEW)
 				executeString = buildInsertString(iterator);
 			}
 
 			try {
+				
 				PreparedStatement p = connection.prepareStatement(executeString);
-
 				iterator = DBNameValue.entrySet().iterator();
+				
 				while (iterator.hasNext()) {
 					iterator.next().getValue().addToPreparedStatement(p);
 				}
-
+				
 				p.execute();
 
 			} catch (SQLException e) {
 				System.err.println("Failed to insert/update row");
-				return false;
+				success = false;
 			}
 
 			updateLastUpdateTime(trade);
 		}
 
-		return commit();
+		boolean v = commit();
+		return success && v;
 	}
 
 	/**
