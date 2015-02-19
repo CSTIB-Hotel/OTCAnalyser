@@ -98,7 +98,7 @@ public class SearchWindow extends JPanel {
 			currencyDescriptor = new CenteredJLabel("Select a currency");
 			this.add(currencyDescriptor);
 			currencyDescriptor.setVisible(true);
-			currency = new JTextField();
+			currency = new JTextField();	
 			Configurator.enableAutoCompletion(myList,currency);
 			this.add(currency);
 			currency.setVisible(true);

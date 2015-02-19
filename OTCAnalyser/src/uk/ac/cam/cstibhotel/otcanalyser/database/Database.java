@@ -300,8 +300,10 @@ public class Database {
 			if (s.getAsset().equals("")||s.getAsset()==null) {
 				query += " (underlyingAsset1 LIKE ? OR underlyingAsset2 LIKE ?) AND ";
 			}
-			query += " optionStrikePrice >= ? AND "
-					+" optionStrikePrice <= ? AND ";
+			if(s.getMinPrice() == s.getMaxPrice()){
+				query += " optionStrikePrice >= ? AND "
+						+" optionStrikePrice <= ? AND ";
+			}
 			if (s.getCurrency().equals("")||s.getCurrency()==null) {
 				query += " (notionalCurrency1 LIKE ? OR notionalCurrency2 LIKE ? ) AND ";
 			}
@@ -321,8 +323,10 @@ public class Database {
 				ps.setString(i, "%"+s.getAsset()+"%"); i++;
 			}
 
-			ps.setFloat(i, s.getMinPrice()); i++;
-			ps.setFloat(i, s.getMaxPrice()); i++;
+			if(s.getMinPrice() == s.getMaxPrice()){
+				ps.setFloat(i, s.getMinPrice()); i++;
+				ps.setFloat(i, s.getMaxPrice()); i++;
+			}
 			
 			if (s.getCurrency().equals("") || s.getCurrency()==null) {
 				ps.setString(i, "%"+s.getCurrency()+"%"); i++;
