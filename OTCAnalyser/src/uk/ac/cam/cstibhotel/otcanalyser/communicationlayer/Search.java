@@ -10,7 +10,7 @@ public class Search {
 	private TradeType tradeType;
 	private AssetClass assetClass;
 	private String asset;
-	private int minPrice, maxPrice;
+	private long minPrice, maxPrice;
 	private String currency;
 	private Date startTime, endTime;
 	private String upi;
@@ -19,7 +19,7 @@ public class Search {
 		super();
 	}
 	
-	public Search(TradeType t, AssetClass ac, String asset, int minP, int maxP, String c,
+	public Search(TradeType t, AssetClass ac, String asset, long minP, long maxP, String c,
 				Date st, Date et, String upi) {
 		this.tradeType = t;
 		this.assetClass = ac;
@@ -56,19 +56,19 @@ public class Search {
 		this.asset = asset;
 	}
 
-	public int getMinPrice() {
+	public long getMinPrice() {
 		return minPrice;
 	}
 
-	public void setMinPrice(int minPrice) {
+	public void setMinPrice(long minPrice) {
 		this.minPrice = minPrice;
 	}
 
-	public int getMaxPrice() {
+	public long getMaxPrice() {
 		return maxPrice;
 	}
 
-	public void setMaxPrice(int maxPrice) {
+	public void setMaxPrice(long maxPrice) {
 		this.maxPrice = maxPrice;
 	}
 
