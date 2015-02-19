@@ -6,13 +6,18 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
+import org.jdesktop.swingx.autocomplete.*;
+
 public class SearchWindow extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
+	String[] data = {"USD", "GBP", "EUR", "POO"};
+	JList<String> myList = new JList<String>(data);
 	private JLabel TaxonomySelectorDescriptor;
 	public TaxonomySelector tax;
 	private JLabel UnderLyingAssetDescriptor;
@@ -94,6 +99,7 @@ public class SearchWindow extends JPanel {
 			this.add(currencyDescriptor);
 			currencyDescriptor.setVisible(true);
 			currency = new JTextField();
+			Configurator.enableAutoCompletion(myList,currency);
 			this.add(currency);
 			currency.setVisible(true);
 			SearchButton = new JButton("Search");

@@ -30,11 +30,13 @@ public class TradeFieldMapping {
 		HashMap<String, SQLField> DBNameDBType = new HashMap<>();
 		DBNameDBType.put("id", new BigIntSQLField(t.getDisseminationID()));
 		DBNameDBType.put("origId", new BigIntSQLField(t.getOriginalDisseminationID()));
-		DBNameDBType.put("action", new SmallIntSQLField(t.getAction().getValue()));
+		DBNameDBType.put("action", (t.getAction()==null) ? null :
+			new SmallIntSQLField(t.getAction().getValue()));
 		DBNameDBType.put("executionTime", (t.getExecutionTimestamp() == null) ? null : 
 			new TimestampSQLField(t.getExecutionTimestamp().getTime()));
 		DBNameDBType.put("cleared", new BoolSQLField(t.isCleared()));
-		DBNameDBType.put("collat", new SmallIntSQLField(t.getCollateralization().getValue()));
+		DBNameDBType.put("collat", (t.getCollateralization() == null) ? null :
+			new SmallIntSQLField(t.getCollateralization().getValue()));
 		DBNameDBType.put("endUserException", new BoolSQLField(t.isEndUserException()));
 		DBNameDBType.put("bespoke", new BoolSQLField(t.isBespoke()));
 		DBNameDBType.put("executionVenue", new BoolSQLField(t.isExecutionVenue()));
@@ -43,11 +45,16 @@ public class TradeFieldMapping {
 		DBNameDBType.put("endDate", new DateSQLField(t.getEndDate()));
 		DBNameDBType.put("dayCountConvention", new VarCharSQLField(255, t.getDayCountConvention()));
 		DBNameDBType.put("settlementCurrency", new VarCharSQLField(20, t.getSettlementCurrency()));
-		DBNameDBType.put("tradeType", new SmallIntSQLField(t.getTradeType().getValue()));
-		DBNameDBType.put("assetClass", new SmallIntSQLField(t.getAssetClass().getValue()));
-		DBNameDBType.put("subAssetClass", new VarCharSQLField(255, t.getSubAssetClass().toString())); // TODO write subassetclass
-		DBNameDBType.put("taxonomy", new VarCharSQLField(255, t.getTaxonomy().toString())); // TODO write UPI
-		DBNameDBType.put("priceFormingContinuationData", new SmallIntSQLField(t.getPriceFormingContinuationData().getValue()));
+		DBNameDBType.put("tradeType", (t.getTradeType() == null) ? null : 
+			new SmallIntSQLField(t.getTradeType().getValue()));
+		DBNameDBType.put("assetClass", (t.getAssetClass() == null) ? null :
+			new SmallIntSQLField(t.getAssetClass().getValue()));
+		DBNameDBType.put("subAssetClass", (t.getSubAssetClass() == null) ? null :
+			new VarCharSQLField(255, t.getSubAssetClass().toString())); // TODO write subassetclass
+		DBNameDBType.put("taxonomy", (t.getTaxonomy() == null) ? null :
+			new VarCharSQLField(255, t.getTaxonomy().toString())); // TODO write UPI
+		DBNameDBType.put("priceFormingContinuationData", (t.getPriceFormingContinuationData() == null) ? null :
+			new SmallIntSQLField(t.getPriceFormingContinuationData().getValue()));
 		DBNameDBType.put("underlyingAsset1", new VarCharSQLField(255, t.getUnderlyingAsset1()));
 		DBNameDBType.put("underlyingAsset2", new VarCharSQLField(255, t.getUnderlyingAsset2()));
 		DBNameDBType.put("priceNotationType", new VarCharSQLField(255, t.getPriceNotationType()));
