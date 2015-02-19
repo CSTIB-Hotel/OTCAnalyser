@@ -40,6 +40,7 @@ public class Database {
 	private static Database db;
 	private static Connection connection;
 	private static final int TableAlreadyExistsError = -21; // as defined by HSQLDB Driver
+	private static final int ObjectNameAlreadyExists = -5504; // as thrown by trying to create table twice
 
 	private static String getDatabasePath() {
 		// Local file path regardless of OS
@@ -102,7 +103,8 @@ public class Database {
 		try {
 			connection.createStatement().execute(dataTableCreator.toString());
 		} catch (SQLException e) {
-			if(e.getErrorCode() != TableAlreadyExistsError){
+			if(e.getErrorCode() != TableAlreadyExistsError && e.getErrorCode() != ObjectNameAlreadyExists){
+				System.err.println(e.getErrorCode());
 				throw e;
 			}
 		}
@@ -115,7 +117,7 @@ public class Database {
 			connection.createStatement().execute("INSERT INTO info (key, vvalue) VALUES ('last_update', '0')");
 			commit();
 		} catch (SQLException e) {
-			if(e.getErrorCode() != TableAlreadyExistsError){
+			if(e.getErrorCode() != TableAlreadyExistsError && e.getErrorCode() != ObjectNameAlreadyExists){
 				throw e;
 			}
 		}
@@ -138,7 +140,7 @@ public class Database {
 		try{
 			connection.createStatement().execute(savedSearchTableCreator);
 		} catch (SQLException e){
-			if(e.getErrorCode() != TableAlreadyExistsError){
+			if(e.getErrorCode() != TableAlreadyExistsError && e.getErrorCode() != ObjectNameAlreadyExists){
 				throw e;
 			}
 		}
