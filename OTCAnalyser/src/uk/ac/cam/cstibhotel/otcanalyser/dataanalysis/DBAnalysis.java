@@ -21,16 +21,24 @@ public class DBAnalysis {
 	
 	//if the database scheme changes, this should ideally be the only method to change
 	private static PreparedStatement statementPreparer(Search s, String select, String group, Connection conn) throws SQLException {
-		PreparedStatement ps = conn.prepareStatement("SELECT " + select + " FROM data WHERE "
-				+"tradeType = ? AND "
-				+"assetClass = ? AND "
-				+"underlyingAsset1 LIKE ? AND "
-				+"optionStrikePrice >= ? AND "
-				+"optionStrikePrice <= ? AND "
-				+"settlementCurrency LIKE ? AND "
-				+"executionTime >= ? AND "
-				+"executionTime <= ?"
-				+ group);
+		String query = "SELECT " + select + " FROM data WHERE "
+		    +"tradeType = ? AND "
+		    +"assetClass = ? AND ";
+				if (s.getAsset().equals("")||s.getAsset()==null) {
+					query += " (underlyingAsset1 LIKE ? OR underlyingAsset2 LIKE ?) AND ";
+				}
+				if(s.getMinPrice() == s.getMaxPrice()){
+					query += " roundedNotionalAmount1 >= ? AND "
+							+" roundedNotionalAmount1 <= ? AND ";
+				}
+				if (s.getCurrency().equals("")||s.getCurrency()==null) {
+					query += " (notionalCurrency1 LIKE ? OR notionalCurrency2 LIKE ? ) AND ";
+				}
+				query += " executionTime >= ? AND "
+						+" executionTime <= ?";
+				query += group;
+		
+		PreparedStatement ps = conn.prepareStatement(query);
 		ps.setShort(1, s.getTradeType().getValue());
 		ps.setShort(2, s.getAssetClass().getValue());
 		ps.setString(3, "%" + s.getAsset() + "%");
@@ -42,9 +50,9 @@ public class DBAnalysis {
 		return ps;
 	}
 	
-	//for now, this gets the max option strike price; will later change to Rounded Notional Amount 1
+	//gets max Rounded Notional Amount 1
 	public static double getMaxPrice(Search s, Connection conn) throws SQLException {
-	  PreparedStatement ps = statementPreparer(s, "max(optionStrikePrice)", "", conn);
+	  PreparedStatement ps = statementPreparer(s, "max(roundedNotionalAmount1)", "", conn);
 	  ResultSet rs = ps.executeQuery();
 	  if (rs.next()) {
 	    return rs.getDouble(1);
@@ -52,14 +60,14 @@ public class DBAnalysis {
 	  else throw new SQLException();
 	}
 	
-	//gets the max option strike price per month grouped by Notional Currency; will later change to Rounded Notional Amount 1
+	//gets max Rounded Notional Amount 1
 	public static List<AnalysisItem> getMaxPricePerMonth(Search s, Connection conn, String date) throws SQLException {
       PreparedStatement ps = statementPreparer
-          (s, "max(optionStrikePrice) AS maxOSP, MONTH(" + date + ") AS month, YEAR("
+          (s, "max(roundedNotionalAmount1) AS maxRNA, MONTH(" + date + ") AS month, YEAR("
           + date + ") AS year, notionalCurrency1 AS curr", "GROUP BY month, year, curr", conn);
 	  ResultSet rs = ps.executeQuery();
 	  //info about what's getting printed
-	  System.out.println("Month/Year: Currency: Max Option Strike Price");
+	  System.out.println("Month/Year: Currency: Max Rounded Notional Amount 1");
 	  ArrayList<AnalysisItem> list = new ArrayList<>();
 	  while (rs.next()) {
 		  Calendar c = Calendar.getInstance();
@@ -68,20 +76,20 @@ public class DBAnalysis {
 		  c.set(Calendar.YEAR, rs.getInt("year"));
 		  //for now,  print it:
 		  System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
-		      + rs.getString("curr") + ": " + rs.getDouble("maxOSP"));
-		  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getDouble("maxOSP")));
+		      + rs.getString("curr") + ": " + rs.getDouble("maxRNA"));
+		  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("maxRNA")));
 	  }
 	  return list;
 	}
 	
-	//gets the population stdev of option strike price per month grouped by Notional Currency; will later change to Rounded Notional Amount 1
+	//gets the population stdev of Rounded Notional Amount1 per month grouped by Notional Currency
 		public static List<AnalysisItem> getPriceStdDevPerMonth(Search s, Connection conn, String date) throws SQLException {
 	      PreparedStatement ps = statementPreparer
-	          (s, "STDDEV_POP(optionStrikePrice) AS stddev, MONTH(" + date + ") AS month, YEAR("
+	          (s, "STDDEV_POP(roundedNotionalAmount1) AS stddev, MONTH(" + date + ") AS month, YEAR("
 	          + date + ") AS year, notionalCurrency1 AS curr", "GROUP BY month, year, curr", conn);
 		  ResultSet rs = ps.executeQuery();
 		  //info about what's getting printed
-		  System.out.println("Month/Year: Currency: Std Dev of Option Strike Price");
+		  System.out.println("Month/Year: Currency: Std Dev of Rounded Notional Amount 1");
 		  ArrayList<AnalysisItem> list = new ArrayList<>();
 		  while (rs.next()) {
 			  Calendar c = Calendar.getInstance();
@@ -91,7 +99,7 @@ public class DBAnalysis {
 			  //for now, print it:
 			  System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
 			      + rs.getString("curr") + ": " + rs.getDouble("stddev"));
-			  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getDouble("stddev")));
+			  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("stddev")));
 		  }
 		  return list;
 		}

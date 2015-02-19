@@ -6,9 +6,9 @@ public class AnalysisItem {
 	
 	private Date time;
   private String currency;
-  private double price;
+  private long price;
   
-  public AnalysisItem(Date time, String currency, double price) {
+  public AnalysisItem(Date time, String currency, long price) {
   	this.time = time;
   	this.currency = currency;
   	this.price = price;
@@ -22,7 +22,7 @@ public class AnalysisItem {
   	return currency;
   }
   
-  public double getPrice() {
+  public long getPrice() {
   	return price;
   }
 }
