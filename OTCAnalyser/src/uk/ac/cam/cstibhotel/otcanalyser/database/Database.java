@@ -328,8 +328,8 @@ public class Database {
 				query += " (underlyingAsset1 LIKE ? OR underlyingAsset2 LIKE ?) AND ";
 			}
 			if(s.getMinPrice() == s.getMaxPrice()){
-				query += " optionStrikePrice >= ? AND "
-						+" optionStrikePrice <= ? AND ";
+				query += " roundedNotionalAmount1 >= ? AND "
+						+" roundedNotionalAmount1 <= ? AND ";
 			}
 			if (s.getCurrency().equals("")||s.getCurrency()==null) {
 				query += " (notionalCurrency1 LIKE ? OR notionalCurrency2 LIKE ? ) AND ";
@@ -489,7 +489,7 @@ public class Database {
 		Statement s = c.createStatement();
 		ResultSet rs = s.executeQuery("SELECT settlementCurrency FROM data GROUP BY settlementCurrency");
 		while (rs.next()) {
-			System.out.println(rs.getString(1));
+			System.out.print("\"" + rs.getString(1) + "\", ");
 		}
 	}
 
