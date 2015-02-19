@@ -66,8 +66,8 @@ public class TradeFieldMapping {
 		DBNameDBType.put("additionalPriceNotation", new FloatSQLField(t.getAdditionalPriceNotation()));
 		DBNameDBType.put("notionalCurrency1", new VarCharSQLField(20, t.getNotionalCurrency1()));
 		DBNameDBType.put("notionalCurrency2", new VarCharSQLField(20, t.getNotionalCurrency2()));
-		DBNameDBType.put("roundedNotionalAmount1", new VarCharSQLField(255, t.getRoundedNotionalAmount1()));
-		DBNameDBType.put("roundedNotionalAmount2", new VarCharSQLField(255, t.getRoundedNotionalAmount2()));
+		DBNameDBType.put("roundedNotionalAmount1", new BigIntSQLField(t.getRoundedNotionalAmount1()));
+		DBNameDBType.put("roundedNotionalAmount2", new BigIntSQLField(t.getRoundedNotionalAmount2()));
 		DBNameDBType.put("paymentFrequency1", new VarCharSQLField(255, t.getPaymentFrequency1()));
 		DBNameDBType.put("paymentFrequency2", new VarCharSQLField(255, t.getPaymentFrequency2()));
 		DBNameDBType.put("resetFrequency1", new VarCharSQLField(255, t.getResetFrequency1()));
@@ -118,8 +118,8 @@ public class TradeFieldMapping {
 		t.setAdditionalPriceNotation(rs.getDouble("additionalPriceNotation"));
 		t.setNotionalCurrency1(rs.getString("notionalCurrency1"));
 		t.setNotionalCurrency2(rs.getString("notionalCurrency2"));
-		t.setRoundedNotionalAmount1(rs.getString("roundedNotionalAmount1"));
-		t.setRoundedNotionalAmount2(rs.getString("roundedNotionalAmount2"));
+		t.setRoundedNotionalAmount1(rs.getLong("roundedNotionalAmount1"));
+		t.setRoundedNotionalAmount2(rs.getLong("roundedNotionalAmount2"));
 		t.setPaymentFrequency1(rs.getString("paymentFrequency1"));
 		t.setPaymentFrequency2(rs.getString("paymentFrequency2"));
 		t.setResetFrequency1(rs.getString("resetFrequency1"));

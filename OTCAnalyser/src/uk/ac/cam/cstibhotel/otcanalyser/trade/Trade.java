@@ -37,8 +37,8 @@ public class Trade {
 	private String notionalCurrency2;
 	
 	//TODO: Not sure about the types in the upcoming fields
-	private String roundedNotionalAmount1; //probably shouldn't be a long, since some values are e.g. 95,000,000+ TODO: probably should be long
-	private String roundedNotionalAmount2; //also has + TODO: Probably should be long
+	private long roundedNotionalAmount1; 
+	private long roundedNotionalAmount2; 
 	private String paymentFrequency1; //e.g. 3M, 1M, 0, but also dates like 2016-01-29
 	private String paymentFrequency2; //e.g. 1D, 1T, 1M
 	private String resetFrequency1; //e.g. 2024-10-10
@@ -202,11 +202,11 @@ public class Trade {
 		this.notionalCurrency2 = notionalCurrency2;
 	}
 
-	public void setRoundedNotionalAmount1(String roundedNotionalAmount1) {
+	public void setRoundedNotionalAmount1(long roundedNotionalAmount1) {
 		this.roundedNotionalAmount1 = roundedNotionalAmount1;
 	}
 
-	public void setRoundedNotionalAmount2(String roundedNotionalAmount2) {
+	public void setRoundedNotionalAmount2(long roundedNotionalAmount2) {
 		this.roundedNotionalAmount2 = roundedNotionalAmount2;
 	}
 
@@ -384,11 +384,11 @@ public class Trade {
 		return notionalCurrency2;
 	}
 
-	public String getRoundedNotionalAmount1() {
+	public long getRoundedNotionalAmount1() {
 		return roundedNotionalAmount1;
 	}
 
-	public String getRoundedNotionalAmount2() {
+	public long getRoundedNotionalAmount2() {
 		return roundedNotionalAmount2;
 	}
 

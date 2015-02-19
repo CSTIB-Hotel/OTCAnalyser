@@ -53,39 +53,40 @@ public class DataViewer extends JTabbedPane {
 	  dataViewer.analysis.addAnalysis(analysis, title);
   }
   
-  public static void main(String[] args) {
-    JFrame frame = new JFrame("Tabs");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.add(dataViewer);
-    frame.pack();
-    frame.setVisible(true);
-    
-    //some made-up data
-    List<Trade> trades = new ArrayList<>();
-    Trade t;
-    for (int i = 0; i < 20; i++) {
-      Date d = new Date(Calendar.getInstance().getTime().getTime()
-          - (long)(Math.random() * 500000000) * i);
-      for (int j = 0; j < 10; j++) {
-        t = new Trade();
-        t.setAction(Action.NEW);
-        t.setBlockTrades(false);
-        t.setRoundedNotionalAmount1(200 + Math.random() * 500 + "+");
-        t.setExecutionTimestamp(d);
-        trades.add(t);
-      }
-    }
-    trades.get(11).setRoundedNotionalAmount1("invalid");
-    addTrades(trades);
-    clearTrades();
-    addTrades(trades);
-    
-    String a = "Analysis of data.";
-    
-    for (int i = 1; i < 5; i++) {
-    	addAnalysis(a, "Analysis Title " + i);
-    }
-    
-   }
+  //TODO: delete it from final product
+//  public static void main(String[] args) {
+//    JFrame frame = new JFrame("Tabs");
+//    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//    frame.add(dataViewer);
+//    frame.pack();
+//    frame.setVisible(true);
+//    
+//    //some made-up data
+//    List<Trade> trades = new ArrayList<>();
+//    Trade t;
+//    for (int i = 0; i < 20; i++) {
+//      Date d = new Date(Calendar.getInstance().getTime().getTime()
+//          - (long)(Math.random() * 500000000) * i);
+//      for (int j = 0; j < 10; j++) {
+//        t = new Trade();
+//        t.setAction(Action.NEW);
+//        t.setBlockTrades(false);
+//        t.setRoundedNotionalAmount1(200 * 500);
+//        t.setExecutionTimestamp(d);
+//        trades.add(t);
+//      }
+//    }
+//    trades.get(11).setRoundedNotionalAmount1(0);
+//    addTrades(trades);
+//    clearTrades();
+//    addTrades(trades);
+//    
+//    String a = "Analysis of data.";
+//    
+//    for (int i = 1; i < 5; i++) {
+//    	addAnalysis(a, "Analysis Title " + i);
+//    }
+//    
+//   }
 
 }
