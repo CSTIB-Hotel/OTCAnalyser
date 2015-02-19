@@ -323,7 +323,7 @@ public class Database {
 		try {
 			String query = "SELECT * FROM data WHERE "
 					+"tradeType = ? AND "
-					+" assetClass = ? AND ";
+					+"assetClass = ? AND ";
 			if (s.getAsset().equals("")||s.getAsset()==null) {
 				query += " (underlyingAsset1 LIKE ? OR underlyingAsset2 LIKE ?) AND ";
 			}
