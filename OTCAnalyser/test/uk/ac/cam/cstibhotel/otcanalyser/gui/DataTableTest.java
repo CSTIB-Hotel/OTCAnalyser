@@ -55,8 +55,8 @@ public class DataTableTest {
 			trades[i].setPriceNotation3Type("Price Notation Type");
 			trades[i].setResetFrequency1("Reset Frequency 1");
 			trades[i].setResetFrequency2("Reset Frequency 2");
-			trades[i].setRoundedNotionalAmount1("1000");
-			trades[i].setRoundedNotionalAmount2("130.5");
+			trades[i].setRoundedNotionalAmount1(1000);
+			trades[i].setRoundedNotionalAmount2(130);
 			trades[i].setUnderlyingAsset1("Underlying Asset 1");
 			trades[i].setUnderlyingAsset2("Underlying Asset 2");
 		}
@@ -153,8 +153,8 @@ public class DataTableTest {
 			trades[i].setPriceNotation3Type("Price Notation Type");
 			trades[i].setResetFrequency1("Reset Frequency 1");
 			trades[i].setResetFrequency2("Reset Frequency 2");
-			trades[i].setRoundedNotionalAmount1("1000");
-			trades[i].setRoundedNotionalAmount2("130.5");
+			trades[i].setRoundedNotionalAmount1(1000);
+			trades[i].setRoundedNotionalAmount2(130);
 			trades[i].setUnderlyingAsset1("Underlying Asset 1");
 			trades[i].setUnderlyingAsset2("Underlying Asset 2");
 		}

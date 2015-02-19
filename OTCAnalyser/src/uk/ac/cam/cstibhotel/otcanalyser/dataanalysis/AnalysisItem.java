@@ -4,11 +4,11 @@ import java.util.Date;
 
 public class AnalysisItem {
 	
-	private Date time;
+  private Date time;
   private String currency;
-  private long price;
+  private double price;
   
-  public AnalysisItem(Date time, String currency, long price) {
+  public AnalysisItem(Date time, String currency, double price) {
   	this.time = time;
   	this.currency = currency;
   	this.price = price;
@@ -22,7 +22,7 @@ public class AnalysisItem {
   	return currency;
   }
   
-  public long getPrice() {
+  public double getPrice() {
   	return price;
   }
 }

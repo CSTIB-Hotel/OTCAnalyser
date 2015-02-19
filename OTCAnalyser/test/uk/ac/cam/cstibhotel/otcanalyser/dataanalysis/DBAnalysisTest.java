@@ -69,8 +69,8 @@ public class DBAnalysisTest {
   	}
   }
   
-  @Test
-  public void testMaxOptionStrikePrice() throws SQLException{
+  /*@Test
+  public void testMaxRNA1PerMonth() throws SQLException{
   	fakeDB();
   	Search s = new Search();
   	s.setTradeType(TradeType.OPTION);
@@ -89,13 +89,41 @@ public class DBAnalysisTest {
   		SearchResult sr = Database.getDB().search(s);
   		if (sr.getNumResults() > 0) {
   			list = DBAnalysis.getMaxPricePerMonth(s, connection, DBAnalysis.EXECUTION_TIME);
-    	  assertEquals((list.get(0).getPrice()), 9);
-    	  assertEquals((list.get(1).getPrice()), 19);
+    	  assertEquals((list.get(0).getPrice()), 9, 0);
+    	  assertEquals((list.get(1).getPrice()), 19, 0);
   		} else {
   			System.out.println("Empty");
   		}
   	} catch (SQLException e){
   		System.err.println("problem with getMaxPricePerMonth");
+  	}
+  }*/
+  @Test
+  public void testAvgRNA1PerMonth() throws SQLException{
+  	fakeDB();
+  	Search s = new Search();
+  	s.setTradeType(TradeType.OPTION);
+  	s.setAssetClass(AssetClass.COMMODITY);
+  	s.setMinPrice(0);
+  	s.setMaxPrice(1000000000);
+  	Calendar c = Calendar.getInstance();
+	  c.set(2100, 1, 1, 1, 13);
+  	s.setStartTime(c.getTime());
+  	c.set(2400, 1, 1, 1, 1);
+  	s.setEndTime(c.getTime());
+  	s.setAsset("");
+  	s.setCurrency("");
+  	List<AnalysisItem> list;
+  	try {
+  		SearchResult sr = Database.getDB().search(s);
+  		if (sr.getNumResults() > 0) {
+  		  list = DBAnalysis.getAvgPricePerMonth(s, connection, DBAnalysis.EXECUTION_TIME);
+    	  assertEquals((list.get(0).getPrice()), 4.5, 0);
+  		} else {
+  			System.out.println("Empty");
+  		}
+  	} catch (SQLException e){
+  		System.err.println("problem with getAvgPricePerMonth");
   	}
   }
   

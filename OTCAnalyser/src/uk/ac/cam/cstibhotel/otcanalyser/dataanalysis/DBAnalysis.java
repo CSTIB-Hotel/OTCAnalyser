@@ -82,6 +82,28 @@ public class DBAnalysis {
 	  return list;
 	}
 	
+	//gets avg Rounded Notional Amount 1 per month
+		public static List<AnalysisItem> getAvgPricePerMonth(Search s, Connection conn, String date) throws SQLException {
+	      PreparedStatement ps = statementPreparer
+	          (s, "avg(CAST(roundedNotionalAmount1 AS DOUBLE)) AS avgRNA, MONTH(" + date + ") AS month, YEAR("
+	          + date + ") AS year, notionalCurrency1 AS curr", "GROUP BY month, year, curr", conn);
+		  ResultSet rs = ps.executeQuery();
+		  //info about what's getting printed
+		  System.out.println("Month/Year: Currency: Avg Rounded Notional Amount 1");
+		  ArrayList<AnalysisItem> list = new ArrayList<>();
+		  while (rs.next()) {
+			  Calendar c = Calendar.getInstance();
+			  c.setTime(new Date(0));
+			  c.set(Calendar.MONTH, rs.getInt("month"));
+			  c.set(Calendar.YEAR, rs.getInt("year"));
+			  //for now,  print it:
+			  System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
+			      + rs.getString("curr") + ": " + rs.getDouble("avgRNA"));
+			  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getDouble("avgRNA")));
+		  }
+		  return list;
+		}
+	
 	//gets the population stdev of Rounded Notional Amount1 per month grouped by Notional Currency
 		public static List<AnalysisItem> getPriceStdDevPerMonth(Search s, Connection conn, String date) throws SQLException {
 	      PreparedStatement ps = statementPreparer
