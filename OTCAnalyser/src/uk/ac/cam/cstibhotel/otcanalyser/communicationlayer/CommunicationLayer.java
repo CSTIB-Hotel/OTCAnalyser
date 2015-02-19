@@ -33,14 +33,11 @@ public class CommunicationLayer {
 		searchListeners = new ArrayList<SearchListener>();
 	}
 	
-	// Adds a listener to the list of searchListeners to allow them to
-	// receive results of a query
-	public static void registerListener(SearchListener s) {
-		searchListeners.add(s);
-	}
-	
-	// Creates a Search and then sends it to the database
-	public static void search() throws ParseException {
+	/*
+	 * Builds a Search object from the currently-selected parameters in the SearchWindow and returns
+	 * it.
+	 */
+	public static Search createSearch() throws ParseException {
 		Search s = new Search();
 
 		String tradeType = (String) SearchWindow.getInstance().TradeType.getSelectedItem();
@@ -142,6 +139,22 @@ public class CommunicationLayer {
 		
 		s.setUPI(fullTaxonomy);
 		
+		return s;
+	}
+	
+	/*
+	 * Adds a listener to the list of searchListeners to allow them to
+	 * receive results of a query
+	 */
+	public static void registerListener(SearchListener s) {
+		searchListeners.add(s);
+	}
+	
+	/*
+	 * Takes a Search, sends the query to the database and then passes the result to any of the
+	 * SearchListeners registered to receive it.
+	 */
+	public static void search(Search s) throws ParseException {
 		// Get the result from the database
 		SearchResult result = Database.getDB().search(s);
 		
