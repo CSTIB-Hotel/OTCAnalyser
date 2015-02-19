@@ -3,7 +3,6 @@ package uk.ac.cam.cstibhotel.otcanalyser.communicationlayer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -11,10 +10,8 @@ import java.util.Locale;
 import uk.ac.cam.cstibhotel.otcanalyser.database.Database;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.SearchWindow;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.StatusBar;
-import uk.ac.cam.cstibhotel.otcanalyser.gui.TextStrings;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.AssetClass;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.TradeType;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.UPIStrings;
 
 public class CommunicationLayer {
