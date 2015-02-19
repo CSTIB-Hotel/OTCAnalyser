@@ -3,6 +3,7 @@ package uk.ac.cam.cstibhotel.otcanalyser.communicationlayer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -140,6 +141,66 @@ public class CommunicationLayer {
 		s.setUPI(fullTaxonomy);
 		
 		return s;
+	}
+	
+	/*
+	 * Takes a Search and loads its values into the GUI for the user.
+	 */
+	public static void loadSearch(Search s) {
+		// Set the trade type
+		if (s.getTradeType() == TradeType.SWAP) {
+			SearchWindow.getInstance().TradeType.setSelectedItem("Swap");
+		} else if (s.getTradeType() == TradeType.OPTION) {
+			SearchWindow.getInstance().TradeType.setSelectedItem("Option");
+		}
+		
+		// Set the underlying asset
+		SearchWindow.getInstance().UnderLyingAsset.setText(s.getAsset());
+		
+		// Set the minimum price
+		SearchWindow.getInstance().minValue.setValue(s.getMinPrice());
+		
+		// Set the maximum price
+		SearchWindow.getInstance().maxValue.setValue(s.getMaxPrice());
+		
+		// Set the currency
+		SearchWindow.getInstance().currency.setText(s.getCurrency());
+		
+		// Set the start date and end date
+		Calendar cal = Calendar.getInstance();
+		
+		cal.setTime(s.getStartTime());
+		SearchWindow.getInstance().StartDate.Day.setSelectedItem(cal.get(Calendar.DAY_OF_MONTH));
+		SearchWindow.getInstance().StartDate.Months.setSelectedIndex(cal.get(Calendar.MONTH));
+		SearchWindow.getInstance().StartDate.Year.setSelectedItem(cal.get(Calendar.YEAR));
+		
+		cal.setTime(s.getEndTime());
+		SearchWindow.getInstance().EndDate.Day.setSelectedItem(cal.get(Calendar.DAY_OF_MONTH));
+		SearchWindow.getInstance().EndDate.Months.setSelectedIndex(cal.get(Calendar.MONTH));
+		SearchWindow.getInstance().EndDate.Year.setSelectedItem(cal.get(Calendar.YEAR));
+		
+		// Set the asset class
+		switch (s.getAssetClass()) {
+		case COMMODITY:
+			SearchWindow.getInstance().tax.Asset.setSelectedItem("Commodity");
+			break;
+		case RATES:
+			SearchWindow.getInstance().tax.Asset.setSelectedItem("Interest");
+			break;
+		case CREDIT:
+			SearchWindow.getInstance().tax.Asset.setSelectedItem("Credit");
+			break;
+		case EQUITY:
+			SearchWindow.getInstance().tax.Asset.setSelectedItem("Equity");
+			break;
+		case FOREX:
+			SearchWindow.getInstance().tax.Asset.setSelectedItem("Foreign Exchange");
+			break;
+		}
+		
+		//TODO Set the base product
+		
+		//TODO Set the sub-product
 	}
 	
 	/*
