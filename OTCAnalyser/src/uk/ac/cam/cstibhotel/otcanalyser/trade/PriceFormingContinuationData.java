@@ -6,7 +6,7 @@ public enum PriceFormingContinuationData {
 	TRADE(1),
 	AMENDMENT(2),
 	INCREASE(3),
-	NOVATION(4),
+	NOVATION(47),
 	PARTIALTERMINATION(5),
 	EXIT(6),
 	EXERCISE(7),
