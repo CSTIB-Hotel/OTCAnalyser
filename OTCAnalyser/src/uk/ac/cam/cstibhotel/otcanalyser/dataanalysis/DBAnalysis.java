@@ -54,6 +54,17 @@ public class DBAnalysis {
 		return ps;
 	}
 	
+	//gets currencies
+	public static List<String> getCurrencies(Search s, Connection conn) throws SQLException {
+		PreparedStatement ps = statementPreparer(s, "DISTINCT notionalCurrency1", "", "", conn);
+		ResultSet rs = ps.executeQuery();
+		List<String> list = new ArrayList<>();
+		while (rs.next()) {
+			list.add(rs.getString("notionalCurrency1"));
+		}
+		return list;
+	}
+	
 	//gets max Rounded Notional Amount 1
 	public static AnalysisItem getMaxPrice(Search s, Connection conn) throws SQLException {
 	  PreparedStatement ps = statementPreparer(s,
