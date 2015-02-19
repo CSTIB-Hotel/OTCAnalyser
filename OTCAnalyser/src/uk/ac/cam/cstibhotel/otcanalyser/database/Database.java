@@ -37,7 +37,7 @@ public class Database {
 
 	private static Database db;
 	private static Connection connection;
-	
+
 	private static String getDatabasePath() {
 		// Local file path regardless of OS
 		return "database.db";
@@ -61,7 +61,7 @@ public class Database {
 
 	private Database() throws SQLException, ClassNotFoundException {
 		Class.forName("org.hsqldb.jdbcDriver");
-		connection = DriverManager.getConnection("jdbc:hsqldb:file:" + getDatabasePath());
+		connection = DriverManager.getConnection("jdbc:hsqldb:file:"+getDatabasePath());
 		//for memory mapped would have "jdbc:hsqldb:mem:."
 		connection.setAutoCommit(false);
 
@@ -69,7 +69,7 @@ public class Database {
 
 		createDataTable();
 		createInfoTable();
-		
+
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				try {
@@ -105,7 +105,7 @@ public class Database {
 	private void createInfoTable() {
 		String infoTableCreator = "CREATE TABLE info ( key VARCHAR(255), vvalue VARCHAR(255) )";
 		try {
-			connection.createStatement().execute(infoTableCreator);			
+			connection.createStatement().execute(infoTableCreator);
 			connection.createStatement().execute("INSERT INTO info (key, vvalue) VALUES ('last_update', '0')");
 			commit();
 		} catch (SQLException e) {
@@ -113,12 +113,12 @@ public class Database {
 			// todo check error message to make sure that we throw any other errors
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return true if the current transaction was successfully committed
 	 */
-	private boolean commit(){
+	private boolean commit() {
 		try {
 			connection.createStatement().execute("COMMIT;");
 			return true;
@@ -134,51 +134,50 @@ public class Database {
 	 * @return true if the database was successfully updated
 	 */
 	public boolean addTrade(List<Trade> trades) {
-		
-		
+
 		for (Trade trade : trades) {
-			
+
 			HashMap<String, SQLField> DBNameValue = TradeFieldMapping.getMapping(trade);
 			Iterator<Entry<String, SQLField>> iterator = DBNameValue.entrySet().iterator();
-			
+
 			String executeString;
-			
-			if(trade.getAction().equals(Action.CANCEL)) {
+
+			if (trade.getAction().equals(Action.CANCEL)) {
 				deleteTrade(trade.getDisseminationID());
 				break; // TODO
-			} else if(trade.getAction().equals(Action.CORRECT)) {
+			} else if (trade.getAction().equals(Action.CORRECT)) {
 				executeString = buildUpdateString(iterator, trade.getDisseminationID());
 			} else { // new entry
 				executeString = buildInsertString(iterator);
 			}
-	
+
 			try {
 				PreparedStatement p = connection.prepareStatement(executeString);
-	
+
 				iterator = DBNameValue.entrySet().iterator();
 				while (iterator.hasNext()) {
 					iterator.next().getValue().addToPreparedStatement(p);
 				}
-				
+
 				p.execute();
-				
+
 			} catch (SQLException e) {
 				System.err.println("Failed to insert/update row");
 				return false;
 			}
-			
+
 			updateLastUpdateTime(trade);
 		}
 
 		return commit();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param iterator An iterator over a DB mapping
 	 * @return An SQL INSERT string
 	 */
-	private String buildInsertString(Iterator<Entry<String, SQLField>> iterator){
+	private String buildInsertString(Iterator<Entry<String, SQLField>> iterator) {
 		StringBuilder a = new StringBuilder("INSERT INTO data (");
 		StringBuilder b = new StringBuilder(") VALUES (");
 
@@ -193,41 +192,41 @@ public class Database {
 		a.setLength(a.length()-2);
 		b.setLength(b.length()-2);
 		a.append(b).append(")");
-		
+
 		return a.toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param iterator An iterator over a DB mapping
 	 * @param origId The id of the trade to update
 	 * @return An SQL update string
 	 */
-	private String buildUpdateString(Iterator<Entry<String, SQLField>> iterator, long origId){
+	private String buildUpdateString(Iterator<Entry<String, SQLField>> iterator, long origId) {
 		StringBuilder s = new StringBuilder("UPDATE data SET ");
-		
+
 		int index = 1;
-		
+
 		while (iterator.hasNext()) {
 			Entry<String, SQLField> mapEntry = iterator.next();
 			s.append(mapEntry.getKey()).append(" = ?, ");
 			mapEntry.getValue().index = index;
 			index++;
 		}
-		
-		s.setLength(s.length() - 2);
+
+		s.setLength(s.length()-2);
 		s.append(" WHERE id = ").append(origId);
-		
+
 		return s.toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param id The id of the trade to delete
 	 * @return Whether the deletion was successful
 	 */
-	private boolean deleteTrade(long id){
-		String deletionString = "DELETE FROM data WHERE id = " + id;
+	private boolean deleteTrade(long id) {
+		String deletionString = "DELETE FROM data WHERE id = "+id;
 		try {
 			connection.createStatement().execute(deletionString);
 		} catch (SQLException ex) {
@@ -236,18 +235,19 @@ public class Database {
 		}
 		return true; // commit();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param trade the trade to use to calculate the last update time
 	 */
-	private boolean updateLastUpdateTime(Trade trade){
+	private boolean updateLastUpdateTime(Trade trade) {
 		java.util.Date thisUpdateTime = trade.getExecutionTimestamp(); // is this the right date?
 		java.util.Date lastUpdateTime = getLastUpdateTime();
-		
-		if (thisUpdateTime == null)
+
+		if (thisUpdateTime==null) {
 			return true;
-		
+		}
+
 		if (thisUpdateTime.after(lastUpdateTime)) {
 			try {
 				PreparedStatement ps = connection.prepareCall("UPDATE info SET vvalue = ? WHERE key = 'last_update'");
@@ -257,10 +257,10 @@ public class Database {
 				System.err.println("Failed to update last update time");
 			}
 		}
-		
+
 		return true;// commit();
 	}
-	
+
 	/**
 	 *
 	 * @return The time the database was last updated
@@ -269,13 +269,13 @@ public class Database {
 		try {
 			Statement s = connection.createStatement();
 			s.execute("SELECT vvalue FROM info WHERE key = 'last_update'");
-		
+
 			String timeString;
-			
+
 			ResultSet rs = s.getResultSet();
 			if (rs.next()) {
 				timeString = rs.getString(1);
-				if (Long.parseLong(timeString) == 0L) {
+				if (Long.parseLong(timeString)==0L) {
 					Calendar c = Calendar.getInstance();
 					// First available data is from 28th February 2013
 					c.set(2013, 1, 27);
@@ -298,31 +298,49 @@ public class Database {
 	 */
 	public SearchResult search(Search s) {
 		try {
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
+			String query = "SELECT * FROM data WHERE "
 					+"tradeType = ? AND "
-					+"assetClass = ? AND "
-					+"underlyingAsset1 LIKE ? AND "
-					+"optionStrikePrice >= ? AND "
-					+"optionStrikePrice <= ? AND "
-					+"settlementCurrency LIKE ? AND "
-					+"executionTime >= ? AND "
-					+"executionTime <= ?");
+					+" assetClass = ? AND ";
+			if (s.getAsset().equals("")||s.getAsset()==null) {
+				query += " (underlyingAsset1 LIKE ? OR underlyingAsset2 LIKE ?) AND ";
+			}
+			query += " optionStrikePrice >= ? AND "
+					+" optionStrikePrice <= ? AND ";
+			if (s.getCurrency().equals("")||s.getCurrency()==null) {
+				query += " (notionalCurrency1 LIKE ? OR notionalCurrency2 LIKE ? ) AND ";
+			}
+			query += " executionTime >= ? AND "
+					+" executionTime <= ?";
+
+			PreparedStatement ps = connection.prepareStatement(query);
 				//	+"taxonomy LIKE ?");
-			ps.setShort(1, s.getTradeType().getValue());
-			ps.setShort(2, s.getAssetClass().getValue());
-			ps.setString(3, "%" + s.getAsset() + "%");
-			ps.setFloat(4, s.getMinPrice());
-			ps.setFloat(5, s.getMaxPrice());
-			ps.setString(6, "%" + s.getCurrency() + "%");
-			ps.setTimestamp(7, new Timestamp(s.getStartTime().getTime()));
-			ps.setTimestamp(8, new Timestamp(s.getEndTime().getTime()));
-		//	ps.setString(9, "%" + s.getUPI().toString() + "%");*/
-	//		PreparedStatement ps = connection.prepareStatement("SELECT * FROM data");
+
+			int i = 1;
+
+			ps.setShort(i, s.getTradeType().getValue()); i++;
+			ps.setShort(i, s.getAssetClass().getValue()); i++;
+
+			if (s.getAsset().equals("") || s.getAsset()==null) {
+				ps.setString(i, "%"+s.getAsset()+"%"); i++;
+				ps.setString(i, "%"+s.getAsset()+"%"); i++;
+			}
+
+			ps.setFloat(i, s.getMinPrice()); i++;
+			ps.setFloat(i, s.getMaxPrice()); i++;
+			
+			if (s.getCurrency().equals("") || s.getCurrency()==null) {
+				ps.setString(i, "%"+s.getCurrency()+"%"); i++;
+				ps.setString(i, "%"+s.getCurrency()+"%"); i++;
+			}
+			
+			ps.setTimestamp(i, new Timestamp(s.getStartTime().getTime())); i++;
+			ps.setTimestamp(i, new Timestamp(s.getEndTime().getTime())); i++;
+			//	ps.setString(i, "%" + s.getUPI().toString() + "%"); i++; */
 			ResultSet rs = ps.executeQuery();
-			
+
 			List<Trade> trades = new LinkedList<>();
-			
-			while(rs.next()){
+
+			while (rs.next()) {
 				trades.add(TradeFieldMapping.makeObjectFromRecord(rs));
 			}
 
@@ -387,9 +405,9 @@ public class Database {
 			return UPIs;
 		}
 	}
-	
+
 	// this method exists only for testing to allow arbitrary SQL queries to be run
-	public Connection getConnection(){
+	public Connection getConnection() {
 		return connection;
 	}
 
@@ -397,9 +415,9 @@ public class Database {
 		Connection c = Database.getDB().getConnection();
 		Statement s = c.createStatement();
 		ResultSet rs = s.executeQuery("SELECT settlementCurrency FROM data GROUP BY settlementCurrency");
-		while(rs.next()){
+		while (rs.next()) {
 			System.out.println(rs.getString(1));
 		}
 	}
-	
+
 }
