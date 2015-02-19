@@ -298,8 +298,6 @@ public class Database {
 	 */
 	public SearchResult search(Search s) {
 		try {
-			//analysis
-			DBAnalysis.getMaxPricePerMonth(s, connection, DBAnalysis.EXECUTION_TIME);
 			PreparedStatement ps = connection.prepareStatement("SELECT * FROM data WHERE "
 					+"tradeType = ? AND "
 					+"assetClass = ? AND "
