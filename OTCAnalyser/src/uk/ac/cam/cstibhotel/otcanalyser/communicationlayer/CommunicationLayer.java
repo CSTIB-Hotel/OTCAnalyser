@@ -151,7 +151,22 @@ public class CommunicationLayer {
 	}
 	
 	/*
-	 * Takes a Search, sends the query to the database and then passes the result to any of the
+	 * Builds a Search and attempts to save it in the database. If this is unsuccessful, puts an
+	 * error message in the StatusBar.
+	 */
+	public static void saveSearch(String name) throws ParseException {
+		// Build a search
+		Search s = createSearch();
+		
+		boolean success = Database.saveSearch(s, name);
+		
+		if (!success) {
+			StatusBar.setMessage("Error: could not save search", 1);
+		}
+	}
+	
+	/*
+	 * Builds a Search, sends the query to the database and then passes the result to any of the
 	 * SearchListeners registered to receive it.
 	 */
 	public static void search() throws ParseException {
