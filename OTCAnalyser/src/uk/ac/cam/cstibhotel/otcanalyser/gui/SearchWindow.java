@@ -2,8 +2,6 @@ package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import java.awt.Component;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -11,7 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.border.EtchedBorder;
 
 public class SearchWindow extends JPanel {
 	
