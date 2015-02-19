@@ -9,3 +9,5 @@ All files should be 100 columns wide.
 uk.ac.cam.cstibhotel.otcanalyser is our default package.
 
 Graphing library: http://sourceforge.net/projects/jfreechart/
+
+Autocomplete: http://www.java2s.com/Code/Jar/s/Downloadswingx080jar.htm

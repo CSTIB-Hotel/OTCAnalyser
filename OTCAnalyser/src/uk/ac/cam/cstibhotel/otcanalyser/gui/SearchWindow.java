@@ -6,12 +6,18 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+
+import org.jdesktop.swingx.autocomplete.*;
 
 public class SearchWindow extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
+	String[] data = {"USD", "GBP", "EUR", "POO"};
+	JList<String> myList = new JList<String>(data);
 	private JLabel TaxonomySelectorDescriptor;
 	public TaxonomySelector tax;
 	private JLabel UnderLyingAssetDescriptor;
@@ -23,13 +29,13 @@ public class SearchWindow extends JPanel {
 	private JLabel TradeTypeDescriptor;
 	public JComboBox<String> TradeType;
 	private JLabel minValueDescriptor;
-	public JTextField minValue;
+	public JSpinner minValue;
 	private JLabel maxValueDescriptor;
-	public JTextField maxValue;
+	public JSpinner maxValue;
 	private JLabel currencyDescriptor;
 	public JTextField currency;
 	public JButton SearchButton;
-	private SearchButtonListener listener;
+	public SaveWindow saveWindow;
 	
 	private static SearchWindow instance;
 	
@@ -38,16 +44,8 @@ public class SearchWindow extends JPanel {
 		return instance;
 	}
 	
-	private class CenteredJLabel extends JLabel{
-		public CenteredJLabel(String s) {
-			super(s);
-			this.setAlignmentX(Component.CENTER_ALIGNMENT);
-		}
-	}
-	
 	private SearchWindow() {
-			setSize(200,100); // default size is 0,0
-			setLocation(100,200); // default is 0,0 (top left corner)
+			setSize(200,100);
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			TaxonomySelectorDescriptor =  new CenteredJLabel("Select a taxonomy");
 
@@ -88,27 +86,29 @@ public class SearchWindow extends JPanel {
 
 			this.add(minValueDescriptor);
 			minValueDescriptor.setVisible(true);
-			minValue = new JTextField();
+			minValue = new JSpinner();
 			this.add(minValue);
 			minValue.setVisible(true);
 			maxValueDescriptor = new CenteredJLabel("Select maximum price");
 			this.add(maxValueDescriptor);
 			maxValueDescriptor.setVisible(true);
-			maxValue = new JTextField();
+			maxValue = new JSpinner();
 			this.add(maxValue);
 			maxValue.setVisible(true);
 			currencyDescriptor = new CenteredJLabel("Select a currency");
 			this.add(currencyDescriptor);
 			currencyDescriptor.setVisible(true);
-			currency = new JTextField();
+			currency = new JTextField();	
+			Configurator.enableAutoCompletion(myList,currency);
 			this.add(currency);
 			currency.setVisible(true);
 			SearchButton = new JButton("Search");
 			SearchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 			this.add(SearchButton);
 			SearchButton.setVisible(true);
-			listener = new SearchButtonListener();
-			SearchButton.addActionListener(listener);
+			saveWindow = SaveWindow.getInstance();
+			this.add(saveWindow);
+			saveWindow.setVisible(true);
 	}
 	
 }

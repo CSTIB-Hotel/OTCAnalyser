@@ -1,8 +1,11 @@
-package uk.ac.cam.cstibhotel.otcanalyser.gui;
+package uk.ac.cam.cstibhotel.otcanalyser.trade;
 
-//The strings used in the dropdown boxes
+/*
+ * This class contains the possible substrings of a UPI. There is a one-to-one equivalence with the
+ * strings in the TextStrings class in the UPI package.
+ */
 
-public class TextStrings {
+public class UPIStrings {
 	
 	static final String[] TradeType = {"Swap","Option"};
 	
@@ -42,5 +45,5 @@ public class TextStrings {
 	static final String[] Months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
 	static final Integer[] Days28 = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28};
 	static final Integer[] Days30 = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30};
-	static final Integer[] Days31 = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31};
+	static final Integer[] Days31 = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,2};
 }
