@@ -20,13 +20,9 @@ import java.util.Map.Entry;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.AssetClass;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.Collateralization;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.EmptyTaxonomyException;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.PriceFormingContinuationData;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.TradeType;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 /**
