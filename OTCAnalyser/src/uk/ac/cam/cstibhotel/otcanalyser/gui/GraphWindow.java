@@ -1,11 +1,12 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.AnalysisItem;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.editor.ChartEditorManager;
-import org.jfree.data.time.ohlc.OHLCSeriesCollection;
+import org.jfree.data.xy.XYDataset;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,34 +14,40 @@ import java.util.List;
 public class GraphWindow extends CBLPanel{
 	
   private static final long serialVersionUID = 1L;
-  private OHLCSeriesCollection dataset;
+  private ContentPanel pnl;
+  private List<String> currencies = new ArrayList<>();
+  private List<XYDataset> datasets = new ArrayList<>();
+  private List<ChartPanel> chartPanels = new ArrayList<>();
   
   public GraphWindow() {
-    dataset = OHLCMaker.makeDataset(new ArrayList<Trade>(), "Trades", false);
-    JFreeChart chart = OHLCMaker.makeChart("Trades", dataset);
-    ChartPanel panel = new ChartPanel(chart); 
-    ChartEditorManager.setChartEditorFactory(new NewDefaultChartEditorFactory());
-    panel.setFillZoomRectangle(true);
-    panel.setMouseWheelEnabled(true);
-    
-    ContentPanel pnl = new ContentPanel();
-    pnl.add(panel);
+    pnl = new ContentPanel();
     add(pnl);
   }
   
-  //add trades to existing datasets
-  public void addTradesToDatasets(List<Trade> trade) {
-    DateSorter.sortByExecutionTimestamp(trade);
-    int count = dataset.getSeriesCount();
-    for (int i = 0; i < count; i++) {
-      OHLCMaker.updateSeries(dataset, i, trade);
-    }
+  public void addChartPanel(String currency) {
+  	XYDataset dataset = LineGraphMaker.makeDataset();
+    datasets.add(dataset);
+    JFreeChart chart = LineGraphMaker.makeMonthChart("Month", currency, dataset);
+    ChartPanel panel = new ChartPanel(chart); 
+    chartPanels.add(panel);
+    ChartEditorManager.setChartEditorFactory(new NewDefaultChartEditorFactory());
+    panel.setFillZoomRectangle(true);
+    panel.setMouseWheelEnabled(true);
+    pnl.add(panel);
   }
   
-  public void clear() {
-	  for (int i = 0; i < dataset.getSeriesCount(); i++) {
-        dataset.getSeries(i).clear();
-	  }
+  //add trades to existing datasets
+  public void addTradesToDatasets(List<AnalysisItem> maxes, List<AnalysisItem> mins,
+      List<AnalysisItem> avgs, String currency) {
+    if (!currencies.contains(currency)) {
+    	addChartPanel(currency);
+    }
+    int i = currencies.lastIndexOf(currency);
+    XYDataset dataset = datasets.get(i);
+    LineGraphMaker.addToSeries(maxes, dataset, LineGraphMaker.MAX);
+    LineGraphMaker.addToSeries(mins, dataset, LineGraphMaker.MIN);
+    LineGraphMaker.addToSeries(avgs, dataset, LineGraphMaker.AVG);
+
   }
   
 }

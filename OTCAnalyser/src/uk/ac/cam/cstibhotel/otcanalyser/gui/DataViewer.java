@@ -34,13 +34,13 @@ public class DataViewer extends JTabbedPane {
     for (Trade t : trades) {
       dataViewer.data.getTable().addRow(t);
     }
-    dataViewer.graph.addTradesToDatasets(trades);
   }
   
   //clear trades - call before adding new trades
   public static void clearTrades() {
   	dataViewer.data.clear();
-  	dataViewer.graph.clear();
+  	dataViewer.graph = new GraphWindow();
+  	dataViewer.repaint();
   }
   
   //add analysis
