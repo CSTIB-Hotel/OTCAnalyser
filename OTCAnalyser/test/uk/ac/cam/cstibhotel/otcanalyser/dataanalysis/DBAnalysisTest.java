@@ -25,7 +25,6 @@ import org.junit.Test;
 
 public class DBAnalysisTest {
 	
-	private ArrayList<Trade> fakeTrades;
 	private Database db;
 	private Connection connection;
   
@@ -35,7 +34,6 @@ public class DBAnalysisTest {
 	    db = Database.getDB();
 	    connection = db.getConnection();
 	    ArrayList<Trade> trades = new ArrayList<>();
-	    fakeTrades = trades;
 	    
 	    Calendar c = Calendar.getInstance();
 	    c.set(2323, 1, 1, 11, 13);
@@ -44,7 +42,7 @@ public class DBAnalysisTest {
 	  	  t.setDisseminationID(i);
 	  	  t.setNotionalCurrency1("USD");
 	  	  t.setSettlementCurrency("USD");
-	  	  t.setOptionStrikePrice((double) i);
+	  	  t.setRoundedNotionalAmount1(i);
 	  	  c.set(Calendar.DATE, i + 1);
 	  	  t.setEffectiveDate(c.getTime());
 	  	  t.setEndDate(c.getTime());
@@ -58,7 +56,7 @@ public class DBAnalysisTest {
 	  	  t.setDisseminationID(i);
 	  	  t.setNotionalCurrency1("GBP");
 	  	  t.setSettlementCurrency("GBP");
-	  	  t.setOptionStrikePrice((double) i);
+	  	  t.setRoundedNotionalAmount1(i);
 	  	  c.set(Calendar.DATE, i - 2);
 	  	  t.setEffectiveDate(c.getTime());
 	  	  t.setEndDate(c.getTime());
@@ -91,8 +89,8 @@ public class DBAnalysisTest {
   		SearchResult sr = Database.getDB().search(s);
   		if (sr.getNumResults() > 0) {
   			list = DBAnalysis.getMaxPricePerMonth(s, connection, DBAnalysis.EXECUTION_TIME);
-    	  assertEquals((int)(list.get(0).getPrice()), 9);
-    	  assertEquals((int)(list.get(1).getPrice()), 19);
+    	  assertEquals((list.get(0).getPrice()), 9);
+    	  assertEquals((list.get(1).getPrice()), 19);
   		} else {
   			System.out.println("Empty");
   		}
