@@ -106,6 +106,7 @@ public class SearchWindow extends JPanel {
 			SearchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 			this.add(SearchButton);
 			SearchButton.setVisible(true);
+			SearchButton.addActionListener(new SearchButtonListener());
 			saveWindow = SaveWindow.getInstance();
 			this.add(saveWindow);
 			saveWindow.setVisible(true);
