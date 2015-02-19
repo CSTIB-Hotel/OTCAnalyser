@@ -154,7 +154,10 @@ public class CommunicationLayer {
 	 * Takes a Search, sends the query to the database and then passes the result to any of the
 	 * SearchListeners registered to receive it.
 	 */
-	public static void search(Search s) throws ParseException {
+	public static void search() throws ParseException {
+		// Build a search
+		Search s = createSearch();
+		
 		// Get the result from the database
 		SearchResult result = Database.getDB().search(s);
 		

@@ -11,7 +11,7 @@ public class SearchButtonListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		try {
-			CommunicationLayer.search(CommunicationLayer.createSearch());
+			CommunicationLayer.search();
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
