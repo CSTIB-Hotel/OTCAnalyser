@@ -55,7 +55,7 @@ public class ParseZIP {
 		if (input.equals("")) {
 			return 0;
 		} else {
-			return Long.parseLong(input);
+			return Long.parseLong(input.replace(",","").replace("+", ""));
 		}
 	}
 	
@@ -187,10 +187,10 @@ public class ParseZIP {
 			tradeOut.setNotionalCurrency2(tradeIn[25]);
 			
 			//ROUNDED_NOTIONAL_AMOUNT_1
-			tradeOut.setRoundedNotionalAmount1(tradeIn[26]);
+			tradeOut.setRoundedNotionalAmount1(parseLong(tradeIn[26]));
 			
 			//ROUNDED_NOTIONAL_AMOUNT_2
-			tradeOut.setRoundedNotionalAmount2(tradeIn[27]);
+			tradeOut.setRoundedNotionalAmount2(parseLong(tradeIn[27]));
 			
 			//PAYMENT_FREQUENCY_1
 			tradeOut.setPaymentFrequency1(tradeIn[28]);

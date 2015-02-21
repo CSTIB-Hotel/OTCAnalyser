@@ -78,50 +78,50 @@ public class OHLCMaker {
   }
   
   private static void addToSeries(OHLCSeries ohlcs, List<Trade> trade) {
-    if (trade.isEmpty()) {
-      return;
-    }
-    int k = 0;
-    Day rtp = new Day(trade.get(k).getExecutionTimestamp()); //day time period
-    String rna = trade.get(k).getRoundedNotionalAmount1();
-    //cycle through trade list looking for first readable rounded notional amount 1
-    while (!(RNAExtractor.validRNA(rna)) && k < trade.size() - 1) {
-    	k++;
-    	rtp = new Day(trade.get(k).getExecutionTimestamp());
-    	rna = trade.get(k).getRoundedNotionalAmount1();
-    }
-    //if they are all unreadable
-    if (k == trade.size() - 1) {
-    	return;
-    }
-    double open = RNAExtractor.getDoubleRNA(rna);
-    double high = open;
-    double low = open;
-    double close = open;
-    for (int i = k; i < trade.size(); i++) {
-      Trade currentTrade = trade.get(i);
-      rna = currentTrade.getRoundedNotionalAmount1();
-      if (RNAExtractor.validRNA(rna)) {
-        double price = RNAExtractor.getDoubleRNA(rna);
-        if(rtp.equals(new Day(currentTrade.getExecutionTimestamp()))) { //same time period
-        	if (price > high) {
-        		high = price;
-        	}
-        	if (price < low) {
-        		low = price;
-        	}
-        	close = price;
-        } else {
-        	ohlcs.add(rtp, open, high, low, close);
-        	rtp = new Day(currentTrade.getExecutionTimestamp());
-        	open = price;
-        	high = open;
-        	low = open;
-          close = open;
-       }
-      }
-    }
-    ohlcs.add(rtp, open, high, low, close); //add last item in
+//    if (trade.isEmpty()) {
+//      return;
+//    }
+//    int k = 0;
+//    Day rtp = new Day(trade.get(k).getExecutionTimestamp()); //day time period
+//    String rna = trade.get(k).getRoundedNotionalAmount1();
+//    //cycle through trade list looking for first readable rounded notional amount 1
+//    while (!(RNAExtractor.validRNA(rna)) && k < trade.size() - 1) {
+//    	k++;
+//    	rtp = new Day(trade.get(k).getExecutionTimestamp());
+//    	rna = trade.get(k).getRoundedNotionalAmount1();
+//    }
+//    //if they are all unreadable
+//    if (k == trade.size() - 1) {
+//    	return;
+//    }
+//    double open = RNAExtractor.getDoubleRNA(rna);
+//    double high = open;
+//    double low = open;
+//    double close = open;
+//    for (int i = k; i < trade.size(); i++) {
+//      Trade currentTrade = trade.get(i);
+//      rna = currentTrade.getRoundedNotionalAmount1();
+//      if (RNAExtractor.validRNA(rna)) {
+//        double price = RNAExtractor.getDoubleRNA(rna);
+//        if(rtp.equals(new Day(currentTrade.getExecutionTimestamp()))) { //same time period
+//        	if (price > high) {
+//        		high = price;
+//        	}
+//        	if (price < low) {
+//        		low = price;
+//        	}
+//        	close = price;
+//        } else {
+//        	ohlcs.add(rtp, open, high, low, close);
+//        	rtp = new Day(currentTrade.getExecutionTimestamp());
+//        	open = price;
+//        	high = open;
+//        	low = open;
+//          close = open;
+//       }
+//      }
+//    }
+//    ohlcs.add(rtp, open, high, low, close); //add last item in
   }
   
 }

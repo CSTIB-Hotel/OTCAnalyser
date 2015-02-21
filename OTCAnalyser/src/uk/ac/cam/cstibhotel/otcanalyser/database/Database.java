@@ -351,8 +351,8 @@ public class Database {
 				t.setAdditionalPriceNotation(rs.getDouble("additionalPriceNotation"));
 				t.setNotionalCurrency1(rs.getString("notionalCurrency1"));
 				t.setNotionalCurrency2(rs.getString("notionalCurrency2"));
-				t.setRoundedNotionalAmount1(rs.getString("roundedNotionalAmount1"));
-				t.setRoundedNotionalAmount2(rs.getString("roundedNotionalAmount2"));
+				t.setRoundedNotionalAmount1(rs.getLong("roundedNotionalAmount1"));
+				t.setRoundedNotionalAmount2(rs.getLong("roundedNotionalAmount2"));
 				t.setPaymentFrequency1(rs.getString("paymentFrequency1"));
 				t.setPaymentFrequency2(rs.getString("paymentFrequency2"));
 				t.setResetFrequency1(rs.getString("resetFrequency1"));
@@ -389,7 +389,7 @@ public class Database {
 	 * @param s the search to save
 	 * @return true if the search was successfully saved
 	 */
-	public boolean saveSearch(Search s) {
+	public boolean saveSearch(Search s, String name) {
 		return false;
 	}
 
