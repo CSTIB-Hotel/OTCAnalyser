@@ -17,8 +17,4 @@ public class NetworkLayer {
 
     	updater.start();
     }
-    
-    public static void poll() { //called internally by a timer
-    	
-    }
 }
