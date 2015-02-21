@@ -389,7 +389,7 @@ public class Database {
 	 * @param s the search to save
 	 * @return true if the search was successfully saved
 	 */
-	public boolean saveSearch(Search s) {
+	public boolean saveSearch(Search s, String name) {
 		return false;
 	}
 

@@ -51,9 +51,9 @@ public class CommunicationLayer {
 		s.setAsset(SearchWindow.getInstance().UnderLyingAsset.getText());
 		
 		try {
-			s.setMinPrice(Integer.toUnsignedLong(
+			s.setMinPrice(Math.max(0,
 					(int) SearchWindow.getInstance().minValue.getValue()));
-			s.setMaxPrice(Integer.toUnsignedLong(
+			s.setMaxPrice(Math.max(0,
 					(int) SearchWindow.getInstance().maxValue.getValue()));
 		} catch (NumberFormatException e) {
 			StatusBar.setMessage("Error: Price fields must contain integers", 1);
@@ -219,7 +219,7 @@ public class CommunicationLayer {
 		// Build a search
 		Search s = createSearch();
 		
-		boolean success = Database.saveSearch(s, name);
+		boolean success = Database.getDB().saveSearch(s, name);
 		
 		if (!success) {
 			StatusBar.setMessage("Error: could not save search", 1);
