@@ -11,11 +11,12 @@ public class GUI extends JFrame implements SearchListener {
 
 	private static final long serialVersionUID = 1L;
 	
-	public StatusBar statusBar;
 	
 	public static GUI gui;
-	static SearchWindow searchWindow;
-	DataViewer dataViewer;
+	static SearchWindow searchWindow = SearchWindow.getInstance();
+	DataViewer dataViewer = DataViewer.dataViewer;
+	StatusBar statusBar = StatusBar.getInstance();
+	AnalysisSummary analysis = AnalysisSummary.getInstance();
 	
 	public static GUI getInstance() {
 		if (gui==null) {
@@ -28,16 +29,11 @@ public class GUI extends JFrame implements SearchListener {
 		setTitle("OTC Analyser");
 		setSize(1000,600);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		searchWindow = SearchWindow.getInstance();
 		add(searchWindow,BorderLayout.WEST);
-		searchWindow.setVisible(true);
-		statusBar = StatusBar.getInstance();
 		add(statusBar,BorderLayout.SOUTH);
-		statusBar.setVisible(true);
-		dataViewer = DataViewer.dataViewer;
-		this.add(dataViewer);
-		dataViewer.setVisible(true);
-		this.setVisible(true);
+		add(analysis,BorderLayout.EAST);
+		add(dataViewer);
+		setVisible(true);
 	}
 	
 	@Override
