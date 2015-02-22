@@ -48,16 +48,37 @@ public class DataViewer extends JTabbedPane {
   public static void clearTrades() {
   	dataViewer.data.clear();
   	dataViewer.graph.clear();
+  	dataViewer.analysis.clear();
   	dataViewer.repaint();
   }
   
   //add analysis
-  public static void addAnalysis (String analysis) {
-	  dataViewer.analysis.addAnalysis(analysis);
+  public static void addAnalysis (AnalysisItem max, AnalysisItem min, List<AnalysisItem> avgs, double stddev) {
+	  if (max != null) {
+  	  String maxAnalysis = max.getPrice() + " " + max.getCurrency() + " at " + max.getTime();
+	    addAnalysis (maxAnalysis, "Largest trade");
+	  }
+	  if (min != null) {
+	    String minAnalysis = min.getPrice() + " " + min.getCurrency () + " at " + min.getTime();
+	    addAnalysis (minAnalysis, "Smallest trade");
+	  }
+	  if (!avgs.isEmpty()) {
+	    String avgAnalysis = "";
+	    for (AnalysisItem a : avgs) {
+	  	  String curr = a.getCurrency();
+	  	  if (curr.isEmpty()) {
+	  		  curr = "Unknown Currency";
+	  	  }
+	  	  curr += "\n";
+	  	  avgAnalysis += a.getPrice() + " " + curr;
+	    }
+	    addAnalysis (avgAnalysis, "Average trade amounts by currency");
+	  }
   }
   
   //add titled analysis
   public static void addAnalysis (String analysis, String title) {
+  	System.out.println("here");
 	  dataViewer.analysis.addAnalysis(analysis, title);
   }
   

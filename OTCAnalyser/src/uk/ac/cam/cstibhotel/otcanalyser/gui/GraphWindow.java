@@ -7,8 +7,12 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.editor.ChartEditorManager;
 import org.jfree.data.time.TimeSeriesCollection;
 
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JToolBar;
 
 public class GraphWindow extends CBLPanel{
 	
@@ -17,10 +21,30 @@ public class GraphWindow extends CBLPanel{
   private List<String> currencies = new ArrayList<>();
   private List<TimeSeriesCollection> datasets = new ArrayList<>();
   private List<ChartPanel> chartPanels = new ArrayList<>();
+  private JToolBar toolbar;
+  private boolean showToolbar = false;
   
   public GraphWindow() {
     pnl = new ContentPanel();
-    add(pnl);
+    add(pnl, BorderLayout.CENTER);
+  }
+  
+  public void makeToolBar() {
+  	if (showToolbar) {
+  		remove(toolbar);
+  	}
+  	toolbar = new JToolBar();
+    toolbar.setOpaque(true);
+    toolbar.setRollover(true);
+    toolbar.setFloatable(false);
+
+    JButton button;
+    for (String curr : currencies) {
+    	button = new JButton(curr);
+    	toolbar.add(button);
+    }
+    this.add(toolbar);
+    showToolbar = true;
   }
   
   public void addChartPanel(String currency) {
@@ -51,6 +75,9 @@ public class GraphWindow extends CBLPanel{
     LineGraphMaker.addToSeries(maxes, dataset, LineGraphMaker.MAX);
     LineGraphMaker.addToSeries(mins, dataset, LineGraphMaker.MIN);
     LineGraphMaker.addToSeries(avgs, dataset, LineGraphMaker.AVG);
+    if (currencies.size() > 1) {
+    	makeToolBar();
+    }
   }
   
   public void clear() {
@@ -58,6 +85,10 @@ public class GraphWindow extends CBLPanel{
   	datasets = new ArrayList<>();
   	chartPanels = new ArrayList<>();
   	pnl.removeAll();
+  	if (showToolbar) {
+  	  remove(toolbar);
+  	  showToolbar = false;
+  	}
   }
   
 }

@@ -70,7 +70,37 @@ public class DBAnalysisTest {
   }
   
   @Test
-  public void testMaxRNA1PerMonth() throws SQLException{
+  public void testMaxRNA() throws SQLException {
+  	fakeDB();
+  	Search s = new Search();
+  	s.setTradeType(TradeType.OPTION);
+  	s.setAssetClass(AssetClass.COMMODITY);
+  	s.setMinPrice(0);
+  	s.setMaxPrice(1000000000);
+  	Calendar c = Calendar.getInstance();
+	  c.set(2100, 1, 1, 1, 13);
+  	s.setStartTime(c.getTime());
+  	c.set(2400, 1, 1, 1, 1);
+  	s.setEndTime(c.getTime());
+  	s.setAsset("");
+  	s.setCurrency("");
+  	AnalysisItem itm;
+  	try {
+  		SearchResult sr = Database.getDB().search(s);
+  		if (sr.getNumResults() > 0) {
+  			itm = DBAnalysis.getMaxPrice(s, connection);
+    	  assertEquals(itm.getPrice(), 19, 0);
+  		} else {
+  			System.out.println("Empty");
+  		}
+  	} catch (SQLException e){
+  		System.err.println("problem with getMaxPrice");
+  		e.printStackTrace();
+  	}
+  }
+  
+  @Test
+  public void testMaxRNA1PerMonth() throws SQLException {
   	fakeDB();
   	Search s = new Search();
   	s.setTradeType(TradeType.OPTION);

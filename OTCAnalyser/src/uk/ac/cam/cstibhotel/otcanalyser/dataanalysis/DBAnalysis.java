@@ -66,6 +66,7 @@ public class DBAnalysis {
 		
 		ps.setTimestamp(i, new Timestamp(s.getStartTime().getTime())); i++;
 		ps.setTimestamp(i, new Timestamp(s.getEndTime().getTime())); i++;
+		
 		return ps;
 	}
 	
@@ -82,10 +83,14 @@ public class DBAnalysis {
 	
 	//gets max Rounded Notional Amount 1
 	public static AnalysisItem getMaxPrice(Search s, Connection conn) throws SQLException {
-	  PreparedStatement ps = statementPreparer(s,
-	  				"max(roundedNotionalAmount1) AS maxRNA, notionalCurrency1 AS curr, " + EXECUTION_TIME,
-	  				"roundedNotionalAmount1 = maxRNA", "", conn);
+		PreparedStatement ps = statementPreparer(s, "max(roundedNotionalAmount1) AS maxRNA", "", "", conn);
 	  ResultSet rs = ps.executeQuery();
+	  if (rs.next()) {
+		  ps = statementPreparer(s,
+	  	    "roundedNotionalAmount1 as maxRNA, notionalCurrency1 AS curr, " + EXECUTION_TIME,
+	  	    "roundedNotionalAmount1 = " + rs.getLong("maxRNA"), "", conn);
+	  } else return null;
+    rs = ps.executeQuery();
 	  if (rs.next()) {
 	    return new AnalysisItem(new Date(rs.getTimestamp(EXECUTION_TIME).getTime()), rs.getString("curr"), rs.getLong("maxRNA"));
 	  }
@@ -94,10 +99,14 @@ public class DBAnalysis {
 	
 	//gets min Rounded Notional Amount 1
 	public static AnalysisItem getMinPrice(Search s, Connection conn) throws SQLException {
-	  PreparedStatement ps = statementPreparer(s,
-	  				"min(roundedNotionalAmount1) AS minRNA, notionalCurrency1 AS curr, " + EXECUTION_TIME,
-	  				"roundedNotionalAmount1 = minRNA", "", conn);
+		PreparedStatement ps = statementPreparer(s, "min(roundedNotionalAmount1) AS minRNA", "", "", conn);
 	  ResultSet rs = ps.executeQuery();
+	  if (rs.next()) {
+		  ps = statementPreparer(s,
+	  	    "roundedNotionalAmount1 as minRNA, notionalCurrency1 AS curr, " + EXECUTION_TIME,
+	  	    "roundedNotionalAmount1 = " + rs.getLong("minRNA"), "", conn);
+	  } else return null;
+    rs = ps.executeQuery();
 	  if (rs.next()) {
 	    return new AnalysisItem(new Date(rs.getTimestamp(EXECUTION_TIME).getTime()), rs.getString("curr"), rs.getLong("minRNA"));
 	  }
@@ -105,15 +114,13 @@ public class DBAnalysis {
 	}
 	
 	//gets avg Rounded Notional Amount 1
-	public static AnalysisItem getAvgPrice(Search s, Connection conn) throws SQLException {
-	  PreparedStatement ps = statementPreparer(s,
-	  				"avg(roundedNotionalAmount1) AS avgRNA, notionalCurrency1 AS curr, " + EXECUTION_TIME,
-	  				"roundedNotionalAmount1 = avgRNA", "", conn);
+	public static double getAvgPrice(Search s, Connection conn) throws SQLException {
+		PreparedStatement ps = statementPreparer(s, "avg(CAST(roundedNotionalAmount1 AS DOUBLE)) AS avgRNA", "", "", conn);
 	  ResultSet rs = ps.executeQuery();
 	  if (rs.next()) {
-	    return new AnalysisItem(new Date(rs.getTimestamp(EXECUTION_TIME).getTime()), rs.getString("curr"), rs.getLong("avgRNA"));
+	  	return rs.getDouble("avgRNA");
 	  }
-	  else return null;
+	  else return 0;
 	}
 	
 	//gets population std dev of Rounded Notional Amount 1
