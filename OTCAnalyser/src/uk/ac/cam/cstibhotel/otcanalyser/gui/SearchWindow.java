@@ -16,8 +16,7 @@ import org.jdesktop.swingx.autocomplete.*;
 public class SearchWindow extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
-	String[] data = {"USD", "GBP", "EUR", "POO"};
-	JList<String> myList = new JList<String>(data);
+	JList<String> myList = new JList<String>(TextStrings.Currencies);
 	private JLabel TaxonomySelectorDescriptor;
 	public TaxonomySelector tax;
 	private JLabel UnderLyingAssetDescriptor;
@@ -82,14 +81,14 @@ public class SearchWindow extends JPanel {
 			EndDate = new DateSelector();
 			this.add(EndDate);
 			EndDate.setVisible(true);
-			minValueDescriptor = new CenteredJLabel("Select minimum price");
+			minValueDescriptor = new CenteredJLabel("Select minimum price (optional)");
 
 			this.add(minValueDescriptor);
 			minValueDescriptor.setVisible(true);
 			minValue = new JSpinner();
 			this.add(minValue);
 			minValue.setVisible(true);
-			maxValueDescriptor = new CenteredJLabel("Select maximum price");
+			maxValueDescriptor = new CenteredJLabel("Select maximum price (optional)");
 			this.add(maxValueDescriptor);
 			maxValueDescriptor.setVisible(true);
 			maxValue = new JSpinner();
@@ -106,6 +105,7 @@ public class SearchWindow extends JPanel {
 			SearchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 			this.add(SearchButton);
 			SearchButton.setVisible(true);
+			SearchButton.addActionListener(new SearchButtonListener());
 			saveWindow = SaveWindow.getInstance();
 			this.add(saveWindow);
 			saveWindow.setVisible(true);
