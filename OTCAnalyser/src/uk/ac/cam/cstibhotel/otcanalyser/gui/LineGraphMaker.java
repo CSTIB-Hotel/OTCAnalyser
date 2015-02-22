@@ -39,7 +39,7 @@ public class LineGraphMaker {
 		return chart;
 	}
 	
-	public static XYDataset makeDataset() {
+	public static TimeSeriesCollection makeDataset() {
 		TimeSeries max = new TimeSeries("Maximum");
 		TimeSeries min = new TimeSeries("Minimum");
 		TimeSeries avg = new TimeSeries("Average");
@@ -50,13 +50,13 @@ public class LineGraphMaker {
 		return dataset;
 	}
 	
-	public static void addToSeries(List<AnalysisItem> item, XYDataset dataset, int series) {
+	public static void addToSeries(List<AnalysisItem> item, TimeSeriesCollection dataset, int series) {
 		for (AnalysisItem itm : item) {
 			Calendar c = Calendar.getInstance();
 			c.setTime(itm.getTime());
 			int month = c.get(Calendar.MONTH);
 			int year = c.get(Calendar.YEAR);
-			((TimeSeries) dataset.getSeriesKey(series)).add(new Month(month, year), itm.getPrice());
+			dataset.getSeries(series).addOrUpdate(new Month(month + 1, year), itm.getPrice());
 		}
 	}
 }

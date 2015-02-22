@@ -42,15 +42,30 @@ public class DBAnalysis {
 				}
 				query += group;
 		
+				
 		PreparedStatement ps = conn.prepareStatement(query);
-		ps.setShort(1, s.getTradeType().getValue());
-		ps.setShort(2, s.getAssetClass().getValue());
-		ps.setString(3, "%" + s.getAsset() + "%");
-		ps.setFloat(4, s.getMinPrice());
-		ps.setFloat(5, s.getMaxPrice());
-		ps.setString(6, "%" + s.getCurrency() + "%");
-		ps.setTimestamp(7, new Timestamp(s.getStartTime().getTime()));
-		ps.setTimestamp(8, new Timestamp(s.getEndTime().getTime()));
+		int i = 1;
+
+		ps.setShort(i, s.getTradeType().getValue()); i++;
+		ps.setShort(i, s.getAssetClass().getValue()); i++;
+
+		if (s.getAsset().equals("") || s.getAsset()==null) {
+			ps.setString(i, "%"+s.getAsset()+"%"); i++;
+			ps.setString(i, "%"+s.getAsset()+"%"); i++;
+		}
+
+		if(s.getMinPrice() == s.getMaxPrice()){
+			ps.setFloat(i, s.getMinPrice()); i++;
+			ps.setFloat(i, s.getMaxPrice()); i++;
+		}
+		
+		if (s.getCurrency().equals("") || s.getCurrency()==null) {
+			ps.setString(i, "%"+s.getCurrency()+"%"); i++;
+			ps.setString(i, "%"+s.getCurrency()+"%"); i++;
+		}
+		
+		ps.setTimestamp(i, new Timestamp(s.getStartTime().getTime())); i++;
+		ps.setTimestamp(i, new Timestamp(s.getEndTime().getTime())); i++;
 		return ps;
 	}
 	

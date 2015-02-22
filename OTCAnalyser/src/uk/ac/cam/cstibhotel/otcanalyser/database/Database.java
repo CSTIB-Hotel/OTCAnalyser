@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
-import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.DBAnalysis;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.AssetClass;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.EmptyTaxonomyException;
@@ -497,7 +496,7 @@ public class Database {
 	public Connection getConnection() {
 		return connection;
 	}
-
+/*
 	public static void main(String[] args) throws SQLException {
 		Connection c = Database.getDB().getConnection();
 		Statement s = c.createStatement();
@@ -506,5 +505,5 @@ public class Database {
 			System.out.print("\"" + rs.getString(1) + "\", ");
 		}
 	}
-
+*/
 }

@@ -1,11 +1,14 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.AnalysisItem;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
@@ -29,17 +32,22 @@ public class DataViewer extends JTabbedPane {
     
   }
   
-  //add trades to the DataViewer
+  //add trades to the DataViewer table
   public static void addTrades(List<Trade> trades) {
     for (Trade t : trades) {
       dataViewer.data.getTable().addRow(t);
     }
   }
   
+  public static void addGraphPoints(List<AnalysisItem> maxes, List<AnalysisItem> mins,
+      List<AnalysisItem> avgs, String currency) {
+  	dataViewer.graph.addTradesToDatasets(maxes, mins, avgs, currency);
+  }
+  
   //clear trades - call before adding new trades
   public static void clearTrades() {
   	dataViewer.data.clear();
-  	dataViewer.graph = new GraphWindow();
+  	dataViewer.graph.clear();
   	dataViewer.repaint();
   }
   

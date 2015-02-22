@@ -69,7 +69,7 @@ public class DBAnalysisTest {
   	}
   }
   
-  /*@Test
+  @Test
   public void testMaxRNA1PerMonth() throws SQLException{
   	fakeDB();
   	Search s = new Search();
@@ -97,7 +97,7 @@ public class DBAnalysisTest {
   	} catch (SQLException e){
   		System.err.println("problem with getMaxPricePerMonth");
   	}
-  }*/
+  }
   @Test
   public void testAvgRNA1PerMonth() throws SQLException{
   	fakeDB();
@@ -124,6 +124,36 @@ public class DBAnalysisTest {
   		}
   	} catch (SQLException e){
   		System.err.println("problem with getAvgPricePerMonth");
+  	}
+  }
+  
+  @Test
+  public void testGetCurrency() throws SQLException {
+  	fakeDB();
+  	Search s = new Search();
+  	s.setTradeType(TradeType.OPTION);
+  	s.setAssetClass(AssetClass.COMMODITY);
+  	s.setMinPrice(0);
+  	s.setMaxPrice(1000000000);
+  	Calendar c = Calendar.getInstance();
+	  c.set(2100, 1, 1, 1, 13);
+  	s.setStartTime(c.getTime());
+  	c.set(2400, 1, 1, 1, 1);
+  	s.setEndTime(c.getTime());
+  	s.setAsset("");
+  	s.setCurrency("");
+  	List<String> list;
+  	try {
+  		SearchResult sr = Database.getDB().search(s);
+  		if (sr.getNumResults() > 0) {
+  		  list = DBAnalysis.getCurrencies(s, connection);
+    	  assertEquals(list.get(0), "GBP");
+    	  assertEquals(list.get(1), "USD");
+  		} else {
+  			System.out.println("Empty");
+  		}
+  	} catch (SQLException e){
+  		System.err.println("problem with getCurrency");
   	}
   }
   
