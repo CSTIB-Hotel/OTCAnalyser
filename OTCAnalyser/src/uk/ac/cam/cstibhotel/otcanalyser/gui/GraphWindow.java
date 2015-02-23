@@ -8,19 +8,22 @@ import org.jfree.chart.editor.ChartEditorManager;
 import org.jfree.data.time.TimeSeriesCollection;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
-public class GraphWindow extends CBLPanel{
+public class GraphWindow extends CBLPanel implements ActionListener{
 	
   private static final long serialVersionUID = 1L;
   private ContentPanel pnl;
   private List<String> currencies = new ArrayList<>();
   private List<TimeSeriesCollection> datasets = new ArrayList<>();
   private List<ChartPanel> chartPanels = new ArrayList<>();
+  private ChartPanel currentChart = null;
   private JToolBar toolbar;
   private boolean showToolbar = false;
   
@@ -45,6 +48,8 @@ public class GraphWindow extends CBLPanel{
     		button = new JButton("Unknown Currency");
     	}
     	toolbar.add(button);
+    	button.setActionCommand(curr);
+    	button.addActionListener(this);
     }
     this.add(toolbar, BorderLayout.SOUTH);
     showToolbar = true;
@@ -64,7 +69,6 @@ public class GraphWindow extends CBLPanel{
     panel.setFillZoomRectangle(true);
     panel.setMouseWheelEnabled(true);
     currencies.add(currency);
-    pnl.add(panel);
   }
   
   //add trades to existing datasets
@@ -81,6 +85,8 @@ public class GraphWindow extends CBLPanel{
     if (currencies.size() > 1) {
     	makeToolBar();
     }
+    currentChart = chartPanels.get(0);
+    pnl.add(currentChart);
   }
   
   public void clear() {
@@ -92,6 +98,15 @@ public class GraphWindow extends CBLPanel{
   	  remove(toolbar);
   	  showToolbar = false;
   	}
+  }
+  
+  @Override
+  public void actionPerformed(ActionEvent e){
+    if (currencies.contains(e.getActionCommand())) {
+    	pnl.remove(currentChart);
+    	currentChart = chartPanels.get(currencies.indexOf(e.getActionCommand()));
+      pnl.add(currentChart);
+    }
   }
   
 }
