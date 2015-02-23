@@ -78,7 +78,6 @@ public class DataViewer extends JTabbedPane {
   
   //add titled analysis
   public static void addAnalysis (String analysis, String title) {
-  	System.out.println("here");
 	  dataViewer.analysis.addAnalysis(analysis, title);
   }
   
