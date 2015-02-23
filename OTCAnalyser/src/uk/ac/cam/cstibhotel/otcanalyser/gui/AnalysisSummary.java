@@ -8,17 +8,29 @@ import javax.swing.JPanel;
 import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.AnalysisItem;
 
 public class AnalysisSummary extends JPanel {
-/* returning
+
+	private static final long serialVersionUID = 1L;
+	/* returning
 	underlying asset
 	price (rounded notional amount)
 	execution timestamp
 */	
+	TradeDisplayer smallestTrade = new TradeDisplayer("Smallest trade");
+	TradeDisplayer biggestTrade = new TradeDisplayer("Biggest trade");
+	TradeDisplayer otherInfo = new TradeDisplayer();
+	
+	private AnalysisItem maxTrade;
+	private AnalysisItem minTrade;
+	private double average;
+	private String mostTraded;
+	private String leastTraded;
+	private String currency;
+	private double numberOfTrades;
+	private double changeInAverageCost;
 	
 	public static void main(String[] args) {
 		getInstance();
 	}
-	
-	private static final long serialVersionUID = 1L;
 
 	private static AnalysisSummary analysisSummary;
 	
@@ -34,14 +46,12 @@ public class AnalysisSummary extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(biggestTrade);
 		add(smallestTrade);
+		add(otherInfo);
 		setVisible(true);
 	}
-	
-	TradeDisplayer smallestTrade = new TradeDisplayer("Smallest trade");
-	TradeDisplayer biggestTrade = new TradeDisplayer("Biggest trade");
 
-	public void UpdateWindow(AnalysisItem Biggest,AnalysisItem Smallest, long Average,String MostTraded,
-			String LeastTraded,String Currency,long NumTrades,long changeInCost) {
+	public void UpdateWindow(AnalysisItem Biggest,AnalysisItem Smallest, double Average,String MostTraded,
+			String LeastTraded,String Currency,double NumTrades,double changeInCost) {
 		maxTrade = Biggest;
 		minTrade = Smallest;
 		average = Average;
@@ -50,18 +60,13 @@ public class AnalysisSummary extends JPanel {
 		currency = Currency;
 		numberOfTrades = NumTrades;
 		changeInAverageCost = changeInCost;
-		//update();
+		update();
 	}
 	
-	
-	
-	private AnalysisItem maxTrade;
-	private AnalysisItem minTrade;
-	private long average;
-	private String mostTraded;
-	private String leastTraded;
-	private String currency;
-	private long numberOfTrades;
-	private long changeInAverageCost;
+	private void update() {
+		biggestTrade.update(maxTrade);
+		smallestTrade.update(minTrade);
+		otherInfo.update(average,mostTraded,leastTraded,currency,numberOfTrades,changeInAverageCost);
+	}
 	
 }
