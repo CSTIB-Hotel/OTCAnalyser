@@ -21,7 +21,7 @@ public class DBAnalysis {
 	
 	//if the database scheme changes, this should ideally be the only method to change
 	private static PreparedStatement statementPreparer(Search s, String select, String where,
-	    String group, Connection conn) throws SQLException {
+	    String grouporder, Connection conn) throws SQLException {
 		String query = "SELECT " + select + " FROM data WHERE "
 		    +"tradeType = ? AND "
 		    +"assetClass = ? AND ";
@@ -40,7 +40,7 @@ public class DBAnalysis {
 				if (!where.isEmpty()) {
 				  query += " AND " + where;
 				}
-				query += group;
+				query += " " + grouporder;
 		
 				
 		PreparedStatement ps = conn.prepareStatement(query);
@@ -88,7 +88,7 @@ public class DBAnalysis {
 	  if (rs.next()) {
 		  ps = statementPreparer(s,
 	  	    "roundedNotionalAmount1 as maxRNA, notionalCurrency1 AS curr, " + EXECUTION_TIME,
-	  	    "roundedNotionalAmount1 = " + rs.getLong("maxRNA"), "", conn);
+	  	    "roundedNotionalAmount1 = " + rs.getLong("maxRNA"), "ORDER BY " + EXECUTION_TIME + " DESC", conn);
 	  } else return null;
     rs = ps.executeQuery();
 	  if (rs.next()) {
@@ -104,7 +104,7 @@ public class DBAnalysis {
 	  if (rs.next()) {
 		  ps = statementPreparer(s,
 	  	    "roundedNotionalAmount1 as minRNA, notionalCurrency1 AS curr, " + EXECUTION_TIME,
-	  	    "roundedNotionalAmount1 = " + rs.getLong("minRNA"), "", conn);
+	  	    "roundedNotionalAmount1 = " + rs.getLong("minRNA"), "ORDER BY " + EXECUTION_TIME + " DESC", conn);
 	  } else return null;
     rs = ps.executeQuery();
 	  if (rs.next()) {
