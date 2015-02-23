@@ -339,18 +339,20 @@ public class Database {
 			if (s.getAsset().equals("")||s.getAsset()==null) {
 				query += " (underlyingAsset1 LIKE ? OR underlyingAsset2 LIKE ?) AND ";
 			}
-			if(s.getMinPrice() == s.getMaxPrice()){
+			if (s.getMinPrice() == s.getMaxPrice()){
 				query += " roundedNotionalAmount1 >= ? AND "
 						+" roundedNotionalAmount1 <= ? AND ";
 			}
 			if (s.getCurrency().equals("")||s.getCurrency()==null) {
 				query += " (notionalCurrency1 LIKE ? OR notionalCurrency2 LIKE ? ) AND ";
 			}
+			if (s.getUPI().equals("") || s.getUPI() == null){
+				query += " taxonomy LIKE ? AND ";
+			}
 			query += " executionTime >= ? AND "
 					+" executionTime <= ?";
-
+			
 			PreparedStatement ps = connection.prepareStatement(query);
-				//	+"taxonomy LIKE ?");
 
 			int i = 1;
 
@@ -372,9 +374,12 @@ public class Database {
 				ps.setString(i, "%"+s.getCurrency()+"%"); i++;
 			}
 			
+			if (s.getUPI().equals("") || s.getUPI() == null){			
+				ps.setString(i, "%" + s.getUPI() + "%"); i++; 
+			}
+
 			ps.setTimestamp(i, new Timestamp(s.getStartTime().getTime())); i++;
 			ps.setTimestamp(i, new Timestamp(s.getEndTime().getTime())); i++;
-			//	ps.setString(i, "%" + s.getUPI().toString() + "%"); i++; */
 			ResultSet rs = ps.executeQuery();
 
 			List<Trade> trades = new LinkedList<>();
