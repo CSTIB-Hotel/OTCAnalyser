@@ -21,10 +21,10 @@ public class TradeDisplayer extends JPanel {
 	
 	public void update(AnalysisItem item) {
 		double amount = item.getPrice();
-		//String asset = item.getUnderlyingAsset
+		String asset = item.getUnderlyingAsset();
 		Date time = item.getTime();
 		String currency = item.getCurrency();
-		Details.setText("Traded amount: "+amount+" "+currency+" Underlying Asset: "+" "+" Execution Date: "+time.toString());
+		Details.setText("Traded amount: "+amount+" "+currency+" Underlying Asset: "+asset+" Execution Date: "+time.toString());
 	}
 	
 	public void update(double Average,String MostTraded,String LeastTraded,String Currency,double NumTrades,double changeInCost){
