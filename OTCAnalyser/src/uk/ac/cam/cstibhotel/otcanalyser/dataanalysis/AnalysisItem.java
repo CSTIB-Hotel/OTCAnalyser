@@ -7,11 +7,13 @@ public class AnalysisItem {
   private Date time;
   private String currency;
   private double price;
+  private String underlyingAsset;
   
-  public AnalysisItem(Date time, String currency, double price) {
+  public AnalysisItem(Date time, String currency, double price, String underlyingAsset) {
   	this.time = time;
   	this.currency = currency;
   	this.price = price;
+  	this.underlyingAsset = underlyingAsset;
   }
   
   public Date getTime() {
@@ -24,5 +26,9 @@ public class AnalysisItem {
   
   public double getPrice() {
   	return price;
+  }
+  
+  public String getUnderlyingAsset() {
+  	return underlyingAsset;
   }
 }
