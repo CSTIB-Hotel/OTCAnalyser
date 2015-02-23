@@ -41,9 +41,12 @@ public class GraphWindow extends CBLPanel{
     JButton button;
     for (String curr : currencies) {
     	button = new JButton(curr);
+    	if (curr.isEmpty()) {
+    		button = new JButton("Unknown Currency");
+    	}
     	toolbar.add(button);
     }
-    this.add(toolbar);
+    this.add(toolbar, BorderLayout.SOUTH);
     showToolbar = true;
   }
   
