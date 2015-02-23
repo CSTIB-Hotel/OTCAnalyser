@@ -38,7 +38,7 @@ public class GUI extends JFrame implements SearchListener {
 	
 	@Override
 	public void getSearchResult(SearchResult s) {
-		//DataViewer.clearTrades();
+		DataViewer.clearTrades();
 		DataViewer.addTrades(s.getResultData());
 	}
 

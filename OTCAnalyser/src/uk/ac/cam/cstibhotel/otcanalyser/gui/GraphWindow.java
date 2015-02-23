@@ -37,4 +37,10 @@ public class GraphWindow extends CBLPanel{
     }
   }
   
+  public void clear() {
+	  for (int i = 0; i < dataset.getSeriesCount(); i++) {
+        dataset.getSeries(i).clear();
+	  }
+  }
+  
 }

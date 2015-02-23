@@ -16,6 +16,7 @@ build.xml
 
 lib/junit/junit-3.8.2-api.zip
 lib/jfreechart-1.0/
+lib/jfreechart-1.0.19/
 lib/nblibraries.properties
 
 nbproject/build-impl.xml
