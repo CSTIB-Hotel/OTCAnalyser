@@ -33,7 +33,7 @@ manifest.mf
 database.db.log
 
 database.db.properties
-
+.metadata/
 ~/Library/OTCAnalyser/database.db.script
 
 database.db.script

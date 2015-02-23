@@ -22,17 +22,17 @@ public class AssetChange implements ActionListener {
 		String[] AssetBaseClasses={""};
 		switch (selectedAsset) {
 			case ("Credit"): 
-					AssetBaseClasses = TextStrings.CreditBaseProducts;
-					break;
+				AssetBaseClasses = TextStrings.CreditBaseProducts;
+				break;
 			case ("Interest"):
 				AssetBaseClasses = TextStrings.InterestBaseProducts;
 				break;
 			case ("Commodity"):
 				AssetBaseClasses = TextStrings.CommodityBaseProducts;
 				tax.settlementType.setVisible(true);
-				System.out.println("Executing");
+				break;
 			case ("Foreign Exchange"):
-				AssetBaseClasses = TextStrings.ForexBaseProducts;
+			AssetBaseClasses = TextStrings.ForexBaseProducts;
 				break;
 			case ("Equity"):
 				AssetBaseClasses = TextStrings.EquityBaseProducts;
