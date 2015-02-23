@@ -35,7 +35,7 @@ public class Analyser {
     	  maxes = DBAnalysis.getMaxPricePerMonth(s, conn, DBAnalysis.EXECUTION_TIME);
     	  mins = DBAnalysis.getMinPricePerMonth(s, conn, DBAnalysis.EXECUTION_TIME);
     	  avgs = DBAnalysis.getAvgPricePerMonth(s, conn, DBAnalysis.EXECUTION_TIME);
-    	  avg.add(new AnalysisItem(null, curr, DBAnalysis.getAvgPrice(s, conn)));
+    	  avg.add(new AnalysisItem(null, curr, DBAnalysis.getAvgPrice(s, conn), null));
     	  //pass lists to graph:
     	  DataViewer.addGraphPoints(maxes, mins, avgs, curr);
     	  System.out.println(curr);

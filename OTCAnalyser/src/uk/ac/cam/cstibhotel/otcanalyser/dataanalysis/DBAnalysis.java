@@ -87,12 +87,12 @@ public class DBAnalysis {
 	  ResultSet rs = ps.executeQuery();
 	  if (rs.next()) {
 		  ps = statementPreparer(s,
-	  	    "roundedNotionalAmount1 as maxRNA, notionalCurrency1 AS curr, " + EXECUTION_TIME,
+	  	    "roundedNotionalAmount1 as maxRNA, notionalCurrency1 AS curr, underlyingAsset1 as asset, " + EXECUTION_TIME,
 	  	    "roundedNotionalAmount1 = " + rs.getLong("maxRNA"), "ORDER BY " + EXECUTION_TIME + " DESC", conn);
 	  } else return null;
     rs = ps.executeQuery();
 	  if (rs.next()) {
-	    return new AnalysisItem(new Date(rs.getTimestamp(EXECUTION_TIME).getTime()), rs.getString("curr"), rs.getLong("maxRNA"));
+	    return new AnalysisItem(new Date(rs.getTimestamp(EXECUTION_TIME).getTime()), rs.getString("curr"), rs.getLong("maxRNA"), rs.getString("asset"));
 	  }
 	  else return null;
 	}
@@ -103,12 +103,12 @@ public class DBAnalysis {
 	  ResultSet rs = ps.executeQuery();
 	  if (rs.next()) {
 		  ps = statementPreparer(s,
-	  	    "roundedNotionalAmount1 as minRNA, notionalCurrency1 AS curr, " + EXECUTION_TIME,
+	  	    "roundedNotionalAmount1 as minRNA, notionalCurrency1 AS curr, underlyingAsset1 as asset, " + EXECUTION_TIME,
 	  	    "roundedNotionalAmount1 = " + rs.getLong("minRNA"), "ORDER BY " + EXECUTION_TIME + " DESC", conn);
 	  } else return null;
     rs = ps.executeQuery();
 	  if (rs.next()) {
-	    return new AnalysisItem(new Date(rs.getTimestamp(EXECUTION_TIME).getTime()), rs.getString("curr"), rs.getLong("minRNA"));
+	    return new AnalysisItem(new Date(rs.getTimestamp(EXECUTION_TIME).getTime()), rs.getString("curr"), rs.getLong("minRNA"), rs.getString("asset"));
 	  }
 	  else return null;
 	}
@@ -150,7 +150,7 @@ public class DBAnalysis {
 		  //for now,  print it:
 		  System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
 		      + rs.getString("curr") + ": " + rs.getDouble("maxRNA"));
-		  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("maxRNA")));
+		  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("maxRNA"), null));
 	  }
 	  return list;
 	}
@@ -172,7 +172,7 @@ public class DBAnalysis {
 			  //for now,  print it:
 			  System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
 			      + rs.getString("curr") + ": " + rs.getDouble("minRNA"));
-			  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("minRNA")));
+			  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("minRNA"), null));
 		  }
 		  return list;
 		}
@@ -194,7 +194,7 @@ public class DBAnalysis {
 			  //for now,  print it:
 			  System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
 			      + rs.getString("curr") + ": " + rs.getDouble("avgRNA"));
-			  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getDouble("avgRNA")));
+			  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getDouble("avgRNA"), null));
 		  }
 		  return list;
 		}
@@ -216,7 +216,7 @@ public class DBAnalysis {
 			  //for now, print it:
 			  System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
 			      + rs.getString("curr") + ": " + rs.getDouble("stddev"));
-			  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("stddev")));
+			  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("stddev"), null));
 		  }
 		  return list;
 		}
