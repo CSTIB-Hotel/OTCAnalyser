@@ -26,6 +26,7 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.PFCDFormatException;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.PriceFormingContinuationData;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.TradeType;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 
@@ -239,6 +240,14 @@ public class ParseZIP {
 			
 			//PRICE_NOTATION3
 			tradeOut.setPriceNotation3(parseDouble(tradeIn[43]));
+			
+			// Set the trade type (SWAP or OPTION) based on whether the trade has an
+			// optionStrikePrice or not
+			if (tradeOut.getOptionStrikePrice() == null) {
+				tradeOut.setTradeType(TradeType.SWAP);
+			} else {
+				tradeOut.setTradeType(TradeType.OPTION);
+			}
 			
 		} catch(ActionFormatException e){
 			e.printStackTrace();
