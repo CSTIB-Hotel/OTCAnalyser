@@ -5,6 +5,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.AnalysisItem;
+
 public class AnalysisSummary extends JPanel {
 /* returning
 	underlying asset
@@ -38,18 +40,28 @@ public class AnalysisSummary extends JPanel {
 	TradeDisplayer smallestTrade = new TradeDisplayer("Smallest trade");
 	TradeDisplayer biggestTrade = new TradeDisplayer("Biggest trade");
 
-	//public void UpdateWindow(AnalysisItem Biggest,AnalysisItem Smallest,long Average) {
-	//	maxTrade = Biggest;
-	//	minTrade = Smallest;
-	//	average = Average;
-	//	update();
-	//}
+	public void UpdateWindow(AnalysisItem Biggest,AnalysisItem Smallest, long Average,String MostTraded,
+			String LeastTraded,String Currency,long NumTrades,long changeInCost) {
+		maxTrade = Biggest;
+		minTrade = Smallest;
+		average = Average;
+		mostTraded = MostTraded;
+		leastTraded = LeastTraded;
+		currency = Currency;
+		numberOfTrades = NumTrades;
+		changeInAverageCost = changeInCost;
+		//update();
+	}
 	
 	
 	
-	//private AnalysisItem maxTrade;
-	//private AnalysisItem minTrade;
-	//private long average;
-	
+	private AnalysisItem maxTrade;
+	private AnalysisItem minTrade;
+	private long average;
+	private String mostTraded;
+	private String leastTraded;
+	private String currency;
+	private long numberOfTrades;
+	private long changeInAverageCost;
 	
 }
