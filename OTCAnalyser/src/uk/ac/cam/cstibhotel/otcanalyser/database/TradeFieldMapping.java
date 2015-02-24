@@ -8,12 +8,16 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.AssetClass;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Collateralization;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.EmptyTaxonomyException;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.InvalidTaxonomyException;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.PriceFormingContinuationData;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.TradeType;
+import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 /**
  *
@@ -107,8 +111,13 @@ public class TradeFieldMapping {
 		t.setSettlementCurrency(rs.getString("settlementCurrency"));
 		t.setTradeType(TradeType.lookup(rs.getShort("tradeType")));
 		t.setAssetClass(AssetClass.lookup(rs.getShort("assetClass")));
-		// t.setSubAssetClass(); // todo
-		// t.setTaxonomy(); // todo
+		t.setSubAssetClass(rs.getString("subAssetClass"));
+		try {
+		  UPI upi = new UPI(rs.getString("taxonomy"));
+		  t.setTaxonomy(upi);
+		} catch (InvalidTaxonomyException | EmptyTaxonomyException e) {
+			//null taxonomy
+		}
 		t.setPriceFormingContinuationData(PriceFormingContinuationData.lookup(rs.getShort("priceFormingContinuationData")));
 		t.setUnderlyingAsset1(rs.getString("underlyingAsset1"));
 		t.setUnderlyingAsset2(rs.getString("underlyingAsset2"));

@@ -15,8 +15,6 @@ public class DataTableCellRenderer extends DefaultTableCellRenderer{
   		} else {
   			super.setValue("No");
   		}
-  	} else if (o instanceof UPI) {
-  		super.setValue(((UPI) o).getFullTaxonomy());
   	}
   	else super.setValue(o);
   }
