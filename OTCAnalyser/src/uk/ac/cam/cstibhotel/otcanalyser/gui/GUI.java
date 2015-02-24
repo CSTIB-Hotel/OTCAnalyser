@@ -35,7 +35,9 @@ public class GUI extends JFrame implements SearchListener {
 		GridBagConstraints searchWindowConstraints = new GridBagConstraints();
 		searchWindowConstraints.gridx = 0;
 		searchWindowConstraints.gridy = 0;
-		searchWindowConstraints.gridheight = 2;
+		searchWindowConstraints.gridheight = 1;
+		searchWindowConstraints.fill = GridBagConstraints.VERTICAL;
+		searchWindowConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
 		add(searchWindow,searchWindowConstraints);
 		GridBagConstraints statusBarConstraints = new GridBagConstraints();
 		statusBarConstraints.gridx = 0;
@@ -45,7 +47,7 @@ public class GUI extends JFrame implements SearchListener {
 		GridBagConstraints analysisSummaryConstraints = new GridBagConstraints();
 		analysisSummaryConstraints.gridx = 1;
 		analysisSummaryConstraints.gridy = 1;
-		analysisSummaryConstraints.anchor = GridBagConstraints.PAGE_END;
+		analysisSummaryConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
 		add(analysis,analysisSummaryConstraints);
 		GridBagConstraints dataViewerConstraints = new GridBagConstraints();
 		dataViewerConstraints.gridx = 1;
