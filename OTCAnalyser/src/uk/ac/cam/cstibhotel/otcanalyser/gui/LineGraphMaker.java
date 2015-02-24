@@ -11,11 +11,12 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.time.Day;
 import org.jfree.data.time.Month;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
-import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.AnalysisItem;
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.PriceTimePair;
 
 public class LineGraphMaker {
 	
@@ -23,17 +24,26 @@ public class LineGraphMaker {
 	public static final int MIN = 1;
 	public static final int AVG = 2;
 
-	public static JFreeChart makeMonthChart(String name, String currency, XYDataset dataset) {
-		JFreeChart chart = ChartFactory.createTimeSeriesChart(name, "Month", "Price in " + currency, dataset);
+	public static JFreeChart makeChart(String name, String currency, XYDataset dataset, boolean isMonth) {
+		String timePeriod = "Day";
+		if (isMonth) {
+			timePeriod = "Month";
+		}
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(name, timePeriod, "Price in " + currency, dataset);
 		XYPlot plot = (XYPlot) chart.getPlot();
 		
 		DateAxis axis = (DateAxis) plot.getDomainAxis();
-    axis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
+		if (isMonth) {
+      axis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
+		} else {
+			axis.setDateFormatOverride(new SimpleDateFormat("dd-MMM-yyyy"));
+		}
 
     XYItemRenderer r = plot.getRenderer();
     if (r instanceof XYLineAndShapeRenderer) {
       XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) r;
       renderer.setDrawSeriesLineAsPath(true);
+      renderer.setBaseShapesVisible(true);
     }
     
 		return chart;
@@ -50,13 +60,18 @@ public class LineGraphMaker {
 		return dataset;
 	}
 	
-	public static void addToSeries(List<AnalysisItem> item, TimeSeriesCollection dataset, int series) {
-		for (AnalysisItem itm : item) {
+	public static void addToSeries(List<PriceTimePair> item, TimeSeriesCollection dataset, int series, boolean isMonth) {
+		for (PriceTimePair itm : item) {
 			Calendar c = Calendar.getInstance();
 			c.setTime(itm.getTime());
+			int day = c.get(Calendar.DAY_OF_MONTH);
 			int month = c.get(Calendar.MONTH);
 			int year = c.get(Calendar.YEAR);
-			dataset.getSeries(series).addOrUpdate(new Month(month + 1, year), itm.getPrice());
+			if (isMonth) {
+			  dataset.getSeries(series).addOrUpdate(new Month(month + 1, year), itm.getPrice());
+			} else {
+				dataset.getSeries(series).addOrUpdate(new Day(day, month + 1, year), itm.getPrice());
+			}
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.AnalysisItem;
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.PriceTimePair;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 
@@ -39,9 +40,9 @@ public class DataViewer extends JTabbedPane {
     }
   }
   
-  public static void addGraphPoints(List<AnalysisItem> maxes, List<AnalysisItem> mins,
-      List<AnalysisItem> avgs, String currency) {
-  	dataViewer.graph.addTradesToDatasets(maxes, mins, avgs, currency);
+  public static void addGraphPoints(List<PriceTimePair> maxes, List<PriceTimePair> mins,
+      List<PriceTimePair> avgs, String currency, boolean byMonth) {
+  	dataViewer.graph.addTradesToDatasets(maxes, mins, avgs, currency, byMonth);
   }
   
   //clear trades - call before adding new trades

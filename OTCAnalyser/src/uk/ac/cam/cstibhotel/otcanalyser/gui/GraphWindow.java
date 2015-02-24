@@ -1,6 +1,6 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
-import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.AnalysisItem;
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.PriceTimePair;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -55,14 +55,18 @@ public class GraphWindow extends CBLPanel implements ActionListener{
     showToolbar = true;
   }
   
-  public void addChartPanel(String currency) {
+  public void addChartPanel(String currency, boolean byMonth) {
   	TimeSeriesCollection dataset = LineGraphMaker.makeDataset();
     datasets.add(dataset);
     String currencyName = currency;
     if (currency.isEmpty()) {
     	currencyName = "Unknown Currency";
     }
-    JFreeChart chart = LineGraphMaker.makeMonthChart("Prices by Month", currencyName, dataset);
+    String timePeriod = "Day";
+    if (byMonth) {
+    	timePeriod = "Month";
+    }
+    JFreeChart chart = LineGraphMaker.makeChart("Prices by " + timePeriod, currencyName, dataset, byMonth);
     ChartPanel panel = new ChartPanel(chart); 
     chartPanels.add(panel);
     ChartEditorManager.setChartEditorFactory(new NewDefaultChartEditorFactory());
@@ -72,16 +76,16 @@ public class GraphWindow extends CBLPanel implements ActionListener{
   }
   
   //add trades to existing datasets
-  public void addTradesToDatasets(List<AnalysisItem> maxes, List<AnalysisItem> mins,
-      List<AnalysisItem> avgs, String currency) {
+  public void addTradesToDatasets(List<PriceTimePair> maxes, List<PriceTimePair> mins,
+      List<PriceTimePair> avgs, String currency, boolean byMonth) {
     if (!currencies.contains(currency)) {
-    	addChartPanel(currency);
+    	addChartPanel(currency, byMonth);
     }
     int i = currencies.indexOf(currency);
     TimeSeriesCollection dataset = datasets.get(i);
-    LineGraphMaker.addToSeries(maxes, dataset, LineGraphMaker.MAX);
-    LineGraphMaker.addToSeries(mins, dataset, LineGraphMaker.MIN);
-    LineGraphMaker.addToSeries(avgs, dataset, LineGraphMaker.AVG);
+    LineGraphMaker.addToSeries(maxes, dataset, LineGraphMaker.MAX, byMonth);
+    LineGraphMaker.addToSeries(mins, dataset, LineGraphMaker.MIN, byMonth);
+    LineGraphMaker.addToSeries(avgs, dataset, LineGraphMaker.AVG, byMonth);
     if (currencies.size() > 1) {
     	makeToolBar();
     }
