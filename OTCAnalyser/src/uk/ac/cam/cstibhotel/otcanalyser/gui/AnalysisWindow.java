@@ -54,5 +54,9 @@ public class AnalysisWindow extends CBLPanel {
 	  public void addAnalysis(String analysis, String title) {
 		  content.add(new AnalysisPanel(analysis, title));
 	  }
-
+	  
+	  public void clear() {
+	  	content.removeAll();
+	  }
+	  
 }

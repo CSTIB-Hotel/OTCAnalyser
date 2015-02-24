@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.Analyser;
 import uk.ac.cam.cstibhotel.otcanalyser.database.Database;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.SearchWindow;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.StatusBar;
@@ -240,6 +241,9 @@ public class CommunicationLayer {
 		for (SearchListener l : searchListeners) {
 			l.getSearchResult(result);
 		}
+		
+		//Give search to analyser
+		Analyser.analyse(s);
 	}
 	
 }
