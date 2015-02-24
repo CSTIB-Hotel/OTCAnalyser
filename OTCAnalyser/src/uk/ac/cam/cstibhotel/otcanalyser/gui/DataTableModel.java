@@ -117,7 +117,7 @@ class DataTableModel extends AbstractTableModel{
     row[14] = t.getTradeType();
     row[15] = t.getAssetClass();
     row[16] = t.getTaxonomy().getSubProduct();
-    row[17] = t.getTaxonomy();
+    row[17] = t.getTaxonomy().getFullTaxonomy();
     row[18] = t.getPriceFormingContinuationData();
     row[19] = t.getUnderlyingAsset1();
     row[20] = t.getUnderlyingAsset2();

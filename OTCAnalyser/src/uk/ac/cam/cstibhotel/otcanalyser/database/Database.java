@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -40,6 +39,7 @@ public class Database {
 	private static Database db;
 	private static Connection connection;
 	private static final int TableAlreadyExistsError = -21; // as defined by HSQLDB Driver
+	private static final int ObjectNameAlreadyExists = -5504; // as thrown by trying to create table twice
 
 	private static String getDatabasePath() {
 		// Local file path regardless of OS
@@ -102,7 +102,8 @@ public class Database {
 		try {
 			connection.createStatement().execute(dataTableCreator.toString());
 		} catch (SQLException e) {
-			if(e.getErrorCode() != TableAlreadyExistsError){
+			if(e.getErrorCode() != TableAlreadyExistsError && e.getErrorCode() != ObjectNameAlreadyExists){
+				System.err.println(e.getErrorCode());
 				throw e;
 			}
 		}
@@ -115,7 +116,7 @@ public class Database {
 			connection.createStatement().execute("INSERT INTO info (key, vvalue) VALUES ('last_update', '0')");
 			commit();
 		} catch (SQLException e) {
-			if(e.getErrorCode() != TableAlreadyExistsError){
+			if(e.getErrorCode() != TableAlreadyExistsError && e.getErrorCode() != ObjectNameAlreadyExists){
 				throw e;
 			}
 		}
@@ -138,7 +139,7 @@ public class Database {
 		try{
 			connection.createStatement().execute(savedSearchTableCreator);
 		} catch (SQLException e){
-			if(e.getErrorCode() != TableAlreadyExistsError){
+			if(e.getErrorCode() != TableAlreadyExistsError && e.getErrorCode() != ObjectNameAlreadyExists){
 				throw e;
 			}
 		}
@@ -336,17 +337,17 @@ public class Database {
 			String query = "SELECT * FROM data WHERE "
 					+"tradeType = ? AND "
 					+"assetClass = ? AND ";
-			if (s.getAsset().equals("")||s.getAsset()==null) {
+			if (!(s.getAsset().equals("")||s.getAsset()==null)) {
 				query += " (underlyingAsset1 LIKE ? OR underlyingAsset2 LIKE ?) AND ";
 			}
-			if (s.getMinPrice() == s.getMaxPrice()){
+			if (!(s.getMinPrice() == s.getMaxPrice())){
 				query += " roundedNotionalAmount1 >= ? AND "
 						+" roundedNotionalAmount1 <= ? AND ";
 			}
-			if (s.getCurrency().equals("")||s.getCurrency()==null) {
+			if (!(s.getCurrency().equals("")||s.getCurrency()==null)) {
 				query += " (notionalCurrency1 LIKE ? OR notionalCurrency2 LIKE ? ) AND ";
 			}
-			if (s.getUPI().equals("") || s.getUPI() == null){
+			if (!(s.getUPI().equals("") || s.getUPI() == null)){
 				query += " taxonomy LIKE ? AND ";
 			}
 			query += " executionTime >= ? AND "
@@ -359,22 +360,22 @@ public class Database {
 			ps.setShort(i, s.getTradeType().getValue()); i++;
 			ps.setShort(i, s.getAssetClass().getValue()); i++;
 
-			if (s.getAsset().equals("") || s.getAsset()==null) {
+			if (!(s.getAsset().equals("") || s.getAsset()==null)) {
 				ps.setString(i, "%"+s.getAsset()+"%"); i++;
 				ps.setString(i, "%"+s.getAsset()+"%"); i++;
 			}
 
-			if(s.getMinPrice() == s.getMaxPrice()){
+			if(!(s.getMinPrice() == s.getMaxPrice())){
 				ps.setFloat(i, s.getMinPrice()); i++;
 				ps.setFloat(i, s.getMaxPrice()); i++;
 			}
 			
-			if (s.getCurrency().equals("") || s.getCurrency()==null) {
+			if (!(s.getCurrency().equals("") || s.getCurrency()==null)) {
 				ps.setString(i, "%"+s.getCurrency()+"%"); i++;
 				ps.setString(i, "%"+s.getCurrency()+"%"); i++;
 			}
 			
-			if (s.getUPI().equals("") || s.getUPI() == null){			
+			if (!(s.getUPI().equals("") || s.getUPI() == null)){			
 				ps.setString(i, "%" + s.getUPI() + "%"); i++; 
 			}
 
@@ -500,7 +501,7 @@ public class Database {
 	public Connection getConnection() {
 		return connection;
 	}
-
+/*
 	public static void main(String[] args) throws SQLException {
 		Connection c = Database.getDB().getConnection();
 		Statement s = c.createStatement();
@@ -509,5 +510,5 @@ public class Database {
 			System.out.print("\"" + rs.getString(1) + "\", ");
 		}
 	}
-
+*/
 }
