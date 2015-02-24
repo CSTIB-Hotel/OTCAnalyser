@@ -35,7 +35,8 @@ public class TrendPredictor {
 	 * or falling with time?
 	 * 
 	 * Least mean squares regression:
-	 * This is a linear prediction of the trendline for the data set.
+	 * This is a linear prediction of the trendline for the data set. It provides two coefficients,
+	 * a and b, which can be used to construct the trendline y = a + bx.
 	 */
 	private void calculateStatistics() {
 		// x is time, y is price
