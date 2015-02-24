@@ -1,6 +1,5 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
-import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.List;
@@ -36,19 +35,25 @@ public class GUI extends JFrame implements SearchListener {
 		GridBagConstraints searchWindowConstraints = new GridBagConstraints();
 		searchWindowConstraints.gridx = 0;
 		searchWindowConstraints.gridy = 0;
+		searchWindowConstraints.gridheight = 2;
 		add(searchWindow,searchWindowConstraints);
 		GridBagConstraints statusBarConstraints = new GridBagConstraints();
 		statusBarConstraints.gridx = 0;
 		statusBarConstraints.gridy = 2;
+		statusBarConstraints.gridwidth = 0;
 		add(statusBar,statusBarConstraints);
 		GridBagConstraints analysisSummaryConstraints = new GridBagConstraints();
 		analysisSummaryConstraints.gridx = 1;
 		analysisSummaryConstraints.gridy = 1;
+		analysisSummaryConstraints.anchor = GridBagConstraints.PAGE_END;
 		add(analysis,analysisSummaryConstraints);
 		GridBagConstraints dataViewerConstraints = new GridBagConstraints();
 		dataViewerConstraints.gridx = 1;
 		dataViewerConstraints.gridy = 0;
-		add(dataViewer);
+		dataViewerConstraints.fill = GridBagConstraints.BOTH;
+		dataViewerConstraints.weightx = 1;
+		dataViewerConstraints.weighty = 1;
+		add(dataViewer,dataViewerConstraints);
 		setVisible(true);
 	}
 	
