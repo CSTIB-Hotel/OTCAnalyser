@@ -10,6 +10,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
 import org.jdesktop.swingx.autocomplete.*;
 
@@ -82,16 +83,24 @@ public class SearchWindow extends JPanel {
 			this.add(EndDate);
 			EndDate.setVisible(true);
 			minValueDescriptor = new CenteredJLabel("Select minimum price (optional)");
-
 			this.add(minValueDescriptor);
 			minValueDescriptor.setVisible(true);
-			minValue = new JSpinner();
+	
+			//Negative values not allowed
+			SpinnerNumberModel minSpinner = new SpinnerNumberModel();
+			minSpinner.setMinimum(0);
+			minValue = new JSpinner(minSpinner);
 			this.add(minValue);
 			minValue.setVisible(true);
+			
 			maxValueDescriptor = new CenteredJLabel("Select maximum price (optional)");
 			this.add(maxValueDescriptor);
 			maxValueDescriptor.setVisible(true);
-			maxValue = new JSpinner();
+			
+			//Negative values not allowed
+			SpinnerNumberModel maxSpinner = new SpinnerNumberModel();
+			maxSpinner.setMinimum(0);
+			maxValue = new JSpinner(maxSpinner);
 			this.add(maxValue);
 			maxValue.setVisible(true);
 			currencyDescriptor = new CenteredJLabel("Select a currency");
