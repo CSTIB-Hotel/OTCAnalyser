@@ -18,10 +18,12 @@ public class Analyser {
   	Connection conn = Database.getDB().getConnection();
   	
   	//analysis variables
-  	AnalysisItem max; //overall max
-  	AnalysisItem min; //overall min
-  	double overallAverage; //overall average not by currency
-  	List<AnalysisItem> avg = new ArrayList<>(); //overall average by currency
+  	AnalysisItem maxNoCurrency; //overall max not by currency
+  	AnalysisItem minNoCurrency; //overall min not by currency
+  	double avgNoCurrency; //overall average not by currency
+  	List<AnalysisItem> maxWithCurrency = new ArrayList<>(); //overall max by currency
+  	List<AnalysisItem> minWithCurrency = new ArrayList<>(); //overall min by currency
+  	List<AnalysisItem> avgWithCurrency = new ArrayList<>(); //overall average by currency
   	double stddev; //overall std deviation
   	String mostTraded; //most traded underlying asset 1
   	String leastTraded; //least traded underlying asset 1
@@ -33,9 +35,9 @@ public class Analyser {
   	
   	try {
   		//do basic non-currency-based analysis
-  	  max = DBAnalysis.getMaxPrice(s, conn);
-  	  min = DBAnalysis.getMinPrice(s, conn);
-  	  overallAverage = DBAnalysis.getAvgPrice(s, conn);
+  		maxNoCurrency = DBAnalysis.getMaxPrice(s, conn);
+  		minNoCurrency = DBAnalysis.getMinPrice(s, conn);
+  		avgNoCurrency = DBAnalysis.getAvgPrice(s, conn);
   	  stddev = DBAnalysis.getStdDevPrice(s, conn);
   	  String mostLeastTraded[] = DBAnalysis.getMostAndLeastTradedUnderlyingAsset(s, conn);
   	  mostTraded = mostLeastTraded[0];
@@ -48,7 +50,9 @@ public class Analyser {
   	  for (String curr : currencies) {
   	  	s.setCurrency(curr);
   	  	//basic analysis by currency
-    	  avg.add(new AnalysisItem(null, curr, DBAnalysis.getAvgPrice(s, conn), null));
+  	  	maxWithCurrency.add(DBAnalysis.getMaxPrice(s, conn));
+  	  	minWithCurrency.add(DBAnalysis.getMinPrice(s, conn));
+    	  avgWithCurrency.add(new AnalysisItem(null, curr, DBAnalysis.getAvgPrice(s, conn), null));
   	  	//should graph by month?
   	  	boolean byMonth = DBAnalysis.graphByMonth(s, conn, DBAnalysis.EXECUTION_TIME);
   	  	
@@ -81,8 +85,18 @@ public class Analyser {
   	  }
   	  
   	  //pass analysis to GUI
-  	  GUI.getInstance().addAnalyses(max, min, avg, stddev, currency, mostTraded, leastTraded,
-  	      numResults, changeInAvgCost, overallAverage);
+  	  GUI.getInstance().addAnalyses(
+  	      maxNoCurrency,
+  	      minNoCurrency,
+  	      avgNoCurrency,
+  	      changeInAvgCost,
+  	      currency,
+  	      mostTraded,
+  	      leastTraded,
+  	      numResults,
+  	      maxWithCurrency,
+  	      minWithCurrency,
+  	      avgWithCurrency);
   	  
   	  //pass per currency data list to extended feeder
   	  ExtendedFeeder.update(perCurrencyDataList);

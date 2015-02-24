@@ -16,43 +16,17 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
-public class GraphWindow extends CBLPanel implements ActionListener{
+public class GraphWindow extends CurrencyToolbarWindow implements ActionListener{
 	
   private static final long serialVersionUID = 1L;
   private ContentPanel pnl;
-  private List<String> currencies = new ArrayList<>();
   private List<TimeSeriesCollection> datasets = new ArrayList<>();
   private List<ChartPanel> chartPanels = new ArrayList<>();
   private ChartPanel currentChart = null;
-  private JToolBar toolbar;
-  private boolean showToolbar = false;
   
   public GraphWindow() {
     pnl = new ContentPanel();
     add(pnl, BorderLayout.CENTER);
-  }
-  
-  public void makeToolBar() {
-  	if (showToolbar) {
-  		remove(toolbar);
-  	}
-  	toolbar = new JToolBar();
-    toolbar.setOpaque(true);
-    toolbar.setRollover(true);
-    toolbar.setFloatable(false);
-
-    JButton button;
-    for (String curr : currencies) {
-    	button = new JButton(curr);
-    	if (curr.isEmpty()) {
-    		button = new JButton("Unknown Currency");
-    	}
-    	toolbar.add(button);
-    	button.setActionCommand(curr);
-    	button.addActionListener(this);
-    }
-    this.add(toolbar, BorderLayout.SOUTH);
-    showToolbar = true;
   }
   
   //add trendline points to dataset
@@ -117,6 +91,7 @@ public class GraphWindow extends CBLPanel implements ActionListener{
     	pnl.remove(currentChart);
     	currentChart = chartPanels.get(currencies.indexOf(e.getActionCommand()));
       pnl.add(currentChart);
+      pnl.repaint();
     }
   }
   

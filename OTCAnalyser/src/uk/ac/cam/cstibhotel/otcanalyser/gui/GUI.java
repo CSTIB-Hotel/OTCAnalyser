@@ -57,17 +57,27 @@ public class GUI extends JFrame implements SearchListener {
 		DataViewer.addTrades(s.getResultData());
 	}
 	
-	public void addAnalyses(AnalysisItem max, AnalysisItem min, List<AnalysisItem> avgs, double stddev, String curr,
-	    String mostTradedAsset, String leastTradedAsset, double numTrades, double changeInCost, double avg) {
+	public void addAnalyses(
+    AnalysisItem maxNoCurrency,
+    AnalysisItem minNoCurrency,
+    double avgNoCurrency,
+    double changeInAvgCost,
+    String currency,
+    String mostTraded,
+    String leastTraded,
+    double numResults,
+    List<AnalysisItem> maxWithCurrency,
+    List<AnalysisItem> minWithCurrency,
+    List<AnalysisItem> avgWithCurrency) {
 		/*
 		 * Uses all values for max, min, and avg.
 		 * Currency is that of the change in average cost, which is just the first one in the results.
 		 */
-		if (max != null && min != null) {
-		AnalysisSummary.getInstance().UpdateWindow(max, min, avg, mostTradedAsset,
-						    leastTradedAsset, curr, numTrades, changeInCost);
+		if (maxNoCurrency != null && minNoCurrency != null) {
+		AnalysisSummary.getInstance().UpdateWindow(maxNoCurrency, minNoCurrency, avgNoCurrency, mostTraded,
+						leastTraded, currency, numResults, changeInAvgCost);
 		}
-		DataViewer.addAnalysis(max, min, avgs, stddev);
+		DataViewer.addAnalysis(maxWithCurrency, minWithCurrency, avgWithCurrency);
 	}
 
 }
