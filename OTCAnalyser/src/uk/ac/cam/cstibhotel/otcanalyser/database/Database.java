@@ -337,17 +337,17 @@ public class Database {
 			String query = "SELECT * FROM data WHERE "
 					+"tradeType = ? AND "
 					+"assetClass = ? AND ";
-			if (s.getAsset().equals("")||s.getAsset()==null) {
+			if (!(s.getAsset().equals("")||s.getAsset()==null)) {
 				query += " (underlyingAsset1 LIKE ? OR underlyingAsset2 LIKE ?) AND ";
 			}
-			if (s.getMinPrice() == s.getMaxPrice()){
+			if (!(s.getMinPrice() == s.getMaxPrice())){
 				query += " roundedNotionalAmount1 >= ? AND "
 						+" roundedNotionalAmount1 <= ? AND ";
 			}
-			if (s.getCurrency().equals("")||s.getCurrency()==null) {
+			if (!(s.getCurrency().equals("")||s.getCurrency()==null)) {
 				query += " (notionalCurrency1 LIKE ? OR notionalCurrency2 LIKE ? ) AND ";
 			}
-			if (s.getUPI().equals("") || s.getUPI() == null){
+			if (!(s.getUPI().equals("") || s.getUPI() == null)){
 				query += " taxonomy LIKE ? AND ";
 			}
 			query += " executionTime >= ? AND "
@@ -360,22 +360,22 @@ public class Database {
 			ps.setShort(i, s.getTradeType().getValue()); i++;
 			ps.setShort(i, s.getAssetClass().getValue()); i++;
 
-			if (s.getAsset().equals("") || s.getAsset()==null) {
+			if (!(s.getAsset().equals("") || s.getAsset()==null)) {
 				ps.setString(i, "%"+s.getAsset()+"%"); i++;
 				ps.setString(i, "%"+s.getAsset()+"%"); i++;
 			}
 
-			if(s.getMinPrice() == s.getMaxPrice()){
+			if(!(s.getMinPrice() == s.getMaxPrice())){
 				ps.setFloat(i, s.getMinPrice()); i++;
 				ps.setFloat(i, s.getMaxPrice()); i++;
 			}
 			
-			if (s.getCurrency().equals("") || s.getCurrency()==null) {
+			if (!(s.getCurrency().equals("") || s.getCurrency()==null)) {
 				ps.setString(i, "%"+s.getCurrency()+"%"); i++;
 				ps.setString(i, "%"+s.getCurrency()+"%"); i++;
 			}
 			
-			if (s.getUPI().equals("") || s.getUPI() == null){			
+			if (!(s.getUPI().equals("") || s.getUPI() == null)){			
 				ps.setString(i, "%" + s.getUPI() + "%"); i++; 
 			}
 
