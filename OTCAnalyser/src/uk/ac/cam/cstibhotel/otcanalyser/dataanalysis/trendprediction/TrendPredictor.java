@@ -18,7 +18,7 @@ public class TrendPredictor {
 	private float leastMeanSquaresB;
 	
 	public TrendPredictor(PerCurrencyData d) {
-		points = d.getData();
+		points = d.data;
 		
 		calculateStatistics();	
 	}
@@ -41,13 +41,17 @@ public class TrendPredictor {
 		// x is time, y is price
 		float sxx, syy, sxy;
 		
-		float sumX, sumY, sumXSquare, sumYSquare, sumXY;
+		float sumX = 0;
+		float sumY = 0;
+		float sumXSquare = 0;
+		float sumYSquare = 0;
+		float sumXY = 0;
 		
-		int n = points.size;
+		int n = points.size();
 		
 		for (int i = 0; i < n; i++) {
-			float currentX = points.get(i).time;
-			float currentY = points.get(i).price;
+			float currentX = (float) points.get(i).getTime().getTime();
+			float currentY = (float) points.get(i).getPrice();
 			sumX += currentX;
 			sumY += currentY;
 			sumXSquare += (currentX * currentX);
