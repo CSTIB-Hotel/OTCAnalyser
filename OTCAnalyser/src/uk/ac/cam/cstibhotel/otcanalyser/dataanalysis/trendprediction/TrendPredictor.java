@@ -2,14 +2,9 @@ package uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.trendprediction;
 
 import java.util.List;
 
-import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.CommunicationLayer;
-import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchListener;
-import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
-
 public class TrendPredictor {
 
-	private List<GraphResult> points;
+	private List<PriceTimePair> points;
 	
 	private float productMomentCorrelationCoefficient;
 	private float meanPrice;
@@ -19,8 +14,8 @@ public class TrendPredictor {
 	private float leastMeanSquaresA;
 	private float leastMeanSquaresB;
 	
-	public TrendPredictor(GraphResult g) {
-		points = g.getResultData();
+	public TrendPredictor(PerCurrencyData d) {
+		points = d.getData();
 		
 		calculateStatistics();	
 	}
