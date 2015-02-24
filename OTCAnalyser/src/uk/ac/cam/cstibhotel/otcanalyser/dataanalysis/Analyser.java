@@ -31,6 +31,7 @@ public class Analyser {
   	  
   	  //get currencies
   	  List<String> currencies = DBAnalysis.getCurrencies(s, conn);
+  	  List<PerCurrencyData> perCurrencyDataList = new ArrayList<>();
   	  
   	  for (String curr : currencies) {
   	  	s.setCurrency(curr);
@@ -51,10 +52,16 @@ public class Analyser {
   	  	}
     	  //pass lists to graph:
     	  DataViewer.addGraphPoints(maxes, mins, avgs, curr, byMonth);
-    	  System.out.println(curr + " " + maxes.size());
+    	  //System.out.println(curr + " " + maxes.size());
+    	  
+    	  //add to per currency data list
+    	  perCurrencyDataList.add(new PerCurrencyData(avgs, curr, byMonth));
   	  }
   	  //pass analysis to GUI
   	  GUI.getInstance().addAnalyses(max, min, avg, stddev);
+  	  
+  	  //pass per currency data list to extended feeder
+  	  ExtendedFeeder.update(perCurrencyDataList);
   	} catch (SQLException e){
   		e.printStackTrace();
   		//analysis could not be performed; do not pass anything

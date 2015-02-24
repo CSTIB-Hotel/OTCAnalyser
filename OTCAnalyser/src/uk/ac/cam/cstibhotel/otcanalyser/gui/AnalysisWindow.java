@@ -21,7 +21,6 @@ public class AnalysisWindow extends CBLPanel {
 		  setText(text);
 		  setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(5,0,5,0),
 				  BorderFactory.createEtchedBorder()));
-		  setOpaque(false);
 	    }
 		
 		public AnalysisPanel(String text, String title) {
