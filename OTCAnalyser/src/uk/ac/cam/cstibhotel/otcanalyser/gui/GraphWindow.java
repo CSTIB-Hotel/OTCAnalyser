@@ -55,6 +55,13 @@ public class GraphWindow extends CBLPanel implements ActionListener{
     showToolbar = true;
   }
   
+  //add trendline points to dataset
+  public void addTrendlinePoints(List<List<PriceTimePair>> ptp) {
+  	for (int i = 0; i < ptp.size(); i++) {
+  		LineGraphMaker.addToSeries(ptp.get(i), datasets.get(i), LineGraphMaker.TREND_LINE, false);
+  	}
+  }
+  
   public void addChartPanel(String currency, boolean byMonth) {
   	TimeSeriesCollection dataset = LineGraphMaker.makeDataset();
     datasets.add(dataset);

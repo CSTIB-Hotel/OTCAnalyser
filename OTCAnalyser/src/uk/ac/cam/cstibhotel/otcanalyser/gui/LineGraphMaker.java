@@ -23,6 +23,7 @@ public class LineGraphMaker {
 	public static final int MAX = 0;
 	public static final int MIN = 1;
 	public static final int AVG = 2;
+	public static final int TREND_LINE = 2;
 
 	public static JFreeChart makeChart(String name, String currency, XYDataset dataset, boolean isMonth) {
 		String timePeriod = "Day";
@@ -53,10 +54,12 @@ public class LineGraphMaker {
 		TimeSeries max = new TimeSeries("Maximum");
 		TimeSeries min = new TimeSeries("Minimum");
 		TimeSeries avg = new TimeSeries("Average");
+		TimeSeries trendLine = new TimeSeries("Trend Line");
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
 		dataset.addSeries(max);
 		dataset.addSeries(min);
 		dataset.addSeries(avg);
+		dataset.addSeries(trendLine);
 		return dataset;
 	}
 	
