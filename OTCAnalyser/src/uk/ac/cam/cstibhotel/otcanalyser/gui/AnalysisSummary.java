@@ -1,5 +1,8 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -43,10 +46,17 @@ public class AnalysisSummary extends JPanel {
 	
 	AnalysisSummary() {
 		setSize(600,50);
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		add(biggestTrade);
-		add(smallestTrade);
-		add(otherInfo);
+		setLayout(new GridBagLayout());
+		GridBagConstraints biggestTradeConstraints = new GridBagConstraints();
+		biggestTradeConstraints.fill = GridBagConstraints.BOTH;
+		add(biggestTrade,biggestTradeConstraints);
+		GridBagConstraints smallestTradeConstraints = new GridBagConstraints();
+		smallestTradeConstraints.gridx = 0;
+		smallestTradeConstraints.fill = GridBagConstraints.BOTH;
+		add(smallestTrade,smallestTradeConstraints);
+		GridBagConstraints otherInfoConstraints = new GridBagConstraints();
+		otherInfoConstraints.gridx = 0;
+		add(otherInfo,otherInfoConstraints);
 		setVisible(true);
 	}
 

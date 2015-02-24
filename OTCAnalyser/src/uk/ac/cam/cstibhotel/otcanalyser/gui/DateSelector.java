@@ -39,9 +39,6 @@ public class DateSelector extends JPanel implements ActionListener {
 			for (int i:TextStrings.Days28) {
 				model.addElement(i);
 			}
-			if ((((Integer)Year.getSelectedItem()) % 4)==0) { //accounts for leap years
-				model.addElement(29);
-			}
 		}
 		else if (month=="April"||month=="June"||month=="September"||month=="November") {
 			DefaultComboBoxModel<Integer> model = (DefaultComboBoxModel<Integer>) Day.getModel();

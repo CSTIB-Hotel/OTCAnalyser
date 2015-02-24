@@ -36,7 +36,7 @@ public class TradeDisplayer extends JPanel {
 		Label = new JLabel(label);
 		setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setSize(200,50);
+		setSize(9,50);
 		add(Label);
 		Label.setVisible(true);
 		Details = new JLabel("Traded amount:              Underlying Asset:              Execution Date:             ");
@@ -49,7 +49,7 @@ public class TradeDisplayer extends JPanel {
 		Label = new JLabel("Other info");
 		setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setSize(200,50);
+		setSize(9,50);
 		add(Label);
 		Label.setVisible(true);
 		Details = new JLabel("Most traded asset:              Least traded asset:              Average trade cost:             ");
