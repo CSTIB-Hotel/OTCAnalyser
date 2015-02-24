@@ -96,8 +96,7 @@ public class Database {
 			dataTableCreator.append(mapEntry.getKey()).append(" ").append(mapEntry.getValue().getType()).append(", ");
 		}
 
-		dataTableCreator.setLength(dataTableCreator.length()-2);
-		dataTableCreator.append(");");
+ 		dataTableCreator.append(" UNIQUE (id));");
 
 		try {
 			connection.createStatement().execute(dataTableCreator.toString());
@@ -172,7 +171,7 @@ public class Database {
 
 			HashMap<String, SQLField> DBNameValue = TradeFieldMapping.getMapping(trade);
 			Iterator<Entry<String, SQLField>> iterator = DBNameValue.entrySet().iterator();
-
+			
 			String executeString;
 
 			if (trade.getAction().equals(Action.CANCEL)) {
@@ -185,8 +184,7 @@ public class Database {
 				executeString = buildInsertString(iterator);
 			}
 
-			try {
-				
+			try {				
 				PreparedStatement p = connection.prepareStatement(executeString);
 				iterator = DBNameValue.entrySet().iterator();
 				
@@ -197,7 +195,7 @@ public class Database {
 				p.execute();
 
 			} catch (SQLException e) {
-				System.err.println("Failed to insert/update row");
+				System.err.println("Failed to insert/update a row");
 				success = false;
 			}
 
