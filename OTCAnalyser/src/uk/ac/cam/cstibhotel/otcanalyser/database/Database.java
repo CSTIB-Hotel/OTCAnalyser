@@ -437,7 +437,7 @@ public class Database {
 	 * @return The 10 most recently saved previously saved searches
 	 */
 	public Map<String, Search> getSavedSearches() {
-		Map<String, Search> savedSearches = new LinkedHashMap<>();
+		Map<String, Search> savedSearches = new LinkedHashMap<String, Search>();
 		
 		String query = "SELECT * FROM savedSearches ORDER BY id DESC LIMIT 10";
 		try {
