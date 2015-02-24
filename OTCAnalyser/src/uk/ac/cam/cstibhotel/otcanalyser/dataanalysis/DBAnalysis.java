@@ -140,7 +140,7 @@ public class DBAnalysis {
           + date + ") AS year, notionalCurrency1 AS curr", "", "GROUP BY month, year, curr", conn);
 	  ResultSet rs = ps.executeQuery();
 	  //info about what's getting printed
-	  System.out.println("Month/Year: Currency: Max Rounded Notional Amount 1");
+	  //System.out.println("Month/Year: Currency: Max Rounded Notional Amount 1");
 	  ArrayList<AnalysisItem> list = new ArrayList<>();
 	  while (rs.next()) {
 		  Calendar c = Calendar.getInstance();
@@ -148,8 +148,8 @@ public class DBAnalysis {
 		  c.set(Calendar.MONTH, rs.getInt("month"));
 		  c.set(Calendar.YEAR, rs.getInt("year"));
 		  //for now,  print it:
-		  System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
-		      + rs.getString("curr") + ": " + rs.getDouble("maxRNA"));
+		  /*System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
+		      + rs.getString("curr") + ": " + rs.getDouble("maxRNA"));*/
 		  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("maxRNA"), null));
 	  }
 	  return list;
@@ -162,7 +162,7 @@ public class DBAnalysis {
 	          + date + ") AS year, notionalCurrency1 AS curr", "", "GROUP BY month, year, curr", conn);
 		  ResultSet rs = ps.executeQuery();
 		  //info about what's getting printed
-		  System.out.println("Month/Year: Currency: Min Rounded Notional Amount 1");
+		  //System.out.println("Month/Year: Currency: Min Rounded Notional Amount 1");
 		  ArrayList<AnalysisItem> list = new ArrayList<>();
 		  while (rs.next()) {
 			  Calendar c = Calendar.getInstance();
@@ -170,8 +170,8 @@ public class DBAnalysis {
 			  c.set(Calendar.MONTH, rs.getInt("month"));
 			  c.set(Calendar.YEAR, rs.getInt("year"));
 			  //for now,  print it:
-			  System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
-			      + rs.getString("curr") + ": " + rs.getDouble("minRNA"));
+			  /*System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
+			      + rs.getString("curr") + ": " + rs.getDouble("minRNA"));*/
 			  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("minRNA"), null));
 		  }
 		  return list;
@@ -184,7 +184,7 @@ public class DBAnalysis {
 	          + date + ") AS year, notionalCurrency1 AS curr", "", "GROUP BY month, year, curr", conn);
 		  ResultSet rs = ps.executeQuery();
 		  //info about what's getting printed
-		  System.out.println("Month/Year: Currency: Avg Rounded Notional Amount 1");
+		  //System.out.println("Month/Year: Currency: Avg Rounded Notional Amount 1");
 		  ArrayList<AnalysisItem> list = new ArrayList<>();
 		  while (rs.next()) {
 			  Calendar c = Calendar.getInstance();
@@ -192,8 +192,8 @@ public class DBAnalysis {
 			  c.set(Calendar.MONTH, rs.getInt("month"));
 			  c.set(Calendar.YEAR, rs.getInt("year"));
 			  //for now,  print it:
-			  System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
-			      + rs.getString("curr") + ": " + rs.getDouble("avgRNA"));
+			  /*System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
+			      + rs.getString("curr") + ": " + rs.getDouble("avgRNA"));*/
 			  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getDouble("avgRNA"), null));
 		  }
 		  return list;
@@ -206,7 +206,7 @@ public class DBAnalysis {
 	          + date + ") AS year, notionalCurrency1 AS curr", "", "GROUP BY month, year, curr", conn);
 		  ResultSet rs = ps.executeQuery();
 		  //info about what's getting printed
-		  System.out.println("Month/Year: Currency: Std Dev of Rounded Notional Amount 1");
+		  //System.out.println("Month/Year: Currency: Std Dev of Rounded Notional Amount 1");
 		  ArrayList<AnalysisItem> list = new ArrayList<>();
 		  while (rs.next()) {
 			  Calendar c = Calendar.getInstance();
@@ -214,8 +214,8 @@ public class DBAnalysis {
 			  c.set(Calendar.MONTH, rs.getInt("month"));
 			  c.set(Calendar.YEAR, rs.getInt("year"));
 			  //for now, print it:
-			  System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
-			      + rs.getString("curr") + ": " + rs.getDouble("stddev"));
+			  /*System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
+			      + rs.getString("curr") + ": " + rs.getDouble("stddev"));*/
 			  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("stddev"), null));
 		  }
 		  return list;
