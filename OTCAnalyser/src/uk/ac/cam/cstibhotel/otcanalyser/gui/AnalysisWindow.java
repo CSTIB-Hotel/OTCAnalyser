@@ -7,9 +7,7 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
-import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
 
 public class AnalysisWindow extends CurrencyToolbarWindow {
@@ -43,6 +41,7 @@ public class AnalysisWindow extends CurrencyToolbarWindow {
 	  
 	  public AnalysisWindow() {
 		  pnl = new ContentPanel();
+		  pnl.setBorder(new EmptyBorder(0,0,0,0));
 		  add(pnl, BorderLayout.CENTER);
 	  }
 	  

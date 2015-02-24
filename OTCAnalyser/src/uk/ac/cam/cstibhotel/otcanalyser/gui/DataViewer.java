@@ -31,20 +31,16 @@ public class DataViewer extends JTabbedPane {
     analysis = new AnalysisWindow();
     
     JScrollPane graphPane = new JScrollPane(graph);
-    graphPane.setBorder(new EmptyBorder(5,5,5,5));
     graphPane.getViewport().setOpaque(false);
-    graph.setBorder(new EmptyBorder(10,10,10,10));
     
     JScrollPane analysisPane = new JScrollPane(analysis);
-    analysisPane.setBorder(new EmptyBorder(5,5,5,5));
-    graphPane.getViewport().setOpaque(false);
-    analysis.setBorder(new EmptyBorder(10,10,10,10));
+    graphPane.getViewport().setOpaque(false);;
     
     addTab("Graph", graphPane);
     addTab("Data", data);
     addTab("Extended Analysis", new JScrollPane(analysisPane));
     
-    this.setMinimumSize(new Dimension(500, 500));
+    this.setMinimumSize(new Dimension(750, 500));
   }
   
   //add trades to the DataViewer table
