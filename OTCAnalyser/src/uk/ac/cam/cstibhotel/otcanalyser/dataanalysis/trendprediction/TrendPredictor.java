@@ -2,6 +2,9 @@ package uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.trendprediction;
 
 import java.util.List;
 
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.PerCurrencyData;
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.PriceTimePair;
+
 public class TrendPredictor {
 
 	private List<PriceTimePair> points;
