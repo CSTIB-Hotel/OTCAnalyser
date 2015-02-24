@@ -11,23 +11,32 @@ import uk.ac.cam.cstibhotel.otcanalyser.gui.DataViewer;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.GUI;
 
 public class Analyser {
+	
+	
+	
   public static void analyse(Search s) {
   	Connection conn = Database.getDB().getConnection();
   	
-  	//perform analysis:
-  	AnalysisItem max;
-  	AnalysisItem min;
-  	List<AnalysisItem> avg = new ArrayList<>();
-  	double stddev;
-  	List<PriceTimePair> maxes;
-  	List<PriceTimePair> mins;
-  	List<PriceTimePair> avgs;
+  	//analysis variables
+  	AnalysisItem max; //overall max
+  	AnalysisItem min; //overall min
+  	List<AnalysisItem> avg = new ArrayList<>(); //overall average by currency
+  	double stddev; //overall std deviation
+  	String mostTraded; //most traded underlying asset 1
+  	String leastTraded; //least traded underlying asset 1
+  	List<PriceTimePair> maxes; //max data points
+  	List<PriceTimePair> mins; //min data points
+  	List<PriceTimePair> avgs; //average data points
+  	double changeInAvgCost;
   	
   	try {
   		//do basic non-currency-based analysis
   	  max = DBAnalysis.getMaxPrice(s, conn);
   	  min = DBAnalysis.getMinPrice(s, conn);
   	  stddev = DBAnalysis.getStdDevPrice(s, conn);
+  	  String mostLeastTraded[] = DBAnalysis.getMostAndLeastTradedUnderlyingAsset(s, conn);
+  	  mostTraded = mostLeastTraded[0];
+  	  leastTraded = mostLeastTraded[1];
   	  
   	  //get currencies
   	  List<String> currencies = DBAnalysis.getCurrencies(s, conn);
@@ -57,8 +66,14 @@ public class Analyser {
     	  //add to per currency data list
     	  perCurrencyDataList.add(new PerCurrencyData(avgs, curr, byMonth));
   	  }
+  	  
+  	  //change in average cost from averages per time period for first currency
+  	  List<PriceTimePair> firstAvgs = perCurrencyDataList.get(0).data; //first currency pricetime data
+  	  //get difference:
+  	  changeInAvgCost = firstAvgs.get(firstAvgs.size() - 1).getPrice() - firstAvgs.get(0).getPrice();
+  	  
   	  //pass analysis to GUI
-  	  GUI.getInstance().addAnalyses(max, min, avg, stddev);
+  	  GUI.getInstance().addAnalyses(max, min, avg, stddev, mostTraded, leastTraded, DBAnalysis.getNumTrades(s, conn), changeInAvgCost);
   	  
   	  //pass per currency data list to extended feeder
   	  ExtendedFeeder.update(perCurrencyDataList);

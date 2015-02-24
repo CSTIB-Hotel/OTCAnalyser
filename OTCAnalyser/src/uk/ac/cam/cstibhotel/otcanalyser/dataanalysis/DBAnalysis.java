@@ -33,7 +33,7 @@ public class DBAnalysis {
 							+" roundedNotionalAmount1 <= ? AND ";
 				}
 				if (!(s.getCurrency().equals("")||s.getCurrency()==null)) {
-					query += " (notionalCurrency1 LIKE ? OR notionalCurrency2 LIKE ? ) AND ";
+					query += " (notionalCurrency1 LIKE ?) AND ";
 				}
 				query += " executionTime >= ? AND "
 						+" executionTime <= ?";
@@ -61,7 +61,6 @@ public class DBAnalysis {
 		
 		if (!(s.getCurrency().equals("") || s.getCurrency()==null)) {
 			ps.setString(i, "%"+s.getCurrency()+"%"); i++;
-			ps.setString(i, "%"+s.getCurrency()+"%"); i++;
 		}
 		
 		ps.setTimestamp(i, new Timestamp(s.getStartTime().getTime())); i++;
@@ -79,6 +78,44 @@ public class DBAnalysis {
 			list.add(rs.getString("notionalCurrency1"));
 		}
 		return list;
+	}
+	
+	//gets most and least traded underlying assets
+	public static String[] getMostAndLeastTradedUnderlyingAsset(Search s, Connection conn) throws SQLException {
+		PreparedStatement ps = statementPreparer(s, "DISTINCT underlyingAsset1", "", "", conn);
+		ResultSet rs = ps.executeQuery();
+		long maxCount = 0;
+		String mostTraded = "";
+		long minCount =  Integer.MAX_VALUE;
+		String leastTraded = "";
+		while (rs.next()) { //cycle through each underlying asset to find the maximum
+			ps = statementPreparer(s, "count(underlyingAsset1) AS num", "underlyingAsset1 = ?", "", conn);
+			//set the last parameter, which is the underlyingAsset1 to match
+			ps.setString(ps.getParameterMetaData().getParameterCount(), rs.getString("underlyingAsset1"));
+			ResultSet gs = ps.executeQuery();
+			if (gs.next()) {
+				if (gs.getLong("num") > maxCount) { //number of trades with this underlying asset > maximum so far
+					maxCount = gs.getLong("num");
+					mostTraded = rs.getString("underlyingAsset1");
+				}
+				if (gs.getLong("num") < minCount) {
+					minCount = gs.getLong("num");
+					leastTraded = rs.getString("underlyingAsset1");
+				}
+			}
+		}
+		return new String[] {mostTraded, leastTraded};
+	}
+	
+	//gets number of trades
+	public static long getNumTrades(Search s, Connection conn) throws SQLException {
+		PreparedStatement ps = statementPreparer(s, "count(id) as num", "", "", conn);
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) {
+			return rs.getLong("num");
+		} else {
+			throw new SQLException();
+		}
 	}
 	
 	//returns true if difference between months is large enough and false otherwise
