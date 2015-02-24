@@ -114,7 +114,7 @@ public class DBAnalysisTest {
   	s.setEndTime(c.getTime());
   	s.setAsset("");
   	s.setCurrency("");
-  	List<AnalysisItem> list;
+  	List<PriceTimePair> list;
   	try {
   		SearchResult sr = Database.getDB().search(s);
   		if (sr.getNumResults() > 0) {
@@ -143,7 +143,7 @@ public class DBAnalysisTest {
   	s.setEndTime(c.getTime());
   	s.setAsset("");
   	s.setCurrency("");
-  	List<AnalysisItem> list;
+  	List<PriceTimePair> list;
   	try {
   		SearchResult sr = Database.getDB().search(s);
   		if (sr.getNumResults() > 0) {

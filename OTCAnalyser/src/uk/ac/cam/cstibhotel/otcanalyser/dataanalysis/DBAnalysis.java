@@ -25,15 +25,18 @@ public class DBAnalysis {
 		String query = "SELECT " + select + " FROM data WHERE "
 		    +"tradeType = ? AND "
 		    +"assetClass = ? AND ";
-				if (!(s.getAsset().equals("")||s.getAsset()==null)) {
+				if (!(s.getAsset()==null || s.getAsset().equals(""))) {
 					query += " (underlyingAsset1 LIKE ? OR underlyingAsset2 LIKE ?) AND ";
 				}
 				if(!(s.getMinPrice() == s.getMaxPrice())){
 					query += " roundedNotionalAmount1 >= ? AND "
 							+" roundedNotionalAmount1 <= ? AND ";
 				}
-				if (!(s.getCurrency().equals("")||s.getCurrency()==null)) {
+				if (!(s.getCurrency()==null || s.getCurrency().equals(""))) {
 					query += " (notionalCurrency1 LIKE ?) AND ";
+				}
+				if (!(s.getUPI() == null || s.getUPI().equals(""))){
+					query += " taxonomy LIKE ? AND ";
 				}
 				query += " executionTime >= ? AND "
 						+" executionTime <= ?";
@@ -49,7 +52,7 @@ public class DBAnalysis {
 		ps.setShort(i, s.getTradeType().getValue()); i++;
 		ps.setShort(i, s.getAssetClass().getValue()); i++;
 
-		if (!(s.getAsset().equals("") || s.getAsset()==null)) {
+		if (!(s.getAsset()==null || s.getAsset().equals(""))) {
 			ps.setString(i, "%"+s.getAsset()+"%"); i++;
 			ps.setString(i, "%"+s.getAsset()+"%"); i++;
 		}
@@ -59,8 +62,12 @@ public class DBAnalysis {
 			ps.setFloat(i, s.getMaxPrice()); i++;
 		}
 		
-		if (!(s.getCurrency().equals("") || s.getCurrency()==null)) {
+		if (!(s.getCurrency()==null||s.getCurrency().equals(""))) {
 			ps.setString(i, "%"+s.getCurrency()+"%"); i++;
+		}
+		
+		if (!(s.getUPI() == null || s.getUPI().equals(""))){		
+			ps.setString(i, "%" + s.getUPI() + "%"); i++; 
 		}
 		
 		ps.setTimestamp(i, new Timestamp(s.getStartTime().getTime())); i++;
@@ -105,17 +112,6 @@ public class DBAnalysis {
 			}
 		}
 		return new String[] {mostTraded, leastTraded};
-	}
-	
-	//gets number of trades
-	public static long getNumTrades(Search s, Connection conn) throws SQLException {
-		PreparedStatement ps = statementPreparer(s, "count(id) as num", "", "", conn);
-		ResultSet rs = ps.executeQuery();
-		if (rs.next()) {
-			return rs.getLong("num");
-		} else {
-			throw new SQLException();
-		}
 	}
 	
 	//returns true if difference between months is large enough and false otherwise

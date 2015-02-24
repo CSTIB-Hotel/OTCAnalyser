@@ -242,8 +242,8 @@ public class CommunicationLayer {
 			l.getSearchResult(result);
 		}
 		
-		//Give search to analyser
-		Analyser.analyse(s);
+		//Give search and number of results to analyser
+		Analyser.analyse(s, result.getNumResults());
 	}
 	
 }

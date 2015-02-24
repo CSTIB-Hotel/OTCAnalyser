@@ -14,12 +14,13 @@ public class Analyser {
 	
 	
 	
-  public static void analyse(Search s) {
+  public static void analyse(Search s, int numResults) {
   	Connection conn = Database.getDB().getConnection();
   	
   	//analysis variables
   	AnalysisItem max; //overall max
   	AnalysisItem min; //overall min
+  	double overallAverage; //overall average not by currency
   	List<AnalysisItem> avg = new ArrayList<>(); //overall average by currency
   	double stddev; //overall std deviation
   	String mostTraded; //most traded underlying asset 1
@@ -28,11 +29,13 @@ public class Analyser {
   	List<PriceTimePair> mins; //min data points
   	List<PriceTimePair> avgs; //average data points
   	double changeInAvgCost;
+  	String currency = ""; //currency for change in average cost
   	
   	try {
   		//do basic non-currency-based analysis
   	  max = DBAnalysis.getMaxPrice(s, conn);
   	  min = DBAnalysis.getMinPrice(s, conn);
+  	  overallAverage = DBAnalysis.getAvgPrice(s, conn);
   	  stddev = DBAnalysis.getStdDevPrice(s, conn);
   	  String mostLeastTraded[] = DBAnalysis.getMostAndLeastTradedUnderlyingAsset(s, conn);
   	  mostTraded = mostLeastTraded[0];
@@ -67,13 +70,19 @@ public class Analyser {
     	  perCurrencyDataList.add(new PerCurrencyData(avgs, curr, byMonth));
   	  }
   	  
-  	  //change in average cost from averages per time period for first currency
-  	  List<PriceTimePair> firstAvgs = perCurrencyDataList.get(0).data; //first currency pricetime data
-  	  //get difference:
-  	  changeInAvgCost = firstAvgs.get(firstAvgs.size() - 1).getPrice() - firstAvgs.get(0).getPrice();
+  	  if (!perCurrencyDataList.isEmpty()) {
+  	    //change in average cost from averages per time period for first currency
+  	    List<PriceTimePair> firstAvgs = perCurrencyDataList.get(0).data; //first currency pricetime data
+  	    //get difference:
+  	    changeInAvgCost = firstAvgs.get(firstAvgs.size() - 1).getPrice() - firstAvgs.get(0).getPrice();
+  	    currency = perCurrencyDataList.get(0).currency;
+  	  } else {
+  	  	changeInAvgCost = 0;
+  	  }
   	  
   	  //pass analysis to GUI
-  	  GUI.getInstance().addAnalyses(max, min, avg, stddev, mostTraded, leastTraded, DBAnalysis.getNumTrades(s, conn), changeInAvgCost);
+  	  GUI.getInstance().addAnalyses(max, min, avg, stddev, currency, mostTraded, leastTraded,
+  	      numResults, changeInAvgCost, overallAverage);
   	  
   	  //pass per currency data list to extended feeder
   	  ExtendedFeeder.update(perCurrencyDataList);
