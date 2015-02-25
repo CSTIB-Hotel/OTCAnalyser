@@ -25,15 +25,18 @@ public class DBAnalysis {
 		String query = "SELECT " + select + " FROM data WHERE "
 		    +"tradeType = ? AND "
 		    +"assetClass = ? AND ";
-				if (!(s.getAsset().equals("")||s.getAsset()==null)) {
+				if (!(s.getAsset()==null || s.getAsset().equals(""))) {
 					query += " (underlyingAsset1 LIKE ? OR underlyingAsset2 LIKE ?) AND ";
 				}
 				if(!(s.getMinPrice() == s.getMaxPrice())){
 					query += " roundedNotionalAmount1 >= ? AND "
 							+" roundedNotionalAmount1 <= ? AND ";
 				}
-				if (!(s.getCurrency().equals("")||s.getCurrency()==null)) {
-					query += " (notionalCurrency1 LIKE ? OR notionalCurrency2 LIKE ? ) AND ";
+				if (!(s.getCurrency()==null || s.getCurrency().equals(""))) {
+					query += " (notionalCurrency1 LIKE ?) AND ";
+				}
+				if (!(s.getUPI() == null || s.getUPI().equals(""))){
+					query += " taxonomy LIKE ? AND ";
 				}
 				query += " executionTime >= ? AND "
 						+" executionTime <= ?";
@@ -49,7 +52,7 @@ public class DBAnalysis {
 		ps.setShort(i, s.getTradeType().getValue()); i++;
 		ps.setShort(i, s.getAssetClass().getValue()); i++;
 
-		if (!(s.getAsset().equals("") || s.getAsset()==null)) {
+		if (!(s.getAsset()==null || s.getAsset().equals(""))) {
 			ps.setString(i, "%"+s.getAsset()+"%"); i++;
 			ps.setString(i, "%"+s.getAsset()+"%"); i++;
 		}
@@ -59,9 +62,12 @@ public class DBAnalysis {
 			ps.setFloat(i, s.getMaxPrice()); i++;
 		}
 		
-		if (!(s.getCurrency().equals("") || s.getCurrency()==null)) {
+		if (!(s.getCurrency()==null||s.getCurrency().equals(""))) {
 			ps.setString(i, "%"+s.getCurrency()+"%"); i++;
-			ps.setString(i, "%"+s.getCurrency()+"%"); i++;
+		}
+		
+		if (!(s.getUPI() == null || s.getUPI().equals(""))){		
+			ps.setString(i, "%" + s.getUPI() + "%"); i++; 
 		}
 		
 		ps.setTimestamp(i, new Timestamp(s.getStartTime().getTime())); i++;
@@ -79,6 +85,55 @@ public class DBAnalysis {
 			list.add(rs.getString("notionalCurrency1"));
 		}
 		return list;
+	}
+	
+	//gets most and least traded underlying assets
+	public static String[] getMostAndLeastTradedUnderlyingAsset(Search s, Connection conn) throws SQLException {
+		PreparedStatement ps = statementPreparer(s, "DISTINCT underlyingAsset1", "", "", conn);
+		ResultSet rs = ps.executeQuery();
+		long maxCount = 0;
+		String mostTraded = "";
+		long minCount =  Integer.MAX_VALUE;
+		String leastTraded = "";
+		while (rs.next()) { //cycle through each underlying asset to find the maximum
+			ps = statementPreparer(s, "count(underlyingAsset1) AS num", "underlyingAsset1 = ?", "", conn);
+			//set the last parameter, which is the underlyingAsset1 to match
+			ps.setString(ps.getParameterMetaData().getParameterCount(), rs.getString("underlyingAsset1"));
+			ResultSet gs = ps.executeQuery();
+			if (gs.next()) {
+				if (gs.getLong("num") > maxCount) { //number of trades with this underlying asset > maximum so far
+					maxCount = gs.getLong("num");
+					mostTraded = rs.getString("underlyingAsset1");
+				}
+				if (gs.getLong("num") < minCount) {
+					minCount = gs.getLong("num");
+					leastTraded = rs.getString("underlyingAsset1");
+				}
+			}
+		}
+		return new String[] {mostTraded, leastTraded};
+	}
+	
+	//returns true if difference between months is large enough and false otherwise
+	public static boolean graphByMonth(Search s, Connection conn, String date) throws SQLException {
+		PreparedStatement ps = statementPreparer(s, "max(" + date + ") as lastDate, min(" + date + ") as firstDate", "", "", conn);
+	  ResultSet rs = ps.executeQuery();
+	  if (rs.next()) {
+	  	Calendar first = Calendar.getInstance();
+	  	first.setTime(rs.getDate("firstDate"));
+	  	Calendar last = Calendar.getInstance();
+	  	last.setTime(rs.getDate("lastDate"));
+	  	if (last.get(Calendar.YEAR) - first.get(Calendar.YEAR) > 0 && first.get(Calendar.MONTH) - last.get(Calendar.MONTH) < 9) {
+	  		return true;
+	  		
+	  	} else if (last.get(Calendar.MONTH) - first.get(Calendar.MONTH) > 3) {
+	  		return true;
+	  	} else {
+	  		return false;
+	  	}
+	  } else {
+	  	throw new SQLException();
+	  }
 	}
 	
 	//gets max Rounded Notional Amount 1
@@ -134,14 +189,14 @@ public class DBAnalysis {
 	}
 	
 	//gets max Rounded Notional Amount 1 per month
-	public static List<AnalysisItem> getMaxPricePerMonth(Search s, Connection conn, String date) throws SQLException {
+	public static List<PriceTimePair> getMaxPricePerMonth(Search s, Connection conn, String date) throws SQLException {
       PreparedStatement ps = statementPreparer
           (s, "max(roundedNotionalAmount1) AS maxRNA, MONTH(" + date + ") AS month, YEAR("
           + date + ") AS year, notionalCurrency1 AS curr", "", "GROUP BY month, year, curr", conn);
 	  ResultSet rs = ps.executeQuery();
 	  //info about what's getting printed
 	  //System.out.println("Month/Year: Currency: Max Rounded Notional Amount 1");
-	  ArrayList<AnalysisItem> list = new ArrayList<>();
+	  ArrayList<PriceTimePair> list = new ArrayList<>();
 	  while (rs.next()) {
 		  Calendar c = Calendar.getInstance();
 		  c.setTime(new Date(0));
@@ -156,14 +211,14 @@ public class DBAnalysis {
 	}
 	
 	//gets min Rounded Notional Amount 1 per month
-		public static List<AnalysisItem> getMinPricePerMonth(Search s, Connection conn, String date) throws SQLException {
+		public static List<PriceTimePair> getMinPricePerMonth(Search s, Connection conn, String date) throws SQLException {
 	      PreparedStatement ps = statementPreparer
 	          (s, "min(roundedNotionalAmount1) AS minRNA, MONTH(" + date + ") AS month, YEAR("
 	          + date + ") AS year, notionalCurrency1 AS curr", "", "GROUP BY month, year, curr", conn);
 		  ResultSet rs = ps.executeQuery();
 		  //info about what's getting printed
 		  //System.out.println("Month/Year: Currency: Min Rounded Notional Amount 1");
-		  ArrayList<AnalysisItem> list = new ArrayList<>();
+		  ArrayList<PriceTimePair> list = new ArrayList<>();
 		  while (rs.next()) {
 			  Calendar c = Calendar.getInstance();
 			  c.setTime(new Date(0));
@@ -178,14 +233,14 @@ public class DBAnalysis {
 		}
 	
 	//gets avg Rounded Notional Amount 1 per month
-		public static List<AnalysisItem> getAvgPricePerMonth(Search s, Connection conn, String date) throws SQLException {
+		public static List<PriceTimePair> getAvgPricePerMonth(Search s, Connection conn, String date) throws SQLException {
 	      PreparedStatement ps = statementPreparer
 	          (s, "avg(CAST(roundedNotionalAmount1 AS DOUBLE)) AS avgRNA, MONTH(" + date + ") AS month, YEAR("
 	          + date + ") AS year, notionalCurrency1 AS curr", "", "GROUP BY month, year, curr", conn);
 		  ResultSet rs = ps.executeQuery();
 		  //info about what's getting printed
 		  //System.out.println("Month/Year: Currency: Avg Rounded Notional Amount 1");
-		  ArrayList<AnalysisItem> list = new ArrayList<>();
+		  ArrayList<PriceTimePair> list = new ArrayList<>();
 		  while (rs.next()) {
 			  Calendar c = Calendar.getInstance();
 			  c.setTime(new Date(0));
@@ -200,14 +255,14 @@ public class DBAnalysis {
 		}
 	
 	//gets the population stdev of Rounded Notional Amount1 per month grouped by Notional Currency
-		public static List<AnalysisItem> getPriceStdDevPerMonth(Search s, Connection conn, String date) throws SQLException {
+		public static List<PriceTimePair> getPriceStdDevPerMonth(Search s, Connection conn, String date) throws SQLException {
 	      PreparedStatement ps = statementPreparer
 	          (s, "STDDEV_POP(CAST(roundedNotionalAmount1 AS DOUBLE)) AS stddev, MONTH(" + date + ") AS month, YEAR("
 	          + date + ") AS year, notionalCurrency1 AS curr", "", "GROUP BY month, year, curr", conn);
 		  ResultSet rs = ps.executeQuery();
 		  //info about what's getting printed
 		  //System.out.println("Month/Year: Currency: Std Dev of Rounded Notional Amount 1");
-		  ArrayList<AnalysisItem> list = new ArrayList<>();
+		  ArrayList<PriceTimePair> list = new ArrayList<>();
 		  while (rs.next()) {
 			  Calendar c = Calendar.getInstance();
 			  c.setTime(new Date(0));
@@ -220,4 +275,74 @@ public class DBAnalysis {
 		  }
 		  return list;
 		}
+	
+		//gets max Rounded Notional Amount 1 per day
+		public static List<PriceTimePair> getMaxPricePerDay(Search s, Connection conn, String date) throws SQLException {
+	      PreparedStatement ps = statementPreparer
+	          (s, "max(roundedNotionalAmount1) AS maxRNA, DAY(" + date + ") as day, MONTH(" + date + ") AS month, YEAR("
+	          + date + ") AS year, notionalCurrency1 AS curr", "", "GROUP BY day, month, year, curr", conn);
+		  ResultSet rs = ps.executeQuery();
+		  //info about what's getting printed
+		  //System.out.println("Month/Year: Currency: Max Rounded Notional Amount 1");
+		  ArrayList<PriceTimePair> list = new ArrayList<>();
+		  while (rs.next()) {
+			  Calendar c = Calendar.getInstance();
+			  c.setTime(new Date(0));
+			  c.set(Calendar.DAY_OF_MONTH, rs.getInt("day"));
+			  c.set(Calendar.MONTH, rs.getInt("month"));
+			  c.set(Calendar.YEAR, rs.getInt("year"));
+			  //for now,  print it:
+			  /*System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
+			      + rs.getString("curr") + ": " + rs.getDouble("maxRNA"));*/
+			  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("maxRNA"), null));
+		  }
+		  return list;
+		}
+		
+	//gets min Rounded Notional Amount 1 per day
+			public static List<PriceTimePair> getMinPricePerDay(Search s, Connection conn, String date) throws SQLException {
+		      PreparedStatement ps = statementPreparer
+		          (s, "min(roundedNotionalAmount1) AS minRNA, DAY(" + date + ") as day, MONTH(" + date + ") AS month, YEAR("
+		          + date + ") AS year, notionalCurrency1 AS curr", "", "GROUP BY day, month, year, curr", conn);
+			  ResultSet rs = ps.executeQuery();
+			  //info about what's getting printed
+			  //System.out.println("Month/Year: Currency: Max Rounded Notional Amount 1");
+			  ArrayList<PriceTimePair> list = new ArrayList<>();
+			  while (rs.next()) {
+				  Calendar c = Calendar.getInstance();
+				  c.setTime(new Date(0));
+				  c.set(Calendar.DAY_OF_MONTH, rs.getInt("day"));
+				  c.set(Calendar.MONTH, rs.getInt("month"));
+				  c.set(Calendar.YEAR, rs.getInt("year"));
+				  //for now,  print it:
+				  /*System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
+				      + rs.getString("curr") + ": " + rs.getDouble("maxRNA"));*/
+				  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("minRNA"), null));
+			  }
+			  return list;
+			}
+			
+		//gets avg Rounded Notional Amount 1 per day
+			public static List<PriceTimePair> getAvgPricePerDay(Search s, Connection conn, String date) throws SQLException {
+		      PreparedStatement ps = statementPreparer
+		          (s, "avg(roundedNotionalAmount1) AS avgRNA, DAY(" + date + ") as day, MONTH(" + date + ") AS month, YEAR("
+		          + date + ") AS year, notionalCurrency1 AS curr", "", "GROUP BY day, month, year, curr", conn);
+			  ResultSet rs = ps.executeQuery();
+			  //info about what's getting printed
+			  //System.out.println("Month/Year: Currency: Max Rounded Notional Amount 1");
+			  ArrayList<PriceTimePair> list = new ArrayList<>();
+			  while (rs.next()) {
+				  Calendar c = Calendar.getInstance();
+				  c.setTime(new Date(0));
+				  c.set(Calendar.DAY_OF_MONTH, rs.getInt("day"));
+				  c.set(Calendar.MONTH, rs.getInt("month"));
+				  c.set(Calendar.YEAR, rs.getInt("year"));
+				  //for now,  print it:
+				  /*System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
+				      + rs.getString("curr") + ": " + rs.getDouble("maxRNA"));*/
+				  list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("avgRNA"), null));
+			  }
+			  return list;
+			}
+		
 }

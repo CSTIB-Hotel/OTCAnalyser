@@ -4,10 +4,16 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
 import org.junit.Test;
+
 import static org.junit.Assert.*;
+
 import org.junit.Ignore;
+
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
@@ -48,13 +54,17 @@ public class DatabaseTest {
 	public void testAddTrade() throws SQLException {
 		System.out.println("addTradeInsert");
 		
+		List<Trade> tradeList = new LinkedList<Trade>();
+		
 		Trade trade = new Trade();
 		trade.setCleared(Boolean.TRUE);
 		trade.setExecutionTimestamp(d);
 		trade.setDisseminationID(128);
 				
+		tradeList.add(trade);
+		
 		Database instance = Database.getDB();
-		boolean result = instance.addTrade(trade);
+		boolean result = instance.addTrade(tradeList);
 		assertTrue(result);
 		
 		Connection c = instance.getConnection();
@@ -66,13 +76,17 @@ public class DatabaseTest {
 	public void specialAdder() throws SQLException {
 		System.out.println("addTradeInsert");
 		
+		List<Trade> tradeList = new LinkedList<Trade>();
+		
 		Trade trade = new Trade();
 		trade.setCleared(Boolean.TRUE);
 		trade.setExecutionTimestamp(d);
 		trade.setDisseminationID(127);
+		
+		tradeList.add(trade);
 				
 		Database instance = Database.getDB();
-		boolean result = instance.addTrade(trade);
+		boolean result = instance.addTrade(tradeList);
 		assertTrue(result);
 	}
 	
@@ -84,14 +98,18 @@ public class DatabaseTest {
 		System.out.println("addTradeUpdate");
 		specialAdder();
 		
+		List<Trade> tradeList = new LinkedList<Trade>();
+		
 		Trade trade = new Trade();
 		trade.setCleared(Boolean.FALSE);
 		trade.setBespoke(Boolean.TRUE);
 		trade.setAction(Action.CORRECT);
 		trade.setDisseminationID(127);
 		
+		tradeList.add(trade);
+		
 		Database instance = Database.getDB();
-		boolean result = instance.addTrade(trade);
+		boolean result = instance.addTrade(tradeList);
 		assertTrue(result);
 		
 		Connection c = instance.getConnection();
@@ -113,12 +131,16 @@ public class DatabaseTest {
 		System.out.println("addTradeDelete");
 		specialAdder();
 		
+		List<Trade> tradeList = new LinkedList<Trade>();
+		
 		Trade trade = new Trade();
 		trade.setAction(Action.CANCEL);
 		trade.setDisseminationID(127);
 		
+		tradeList.add(trade);
+		
 		Database instance = Database.getDB();
-		boolean result = instance.addTrade(trade);
+		boolean result = instance.addTrade(tradeList);
 		assertTrue(result);
 		
 		Connection c = instance.getConnection();
@@ -164,7 +186,7 @@ public class DatabaseTest {
 		Search s = null;
 		Database instance = null;
 		boolean expResult = false;
-		boolean result = instance.saveSearch(s);
+		boolean result = instance.saveSearch(s, "Sample name");
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -177,8 +199,8 @@ public class DatabaseTest {
 	public void testGetSavedSearches() {
 		System.out.println("getSavedSearches");
 		Database instance = null;
-		List<Search> expResult = null;
-		List<Search> result = instance.getSavedSearches();
+		Map<String, Search> expResult = null;
+		Map<String, Search> result = instance.getSavedSearches();
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

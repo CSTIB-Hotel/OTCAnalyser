@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,6 +42,7 @@ public class Database {
 	private static Connection connection;
 	private static final int TableAlreadyExistsError = -21; // as defined by HSQLDB Driver
 	private static final int ObjectNameAlreadyExists = -5504; // as thrown by trying to create table twice
+	private static final int RowWithUniqueFieldAlreadyExistsError = -104;
 
 	private static String getDatabasePath() {
 		// Local file path regardless of OS
@@ -96,8 +99,7 @@ public class Database {
 			dataTableCreator.append(mapEntry.getKey()).append(" ").append(mapEntry.getValue().getType()).append(", ");
 		}
 
-		dataTableCreator.setLength(dataTableCreator.length()-2);
-		dataTableCreator.append(");");
+ 		dataTableCreator.append(" UNIQUE (id));");
 
 		try {
 			connection.createStatement().execute(dataTableCreator.toString());
@@ -160,19 +162,25 @@ public class Database {
 	}
 
 	/**
-	 * Adds a trade to the database
+	 * Adds trades to the database
 	 *
-	 * @param trade a trade to be added to the database
+	 * @param trades a list of trades to be added to the database
 	 * @return true if the database was successfully updated
 	 */
 	public boolean addTrade(List<Trade> trades) {
 		boolean success = true;
 		
+		Comparator<Trade> tradeByIdComparator = (Trade o1, Trade o2) -> {
+			return (int) (o1.getDisseminationID() - o2.getDisseminationID());
+		};
+		
+		Collections.sort(trades, tradeByIdComparator);
+		
 		for (Trade trade : trades) {
 
 			HashMap<String, SQLField> DBNameValue = TradeFieldMapping.getMapping(trade);
 			Iterator<Entry<String, SQLField>> iterator = DBNameValue.entrySet().iterator();
-
+			
 			String executeString;
 
 			if (trade.getAction().equals(Action.CANCEL)) {
@@ -185,8 +193,7 @@ public class Database {
 				executeString = buildInsertString(iterator);
 			}
 
-			try {
-				
+			try {				
 				PreparedStatement p = connection.prepareStatement(executeString);
 				iterator = DBNameValue.entrySet().iterator();
 				
@@ -197,8 +204,13 @@ public class Database {
 				p.execute();
 
 			} catch (SQLException e) {
-				System.err.println("Failed to insert/update row");
-				success = false;
+				if(e.getErrorCode() == RowWithUniqueFieldAlreadyExistsError){
+					// ignore, we've just tried to duplicate a row
+				} else {
+					System.err.println(e.getErrorCode());
+					System.err.println("Failed to insert/update a row");
+					success = false;
+				}
 			}
 
 			updateLastUpdateTime(trade);
@@ -290,6 +302,7 @@ public class Database {
 				ps.setString(1, Long.toString(thisUpdateTime.getTime()));
 				ps.execute();
 			} catch (SQLException e) {
+				System.err.println(e.getMessage());
 				System.err.println("Failed to update last update time");
 			}
 		}
@@ -322,6 +335,7 @@ public class Database {
 				throw new RuntimeException("no data");
 			}
 		} catch (SQLException ex) {
+			System.err.println(ex.getMessage());
 			System.err.println("Could not get the last update time");
 			return new java.util.Date(0);
 		}
@@ -337,17 +351,17 @@ public class Database {
 			String query = "SELECT * FROM data WHERE "
 					+"tradeType = ? AND "
 					+"assetClass = ? AND ";
-			if (!(s.getAsset().equals("")||s.getAsset()==null)) {
+			if (!(s.getAsset() == null||s.getAsset().equals(""))) {
 				query += " (underlyingAsset1 LIKE ? OR underlyingAsset2 LIKE ?) AND ";
 			}
 			if (!(s.getMinPrice() == s.getMaxPrice())){
 				query += " roundedNotionalAmount1 >= ? AND "
 						+" roundedNotionalAmount1 <= ? AND ";
 			}
-			if (!(s.getCurrency().equals("")||s.getCurrency()==null)) {
+			if (!(s.getCurrency() == null || s.getCurrency().equals(""))) {
 				query += " (notionalCurrency1 LIKE ? OR notionalCurrency2 LIKE ? ) AND ";
 			}
-			if (!(s.getUPI().equals("") || s.getUPI() == null)){
+			if (!(s.getUPI() == null || s.getUPI().equals(""))){
 				query += " taxonomy LIKE ? AND ";
 			}
 			query += " executionTime >= ? AND "
@@ -360,7 +374,7 @@ public class Database {
 			ps.setShort(i, s.getTradeType().getValue()); i++;
 			ps.setShort(i, s.getAssetClass().getValue()); i++;
 
-			if (!(s.getAsset().equals("") || s.getAsset()==null)) {
+			if (!(s.getAsset() == null||s.getAsset().equals(""))) {
 				ps.setString(i, "%"+s.getAsset()+"%"); i++;
 				ps.setString(i, "%"+s.getAsset()+"%"); i++;
 			}
@@ -370,12 +384,12 @@ public class Database {
 				ps.setFloat(i, s.getMaxPrice()); i++;
 			}
 			
-			if (!(s.getCurrency().equals("") || s.getCurrency()==null)) {
+			if (!(s.getCurrency() == null || s.getCurrency().equals(""))) {
 				ps.setString(i, "%"+s.getCurrency()+"%"); i++;
 				ps.setString(i, "%"+s.getCurrency()+"%"); i++;
 			}
 			
-			if (!(s.getUPI().equals("") || s.getUPI() == null)){			
+			if (!(s.getUPI() == null || s.getUPI().equals(""))){		
 				ps.setString(i, "%" + s.getUPI() + "%"); i++; 
 			}
 
@@ -428,8 +442,41 @@ public class Database {
 			return true;
 			
 		} catch (SQLException e){
+			System.err.println(e.getMessage());
 			return false;
 		}
+	}
+	
+	/**
+	 * 
+	 * @param name the name of the search to lookup;
+	 * @return the Search that matches the requested string, or null if no search exists/a db failure occurred
+	 */
+	public Search getSavedSearch(String name) {
+		String query = "SELECT * FROM savedSearches WHERE searchName = ?";
+		try{
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setString(1, name);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()){
+				Search s = new Search();
+				s.setTradeType(TradeType.lookup(rs.getShort("tradeType")));
+				s.setAssetClass(AssetClass.lookup(rs.getShort("assetClass")));
+				s.setAsset(rs.getString("asset"));
+				s.setMinPrice(rs.getInt("minPrice"));
+				s.setMaxPrice(rs.getInt("maxPrice"));
+				s.setCurrency(rs.getString("currency"));
+				s.setStartTime(new Timestamp(rs.getTimestamp("startTime").getTime()));
+				s.setEndTime(new Timestamp(rs.getTimestamp("endTime").getTime()));
+				s.setUPI(rs.getString("upi"));
+				return s;
+			}
+		} catch (SQLException e){
+			System.err.println(e.getMessage());
+			return null;
+		}
+		
+		return null;
 	}
 
 	/**
@@ -497,18 +544,9 @@ public class Database {
 		}
 	}
 
-	// this method exists only for testing to allow arbitrary SQL queries to be run
+	// this method lets the analysis layer do raw SQL
 	public Connection getConnection() {
 		return connection;
 	}
-/*
-	public static void main(String[] args) throws SQLException {
-		Connection c = Database.getDB().getConnection();
-		Statement s = c.createStatement();
-		ResultSet rs = s.executeQuery("SELECT settlementCurrency FROM data GROUP BY settlementCurrency");
-		while (rs.next()) {
-			System.out.print("\"" + rs.getString(1) + "\", ");
-		}
-	}
-*/
+
 }

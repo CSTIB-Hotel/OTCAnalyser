@@ -39,3 +39,5 @@ database.db.properties
 database.db.script
 
 *.lck
+
+database.db.script.new
