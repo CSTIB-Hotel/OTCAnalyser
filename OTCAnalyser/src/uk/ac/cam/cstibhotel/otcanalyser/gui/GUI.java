@@ -1,5 +1,6 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.List;
@@ -29,7 +30,7 @@ public class GUI extends JFrame implements SearchListener {
 	
 	public GUI() {
 		setTitle("OTC Analyser");
-		setSize(1050,700);
+		setMinimumSize(new Dimension(1250,700));
 		setLayout(new GridBagLayout());
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowCloseListener());
@@ -46,8 +47,10 @@ public class GUI extends JFrame implements SearchListener {
 		statusBarConstraints.gridwidth = 0;
 		add(statusBar,statusBarConstraints);
 		GridBagConstraints analysisSummaryConstraints = new GridBagConstraints();
-		analysisSummaryConstraints.gridx = 1;
+		analysisSummaryConstraints.gridx = 0;
 		analysisSummaryConstraints.gridy = 1;
+		analysisSummaryConstraints.gridwidth = 0;
+		analysisSummaryConstraints.fill = GridBagConstraints.HORIZONTAL;
 		analysisSummaryConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
 		add(analysis,analysisSummaryConstraints);
 		GridBagConstraints dataViewerConstraints = new GridBagConstraints();
@@ -67,25 +70,12 @@ public class GUI extends JFrame implements SearchListener {
 	}
 	
 	public void addAnalyses(
-    AnalysisItem maxNoCurrency,
-    AnalysisItem minNoCurrency,
-    double avgNoCurrency,
-    double changeInAvgCost,
-    String currency,
     String mostTraded,
-    String leastTraded,
-    double numResults,
+    int numResults,
     List<AnalysisItem> maxWithCurrency,
     List<AnalysisItem> minWithCurrency,
     List<AnalysisItem> avgWithCurrency) {
-		/*
-		 * Uses all values for max, min, and avg.
-		 * Currency is that of the change in average cost, which is just the first one in the results.
-		 */
-		if (maxNoCurrency != null && minNoCurrency != null) {
-		AnalysisSummary.getInstance().UpdateWindow(maxNoCurrency, minNoCurrency, avgNoCurrency, mostTraded,
-						leastTraded, currency, numResults, changeInAvgCost);
-		}
+		AnalysisSummary.getInstance().UpdateWindow(mostTraded, numResults);
 		DataViewer.addAnalysis(maxWithCurrency, minWithCurrency, avgWithCurrency);
 	}
 

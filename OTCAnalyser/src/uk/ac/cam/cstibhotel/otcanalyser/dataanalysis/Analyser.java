@@ -18,30 +18,18 @@ public class Analyser {
   	Connection conn = Database.getDB().getConnection();
   	
   	//analysis variables
-  	AnalysisItem maxNoCurrency; //overall max not by currency
-  	AnalysisItem minNoCurrency; //overall min not by currency
-  	double avgNoCurrency; //overall average not by currency
   	List<AnalysisItem> maxWithCurrency = new ArrayList<>(); //overall max by currency
   	List<AnalysisItem> minWithCurrency = new ArrayList<>(); //overall min by currency
   	List<AnalysisItem> avgWithCurrency = new ArrayList<>(); //overall average by currency
-  	double stddev; //overall std deviation
   	String mostTraded; //most traded underlying asset 1
-  	String leastTraded; //least traded underlying asset 1
   	List<PriceTimePair> maxes; //max data points
   	List<PriceTimePair> mins; //min data points
   	List<PriceTimePair> avgs; //average data points
-  	double changeInAvgCost;
-  	String currency = ""; //currency for change in average cost
   	
   	try {
   		//do basic non-currency-based analysis
-  		maxNoCurrency = DBAnalysis.getMaxPrice(s, conn);
-  		minNoCurrency = DBAnalysis.getMinPrice(s, conn);
-  		avgNoCurrency = DBAnalysis.getAvgPrice(s, conn);
-  	  stddev = DBAnalysis.getStdDevPrice(s, conn);
   	  String mostLeastTraded[] = DBAnalysis.getMostAndLeastTradedUnderlyingAsset(s, conn);
   	  mostTraded = mostLeastTraded[0];
-  	  leastTraded = mostLeastTraded[1];
   	  
   	  //get currencies
   	  List<String> currencies = DBAnalysis.getCurrencies(s, conn);
@@ -76,25 +64,9 @@ public class Analyser {
   	  	}
   	  }
   	  
-  	  if (!perCurrencyDataList.isEmpty()) {
-  	    //change in average cost from averages per time period for first currency
-  	    List<PriceTimePair> firstAvgs = perCurrencyDataList.get(0).data; //first currency pricetime data
-  	    //get difference:
-  	    changeInAvgCost = firstAvgs.get(firstAvgs.size() - 1).getPrice() - firstAvgs.get(0).getPrice();
-  	    currency = perCurrencyDataList.get(0).currency;
-  	  } else {
-  	  	changeInAvgCost = 0;
-  	  }
-  	  
   	  //pass analysis to GUI
   	  GUI.getInstance().addAnalyses(
-  	      maxNoCurrency,
-  	      minNoCurrency,
-  	      avgNoCurrency,
-  	      changeInAvgCost,
-  	      currency,
   	      mostTraded,
-  	      leastTraded,
   	      numResults,
   	      maxWithCurrency,
   	      minWithCurrency,

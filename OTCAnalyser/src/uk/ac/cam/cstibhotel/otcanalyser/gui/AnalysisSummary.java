@@ -1,12 +1,17 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.AnalysisItem;
 
@@ -17,23 +22,12 @@ public class AnalysisSummary extends JPanel {
 	underlying asset
 	price (rounded notional amount)
 	execution timestamp
-*/	
-	TradeDisplayer smallestTrade = new TradeDisplayer("Smallest trade");
-	TradeDisplayer biggestTrade = new TradeDisplayer("Biggest trade");
-	TradeDisplayer otherInfo = new TradeDisplayer();
+  */	
 	
-	private AnalysisItem maxTrade;
-	private AnalysisItem minTrade;
-	private double average;
-	private String mostTraded;
-	private String leastTraded;
-	private String currency;
-	private double numberOfTrades;
-	private double changeInAverageCost;
-	
-	public static void main(String[] args) {
-		getInstance();
-	}
+	TradeDisplayer analysisInfo = new TradeDisplayer();
+
+	private JLabel mostTraded = new JLabel("test1");
+	private JLabel numberOfTrades = new JLabel("test2");
 
 	private static AnalysisSummary analysisSummary;
 	
@@ -45,38 +39,31 @@ public class AnalysisSummary extends JPanel {
 	}
 	
 	AnalysisSummary() {
-		setSize(600,50);
-		setLayout(new GridBagLayout());
-		GridBagConstraints biggestTradeConstraints = new GridBagConstraints();
-		biggestTradeConstraints.fill = GridBagConstraints.BOTH;
-		add(biggestTrade,biggestTradeConstraints);
-		GridBagConstraints smallestTradeConstraints = new GridBagConstraints();
-		smallestTradeConstraints.gridx = 0;
-		smallestTradeConstraints.fill = GridBagConstraints.BOTH;
-		add(smallestTrade,smallestTradeConstraints);
-		GridBagConstraints otherInfoConstraints = new GridBagConstraints();
-		otherInfoConstraints.gridx = 0;
-		add(otherInfo,otherInfoConstraints);
-		setVisible(true);
+		this.setBorder(BorderFactory.createEtchedBorder());
+		GridLayout layout = new GridLayout(1,2);
+		layout.minimumLayoutSize(this);
+		this.setLayout(layout);
+		setVisible(false);
 	}
 
-	public void UpdateWindow(AnalysisItem Biggest,AnalysisItem Smallest, double Average,String MostTraded,
-			String LeastTraded,String Currency,double NumTrades,double changeInCost) {
-		maxTrade = Biggest;
-		minTrade = Smallest;
-		average = Average;
-		mostTraded = MostTraded;
-		leastTraded = LeastTraded;
-		currency = Currency;
-		numberOfTrades = NumTrades;
-		changeInAverageCost = changeInCost;
-		update();
-	}
-	
-	private void update() {
-		biggestTrade.update(maxTrade);
-		smallestTrade.update(minTrade);
-		otherInfo.update(average,mostTraded,leastTraded,currency,numberOfTrades,changeInAverageCost);
+	public void UpdateWindow(String mostTradedAsset, int numTrades) {
+		remove(mostTraded);
+		remove(numberOfTrades);
+		
+		if (numTrades > 0) {
+		  mostTraded = new CenteredJLabel("Most Traded Underlying Asset: " + mostTradedAsset);
+		} else {
+			mostTraded = new CenteredJLabel("Most Traded Underlying Asset: N/A");
+		}
+	  mostTraded.setBorder(new EmptyBorder(1,5,1,5));
+	  
+		numberOfTrades = new CenteredJLabel("Number of Trades: " + numTrades);
+		numberOfTrades.setBorder(new EmptyBorder(1,5,1,5));
+
+	  add(mostTraded);
+		add(numberOfTrades);
+		setVisible(true);
+		repaint();
 	}
 	
 }
