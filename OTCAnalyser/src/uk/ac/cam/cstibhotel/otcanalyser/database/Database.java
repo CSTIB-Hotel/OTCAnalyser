@@ -9,6 +9,9 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,6 +43,7 @@ public class Database {
 	private static Connection connection;
 	private static final int TableAlreadyExistsError = -21; // as defined by HSQLDB Driver
 	private static final int ObjectNameAlreadyExists = -5504; // as thrown by trying to create table twice
+	private static final int RowWithUniqueFieldAlreadyExistsError = -104;
 
 	private static String getDatabasePath() {
 		// Local file path regardless of OS
@@ -159,9 +163,9 @@ public class Database {
 	}
 
 	/**
-	 * Adds a trade to the database
+	 * Adds trades to the database
 	 *
-	 * @param trade a trade to be added to the database
+	 * @param trades a list of trades to be added to the database
 	 * @return true if the database was successfully updated
 	 */
 	public boolean addTrade(List<Trade> trades) {
@@ -195,8 +199,13 @@ public class Database {
 				p.execute();
 
 			} catch (SQLException e) {
-				System.err.println("Failed to insert/update a row");
-				success = false;
+				if(e.getErrorCode() == RowWithUniqueFieldAlreadyExistsError){
+					// ignore, we've just tried to duplicate a row
+				} else {
+					System.err.println(e.getErrorCode());
+					System.err.println("Failed to insert/update a row");
+					success = false;
+				}
 			}
 
 			updateLastUpdateTime(trade);
@@ -430,13 +439,45 @@ public class Database {
 			return false;
 		}
 	}
+	
+	/**
+	 * 
+	 * @param name the name of the search to lookup;
+	 * @return the Search that matches the requested string, or null if no search exists/a db failure occurred
+	 */
+	public Search getSavedSearch(String name) {
+		String query = "SELECT * FROM savedSearches WHERE searchName = ?";
+		try{
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setString(1, name);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()){
+				Search s = new Search();
+				s.setTradeType(TradeType.lookup(rs.getShort("tradeType")));
+				s.setAssetClass(AssetClass.lookup(rs.getShort("assetClass")));
+				s.setAsset(rs.getString("asset"));
+				s.setMinPrice(rs.getInt("minPrice"));
+				s.setMaxPrice(rs.getInt("maxPrice"));
+				s.setCurrency(rs.getString("currency"));
+				s.setStartTime(new Timestamp(rs.getTimestamp("startTime").getTime()));
+				s.setEndTime(new Timestamp(rs.getTimestamp("endTime").getTime()));
+				s.setUPI(rs.getString("upi"));
+				return s;
+			}
+		} catch (SQLException e){
+			System.err.println(e.getMessage());
+			return null;
+		}
+		
+		return null;
+	}
 
 	/**
 	 *
 	 * @return The 10 most recently saved previously saved searches
 	 */
 	public Map<String, Search> getSavedSearches() {
-		Map<String, Search> savedSearches = new LinkedHashMap<String, Search>();
+		Map<String, Search> savedSearches = new LinkedHashMap<>();
 		
 		String query = "SELECT * FROM savedSearches ORDER BY id DESC LIMIT 10";
 		try {
@@ -496,18 +537,9 @@ public class Database {
 		}
 	}
 
-	// this method exists only for testing to allow arbitrary SQL queries to be run
+	// this method lets the analysis layer do raw SQL
 	public Connection getConnection() {
 		return connection;
 	}
-/*
-	public static void main(String[] args) throws SQLException {
-		Connection c = Database.getDB().getConnection();
-		Statement s = c.createStatement();
-		ResultSet rs = s.executeQuery("SELECT settlementCurrency FROM data GROUP BY settlementCurrency");
-		while (rs.next()) {
-			System.out.print("\"" + rs.getString(1) + "\", ");
-		}
-	}
-*/
+
 }
