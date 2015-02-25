@@ -490,7 +490,7 @@ public class Database {
 	 * @param name the name of the search to lookup;
 	 * @return the Search that matches the requested string, or null if no search exists/a db failure occurred
 	 */
-	public Search getSavedSearch(String name) {
+	public static Search getSavedSearch(String name) {
 		String query = "SELECT * FROM savedSearches WHERE searchName = ?";
 		try{
 			PreparedStatement ps = connection.prepareStatement(query);
