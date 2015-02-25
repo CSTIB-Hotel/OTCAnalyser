@@ -54,7 +54,6 @@ public class Database {
 			try {
 				db = new Database();
 			} catch (SQLException ex) {
-				ex.printStackTrace();
 				System.err.println("There was a fatal database error, class 1");
 				System.exit(1);
 			} catch (ClassNotFoundException e) {
@@ -78,6 +77,7 @@ public class Database {
 		createSavedSearchTable();
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
 			public void run() {
 				try {
 					connection.createStatement().execute("SHUTDOWN");
@@ -410,7 +410,7 @@ public class Database {
 		} catch (SQLException ex) {
 			System.out.println(ex.getMessage());
 			System.err.println("Search failed");
-			return new SearchResult(new LinkedList<Trade>(), 0);
+			return new SearchResult(new LinkedList<>(), 0);
 		}
 	}
 
