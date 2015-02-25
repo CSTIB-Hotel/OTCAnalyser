@@ -25,27 +25,26 @@ public class DBAnalysis {
 		String query = "SELECT " + select + " FROM data WHERE "
 		    +"tradeType = ? AND "
 		    +"assetClass = ? AND ";
-				if (!(s.getAsset()==null || s.getAsset().equals(""))) {
-					query += " (underlyingAsset1 LIKE ? OR underlyingAsset2 LIKE ?) AND ";
-				}
-				if(!(s.getMinPrice() == s.getMaxPrice())){
-					query += " roundedNotionalAmount1 >= ? AND "
-							+" roundedNotionalAmount1 <= ? AND ";
-				}
-				if (!(s.getCurrency()==null || s.getCurrency().equals(""))) {
-					query += " (notionalCurrency1 LIKE ?) AND ";
-				}
-				if (!(s.getUPI() == null || s.getUPI().equals(""))){
-					query += " taxonomy LIKE ? AND ";
-				}
-				query += " executionTime >= ? AND "
-						+" executionTime <= ?";
-				if (!where.isEmpty()) {
-				  query += " AND " + where;
-				}
-				query += " " + grouporder;
+		if (!(s.getAsset()==null || s.getAsset().equals(""))) {
+			query += " (underlyingAsset1 LIKE ? OR underlyingAsset2 LIKE ?) AND ";
+		}
+		if(!(s.getMinPrice() == s.getMaxPrice())){
+			query += " roundedNotionalAmount1 >= ? AND "
+					+" roundedNotionalAmount1 <= ? AND ";
+		}
+		if (!(s.getCurrency()==null || s.getCurrency().equals(""))) {
+			query += " (notionalCurrency1 LIKE ?) AND ";
+		}
+		if (!(s.getUPI() == null || s.getUPI().equals(""))){
+			query += " taxonomy LIKE ? AND ";
+		}
+		query += " executionTime >= ? AND "
+				+" executionTime <= ?";
+		if (!where.isEmpty()) {
+		  query += " AND " + where;
+		}
+		query += " " + grouporder;
 		
-				
 		PreparedStatement ps = conn.prepareStatement(query);
 		int i = 1;
 
@@ -89,6 +88,31 @@ public class DBAnalysis {
 	
 	//gets most and least traded underlying assets
 	public static String[] getMostAndLeastTradedUnderlyingAsset(Search s, Connection conn) throws SQLException {
+		PreparedStatement ps = statementPreparer(s, "underlyingAsset1, count(underlyingAsset1) AS cntTrade", "", "GROUP BY underlyingAsset1", conn);
+		ResultSet rs = ps.executeQuery();
+		
+		long maxCount = 0;
+		String mostTraded = "";
+		long minCount =  Integer.MAX_VALUE;
+		String leastTraded = "";
+		
+		while (rs.next()) {
+			//System.out.println(rs.getString("underlyingAsset1"));
+			if (rs.getLong("cntTrade") > maxCount) {
+				maxCount = rs.getLong("cntTrade");
+				mostTraded = rs.getString("underlyingAsset1");
+			}
+			if (rs.getLong("cntTrade") < minCount) {
+				minCount = rs.getLong("cntTrade");
+				leastTraded = rs.getString("underlyingAsset1");
+			}
+		}
+		
+		return new String[] {mostTraded, leastTraded};
+	}
+	
+	@Deprecated
+	public static String[] getMostAndLeastTradedUnderlyingAssetButAlsoHangForAtLeastOneMinute(Search s, Connection conn) throws SQLException {
 		PreparedStatement ps = statementPreparer(s, "DISTINCT underlyingAsset1", "", "", conn);
 		ResultSet rs = ps.executeQuery();
 		long maxCount = 0;
