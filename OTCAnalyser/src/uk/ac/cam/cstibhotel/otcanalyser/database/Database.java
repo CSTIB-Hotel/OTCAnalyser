@@ -303,6 +303,7 @@ public class Database {
 				ps.setString(1, Long.toString(thisUpdateTime.getTime()));
 				ps.execute();
 			} catch (SQLException e) {
+				System.err.println(e.getMessage());
 				System.err.println("Failed to update last update time");
 			}
 		}
@@ -335,6 +336,7 @@ public class Database {
 				throw new RuntimeException("no data");
 			}
 		} catch (SQLException ex) {
+			System.err.println(ex.getMessage());
 			System.err.println("Could not get the last update time");
 			return new java.util.Date(0);
 		}
