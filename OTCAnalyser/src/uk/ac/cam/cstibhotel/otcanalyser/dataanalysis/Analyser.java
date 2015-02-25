@@ -48,31 +48,32 @@ public class Analyser {
   	  List<PerCurrencyData> perCurrencyDataList = new ArrayList<>();
   	  
   	  for (String curr : currencies) {
-  	  	s.setCurrency(curr);
-  	  	//basic analysis by currency
-  	  	maxWithCurrency.add(DBAnalysis.getMaxPrice(s, conn));
-  	  	minWithCurrency.add(DBAnalysis.getMinPrice(s, conn));
-    	  avgWithCurrency.add(new AnalysisItem(null, curr, DBAnalysis.getAvgPrice(s, conn), null));
-  	  	//should graph by month?
-  	  	boolean byMonth = DBAnalysis.graphByMonth(s, conn, DBAnalysis.EXECUTION_TIME);
-  	  	
-  	  	//make data points
-  	  	if (byMonth) {
-    	    maxes = DBAnalysis.getMaxPricePerMonth(s, conn, DBAnalysis.EXECUTION_TIME);
-    	    mins = DBAnalysis.getMinPricePerMonth(s, conn, DBAnalysis.EXECUTION_TIME);
-    	    avgs = DBAnalysis.getAvgPricePerMonth(s, conn, DBAnalysis.EXECUTION_TIME);
-  	  	} else {
-  	  		maxes = DBAnalysis.getMaxPricePerDay(s, conn, DBAnalysis.EXECUTION_TIME);
-    	    mins = DBAnalysis.getMinPricePerDay(s, conn, DBAnalysis.EXECUTION_TIME);
-    	    avgs = DBAnalysis.getAvgPricePerDay(s, conn, DBAnalysis.EXECUTION_TIME);
+  	  	if (curr != null && !curr.isEmpty()) {
+	  	  	s.setCurrency(curr);
+	  	  	//basic analysis by currency
+	  	  	maxWithCurrency.add(DBAnalysis.getMaxPrice(s, conn));
+	  	  	minWithCurrency.add(DBAnalysis.getMinPrice(s, conn));
+	    	  avgWithCurrency.add(new AnalysisItem(null, curr, DBAnalysis.getAvgPrice(s, conn), null));
+	  	  	//should graph by month?
+	  	  	boolean byMonth = DBAnalysis.graphByMonth(s, conn, DBAnalysis.EXECUTION_TIME);
+	  	  	
+	  	  	//make data points
+	  	  	if (byMonth) {
+	    	    maxes = DBAnalysis.getMaxPricePerMonth(s, conn, DBAnalysis.EXECUTION_TIME);
+	    	    mins = DBAnalysis.getMinPricePerMonth(s, conn, DBAnalysis.EXECUTION_TIME);
+	    	    avgs = DBAnalysis.getAvgPricePerMonth(s, conn, DBAnalysis.EXECUTION_TIME);
+	  	  	} else {
+	  	  		maxes = DBAnalysis.getMaxPricePerDay(s, conn, DBAnalysis.EXECUTION_TIME);
+	    	    mins = DBAnalysis.getMinPricePerDay(s, conn, DBAnalysis.EXECUTION_TIME);
+	    	    avgs = DBAnalysis.getAvgPricePerDay(s, conn, DBAnalysis.EXECUTION_TIME);
+	  	  	}
+	    	  //pass lists to graph:
+	
+	    	  DataViewer.addGraphPoints(maxes, mins, avgs, curr, byMonth);
+	    	  
+	    	  //add to per currency data list
+	    	  perCurrencyDataList.add(new PerCurrencyData(avgs, curr, byMonth));
   	  	}
-    	  //pass lists to graph:
-
-    	  DataViewer.addGraphPoints(maxes, mins, avgs, curr, byMonth);
-    	  //System.out.println(curr + " " + maxes.size());
-    	  
-    	  //add to per currency data list
-    	  perCurrencyDataList.add(new PerCurrencyData(avgs, curr, byMonth));
   	  }
   	  
   	  if (!perCurrencyDataList.isEmpty()) {

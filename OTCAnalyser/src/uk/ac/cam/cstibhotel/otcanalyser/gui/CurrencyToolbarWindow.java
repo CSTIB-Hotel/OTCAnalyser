@@ -33,7 +33,6 @@ public abstract class CurrencyToolbarWindow extends CBLPanel implements ActionLi
     	toolbar.add(button);
     	button.setActionCommand(curr);
     	button.addActionListener(this);
-    	System.out.println("currency " + curr);
     }
     this.add(toolbar, BorderLayout.SOUTH);
     showToolbar = true;

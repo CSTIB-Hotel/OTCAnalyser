@@ -82,6 +82,7 @@ public class DataViewer extends JTabbedPane {
 	  	  analysis += "Smallest Trade Price: " + mins.get(i).getPrice() + " " + curr;
 	  	  analysis += "Average Trade Price: " + avgs.get(i).getPrice() + " " + curr;
 	  	  addAnalysis(analysis, "Basic Information", curr);
+	  	  System.out.println("add analysis for " + curr);
 	    }
 	  }
   }

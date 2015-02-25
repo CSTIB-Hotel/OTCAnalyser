@@ -50,6 +50,7 @@ public class AnalysisWindow extends CurrencyToolbarWindow {
 	  	cPnl.setBorder(new EmptyBorder(5,5,5,5));
 		  cPnl.setLayout(new BoxLayout(cPnl, BoxLayout.Y_AXIS));
 	  	contentPanel.add(cPnl);
+	  	cPnl.setBorder(BorderFactory.createEtchedBorder());
 	  	currencies.add(currency);
 	    if (currencies.size() > 1) {
 	    	makeToolBar();

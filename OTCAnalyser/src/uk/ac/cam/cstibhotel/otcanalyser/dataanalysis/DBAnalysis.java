@@ -63,7 +63,7 @@ public class DBAnalysis {
 		}
 		
 		if (!(s.getCurrency()==null||s.getCurrency().equals(""))) {
-			ps.setString(i, "%"+s.getCurrency()+"%"); i++;
+			ps.setString(i, s.getCurrency()); i++;
 		}
 		
 		if (!(s.getUPI() == null || s.getUPI().equals(""))){		
