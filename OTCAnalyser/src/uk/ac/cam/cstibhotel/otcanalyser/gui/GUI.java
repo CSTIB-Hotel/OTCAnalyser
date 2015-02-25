@@ -31,7 +31,8 @@ public class GUI extends JFrame implements SearchListener {
 		setTitle("OTC Analyser");
 		setSize(1050,700);
 		setLayout(new GridBagLayout());
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowCloseListener());
 		GridBagConstraints searchWindowConstraints = new GridBagConstraints();
 		searchWindowConstraints.gridx = 0;
 		searchWindowConstraints.gridy = 0;
