@@ -3,9 +3,12 @@ package uk.ac.cam.cstibhotel.otcanalyser.dataanalysis;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.trendprediction.PredictionResult;
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.trendprediction.TrendPredictor;
 import uk.ac.cam.cstibhotel.otcanalyser.database.Database;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.DataViewer;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.GUI;
@@ -53,7 +56,8 @@ public class Analyser {
 	  	  	//basic analysis by currency
 	  	  	maxWithCurrency.add(DBAnalysis.getMaxPrice(s, conn));
 	  	  	minWithCurrency.add(DBAnalysis.getMinPrice(s, conn));
-	    	  avgWithCurrency.add(new AnalysisItem(null, curr, DBAnalysis.getAvgPrice(s, conn), null));
+	    	avgWithCurrency.add(new AnalysisItem(null, curr, DBAnalysis.getAvgPrice(s, conn), null));
+	    	
 	  	  	//should graph by month?
 	  	  	boolean byMonth = DBAnalysis.graphByMonth(s, conn, DBAnalysis.EXECUTION_TIME);
 	  	  	
@@ -68,11 +72,52 @@ public class Analyser {
 	    	    avgs = DBAnalysis.getAvgPricePerDay(s, conn, DBAnalysis.EXECUTION_TIME);
 	  	  	}
 	    	  //pass lists to graph:
-	
-	    	  DataViewer.addGraphPoints(maxes, mins, avgs, curr, byMonth);
+	  	  	
+	  	  	//gettinf the first and last elements for "time coordinate"
+	  	  	  PriceTimePair first = maxes.get(0);
+	  	  	  PriceTimePair last = maxes.get(maxes.size()-1);
+	  	  	  
+	  	  	  //x coordinate values in long
+	  	  	  long firstX = first.getTime().getTime();
+	  	  	  long lastX = last.getTime().getTime();
+	  	  	  
+	  	  	  /*
+	  	  	   * 
+	  	  	   * Creating trend lines
+	  	  	   * 
+	  	  	   */
+	  	  	  PerCurrencyData avgPerCurrency = new PerCurrencyData(avgs, curr, byMonth);
+	  	  	  TrendPredictor avgTrendPredictor = new TrendPredictor(avgPerCurrency);
+	  	  	  TrendPredictor minTrendPredictor = new TrendPredictor(new PerCurrencyData(mins, curr, byMonth));
+	  	  	  TrendPredictor maxTrendPredictor = new TrendPredictor(new PerCurrencyData(maxes, curr, byMonth));
+	  	  	  PredictionResult avgPR = avgTrendPredictor.createPredictionResult();
+	  	  	  PredictionResult minPR = minTrendPredictor.createPredictionResult();
+	  	  	  PredictionResult maxPR = maxTrendPredictor.createPredictionResult();
+	  	  	  
+	  	  	  System.out.println(avgPR.pmcc+" "+avgPR.regA+" "+avgPR.regB);
+	  	  	  
+	  	  	  //AVERAGE trend line
+	  	  	  List<PriceTimePair> avgTrendLine = new ArrayList<PriceTimePair>();
+	  	  	  double avgFirstY = avgPR.regA + firstX*avgPR.regB;
+	  	  	  double avgLastY = avgPR.regA + lastX*avgPR.regB;
+	  	  	  
+	  	  	  //System.out.println(avgFirstY);
+	  	  	  //System.out.println(avgLastY);
+	  	  	  
+	  	  	  avgTrendLine.add(new PriceTimePair(new Date(firstX), avgFirstY));
+	  	  	  avgTrendLine.add(new PriceTimePair(new Date(lastX), avgLastY));
+	  	  	  
+	  	  	  List<PriceTimePair> maxTrendLine = new ArrayList<PriceTimePair>();
+	  	  	  List<PriceTimePair> minTrendLine = new ArrayList<PriceTimePair>();
+	  	  	  
+	  	  	  List<List<PriceTimePair>> trendLines = new ArrayList<List<PriceTimePair>>();
+	  	  	  
+	  	  	  trendLines.add(avgTrendLine);
+	  	  	  
+	  	  	  DataViewer.addGraphPoints(maxes, mins, avgs, trendLines, curr, byMonth);
 	    	  
 	    	  //add to per currency data list
-	    	  perCurrencyDataList.add(new PerCurrencyData(avgs, curr, byMonth));
+	    	  perCurrencyDataList.add(avgPerCurrency);
   	  	}
   	  }
   	  

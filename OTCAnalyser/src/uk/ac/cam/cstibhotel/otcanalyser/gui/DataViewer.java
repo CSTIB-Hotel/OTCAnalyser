@@ -2,6 +2,7 @@ package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.AnalysisItem;
 import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.PriceTimePair;
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.trendprediction.PredictionResult;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 
@@ -51,8 +52,9 @@ public class DataViewer extends JTabbedPane {
   }
   
   public static void addGraphPoints(List<PriceTimePair> maxes, List<PriceTimePair> mins,
-      List<PriceTimePair> avgs, String currency, boolean byMonth) {
+      List<PriceTimePair> avgs, List<List<PriceTimePair>> trendLines, String currency, boolean byMonth) {
   	dataViewer.graph.addTradesToDatasets(maxes, mins, avgs, currency, byMonth);
+  	dataViewer.graph.addTrendlinePoints(trendLines);
   }
   
   //adds trendline points to graphs

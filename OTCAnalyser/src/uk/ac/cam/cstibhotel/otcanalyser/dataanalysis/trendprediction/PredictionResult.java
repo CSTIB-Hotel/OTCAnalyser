@@ -11,5 +11,4 @@ public class PredictionResult {
 		this.regA = regA;
 		this.regB = regB;
 	}
-
 }
