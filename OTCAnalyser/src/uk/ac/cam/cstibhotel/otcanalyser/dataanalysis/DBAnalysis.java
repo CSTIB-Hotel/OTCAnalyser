@@ -25,14 +25,14 @@ public class DBAnalysis {
 		String query = "SELECT " + select + " FROM data WHERE "
 		    +"tradeType = ? AND "
 		    +"assetClass = ? AND ";
-		if (!(s.getAsset()==null || s.getAsset().equals(""))) {
+		if (!(s.getAsset() == null || s.getAsset().equals(""))) {
 			query += " (underlyingAsset1 LIKE ? OR underlyingAsset2 LIKE ?) AND ";
 		}
 		if(!(s.getMinPrice() == s.getMaxPrice())){
 			query += " roundedNotionalAmount1 >= ? AND "
 					+" roundedNotionalAmount1 <= ? AND ";
 		}
-		if (!(s.getCurrency()==null || s.getCurrency().equals(""))) {
+		if (!(s.getCurrency() == null || s.getCurrency().equals(""))) {
 			query += " (notionalCurrency1 LIKE ?) AND ";
 		}
 		if (!(s.getUPI() == null || s.getUPI().equals(""))){
@@ -51,7 +51,7 @@ public class DBAnalysis {
 		ps.setShort(i, s.getTradeType().getValue()); i++;
 		ps.setShort(i, s.getAssetClass().getValue()); i++;
 
-		if (!(s.getAsset()==null || s.getAsset().equals(""))) {
+		if (!(s.getAsset() == null || s.getAsset().equals(""))) {
 			ps.setString(i, "%"+s.getAsset()+"%"); i++;
 			ps.setString(i, "%"+s.getAsset()+"%"); i++;
 		}
@@ -61,7 +61,7 @@ public class DBAnalysis {
 			ps.setFloat(i, s.getMaxPrice()); i++;
 		}
 		
-		if (!(s.getCurrency()==null||s.getCurrency().equals(""))) {
+		if (!(s.getCurrency()==null || s.getCurrency().equals(""))) {
 			ps.setString(i, s.getCurrency()); i++;
 		}
 		

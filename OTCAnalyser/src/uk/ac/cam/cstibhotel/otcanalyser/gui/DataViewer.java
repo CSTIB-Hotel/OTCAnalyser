@@ -36,7 +36,7 @@ public class DataViewer extends JTabbedPane {
     
     JScrollPane analysisPane = new JScrollPane(analysis);
     analysisPane.setOpaque(false);
-    analysisPane.getViewport().setOpaque(false);;
+    analysisPane.getViewport().setOpaque(false);
     
     addTab("Graph", graphPane);
     addTab("Data", data);

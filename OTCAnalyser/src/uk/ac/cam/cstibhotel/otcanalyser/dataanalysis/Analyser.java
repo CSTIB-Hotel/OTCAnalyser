@@ -55,8 +55,8 @@ public class Analyser {
 	    	    mins = DBAnalysis.getMinPricePerDay(s, conn, DBAnalysis.EXECUTION_TIME);
 	    	    avgs = DBAnalysis.getAvgPricePerDay(s, conn, DBAnalysis.EXECUTION_TIME);
 	  	  	}
+	  	  	
 	    	  //pass lists to graph:
-	
 	    	  DataViewer.addGraphPoints(maxes, mins, avgs, curr, byMonth);
 	    	  
 	    	  //add to per currency data list

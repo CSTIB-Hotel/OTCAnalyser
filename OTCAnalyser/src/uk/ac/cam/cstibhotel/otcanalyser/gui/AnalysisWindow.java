@@ -57,6 +57,7 @@ public class AnalysisWindow extends CurrencyToolbarWindow {
 	    }
 	  }
 	  
+	  //add analysis without title
 	  public void addAnalysis(String analysis, String currency) {
 	  	if (!currencies.contains(currency)) {
 	  		addContentPanel(currency);
@@ -68,6 +69,7 @@ public class AnalysisWindow extends CurrencyToolbarWindow {
 	  	repaint();
 	  }
 	  
+	  //add analysis with title
 	  public void addAnalysis(String analysis, String title, String currency) {
 	  	if (!currencies.contains(currency)) {
 	  		addContentPanel(currency);
