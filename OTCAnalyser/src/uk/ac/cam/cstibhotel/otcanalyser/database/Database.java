@@ -426,6 +426,7 @@ public class Database {
 			return true;
 			
 		} catch (SQLException e){
+			System.err.println(e.getMessage());
 			return false;
 		}
 	}
