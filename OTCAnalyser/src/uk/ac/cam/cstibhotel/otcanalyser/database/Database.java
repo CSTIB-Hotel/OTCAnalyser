@@ -170,11 +170,7 @@ public class Database {
 	public boolean addTrade(List<Trade> trades) {
 		boolean success = true;
 		
-		Comparator<Trade> tradeByIdComparator = (Trade o1, Trade o2) -> {
-			return (int) (o1.getDisseminationID() - o2.getDisseminationID());
-		};
-		
-		Collections.sort(trades, tradeByIdComparator);
+		Collections.sort(trades);
 		
 		for (Trade trade : trades) {
 
@@ -410,7 +406,7 @@ public class Database {
 		} catch (SQLException ex) {
 			System.out.println(ex.getMessage());
 			System.err.println("Search failed");
-			return new SearchResult(new LinkedList<>(), 0);
+			return new SearchResult(new LinkedList<Trade>(), 0.0);
 		}
 	}
 

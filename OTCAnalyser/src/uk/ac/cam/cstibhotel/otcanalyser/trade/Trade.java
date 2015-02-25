@@ -4,8 +4,9 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Trade {
+public class Trade implements Comparable<Trade> {
 
+	
 	// The fields in here are a direct copy of the fields of a trade taken
 	// from the OTC repository
 	private long disseminationID;
@@ -454,6 +455,11 @@ public class Trade {
 
 	public Double getPriceNotation3() {
 		return priceNotation3;
+	}
+
+	@Override
+	public int compareTo(Trade trade2) {
+		return (int) (this.getDisseminationID() - trade2.getDisseminationID());
 	}
 
 }
