@@ -1,16 +1,20 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.AnalysisItem;
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.PriceTimePair;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.border.EmptyBorder;
 
 public class DataViewer extends JTabbedPane {
 	
@@ -26,10 +30,17 @@ public class DataViewer extends JTabbedPane {
     graph = new GraphWindow();
     analysis = new AnalysisWindow();
     
-    addTab("Graph", graph);
-    addTab("Data", data);
-    addTab("Extended Analysis", analysis);
+    JScrollPane graphPane = new JScrollPane(graph);
+    graphPane.getViewport().setOpaque(false);
     
+    JScrollPane analysisPane = new JScrollPane(analysis);
+    graphPane.getViewport().setOpaque(false);;
+    
+    addTab("Graph", graphPane);
+    addTab("Data", data);
+    addTab("Extended Analysis", new JScrollPane(analysisPane));
+    
+    this.setMinimumSize(new Dimension(750, 500));
   }
   
   //add trades to the DataViewer table
@@ -39,9 +50,14 @@ public class DataViewer extends JTabbedPane {
     }
   }
   
-  public static void addGraphPoints(List<AnalysisItem> maxes, List<AnalysisItem> mins,
-      List<AnalysisItem> avgs, String currency) {
-  	dataViewer.graph.addTradesToDatasets(maxes, mins, avgs, currency);
+  public static void addGraphPoints(List<PriceTimePair> maxes, List<PriceTimePair> mins,
+      List<PriceTimePair> avgs, String currency, boolean byMonth) {
+  	dataViewer.graph.addTradesToDatasets(maxes, mins, avgs, currency, byMonth);
+  }
+  
+  //adds trendline points to graphs
+  public static void addTrendlinePoints(List<List<PriceTimePair>> ptp) {
+  	dataViewer.graph.addTrendlinePoints(ptp);
   }
   
   //clear trades - call before adding new trades
@@ -53,68 +69,26 @@ public class DataViewer extends JTabbedPane {
   }
   
   //add analysis
-  public static void addAnalysis (AnalysisItem max, AnalysisItem min, List<AnalysisItem> avgs, double stddev) {
-	  if (max != null) {
-  	  String maxAnalysis = max.getPrice() + " " + max.getCurrency() + " at " + max.getTime();
-	    addAnalysis (maxAnalysis, "Largest trade");
-	  }
-	  if (min != null) {
-	    String minAnalysis = min.getPrice() + " " + min.getCurrency () + " at " + min.getTime();
-	    addAnalysis (minAnalysis, "Smallest trade");
-	  }
-	  if (!avgs.isEmpty()) {
-	    String avgAnalysis = "";
-	    for (AnalysisItem a : avgs) {
-	  	  String curr = a.getCurrency();
+  public static void addAnalysis (List<AnalysisItem> maxes, List<AnalysisItem> mins, List<AnalysisItem> avgs) {
+  	if (!avgs.isEmpty() && maxes.size() == avgs.size() && avgs.size() == mins.size()) {
+	    for (int i = 0; i < maxes.size(); i++) {
+		    String analysis = "";
+	  	  String curr = maxes.get(i).getCurrency();
 	  	  if (curr.isEmpty()) {
 	  		  curr = "Unknown Currency";
 	  	  }
 	  	  curr += "\n";
-	  	  avgAnalysis += a.getPrice() + " " + curr;
+	  	  analysis += "Largest Trade Price: " + maxes.get(i).getPrice() + " " + curr;
+	  	  analysis += "Smallest Trade Price: " + mins.get(i).getPrice() + " " + curr;
+	  	  analysis += "Average Trade Price: " + avgs.get(i).getPrice() + " " + curr;
+	  	  addAnalysis(analysis, "Basic Information", curr);
 	    }
-	    addAnalysis (avgAnalysis, "Average trade amounts by currency");
 	  }
   }
   
   //add titled analysis
-  public static void addAnalysis (String analysis, String title) {
-	  dataViewer.analysis.addAnalysis(analysis, title);
+  public static void addAnalysis (String analysis, String title, String currency) {
+	  dataViewer.analysis.addAnalysis(analysis, title, currency);
   }
-  
-  //TODO: delete it from final product
-//  public static void main(String[] args) {
-//    JFrame frame = new JFrame("Tabs");
-//    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//    frame.add(dataViewer);
-//    frame.pack();
-//    frame.setVisible(true);
-//    
-//    //some made-up data
-//    List<Trade> trades = new ArrayList<>();
-//    Trade t;
-//    for (int i = 0; i < 20; i++) {
-//      Date d = new Date(Calendar.getInstance().getTime().getTime()
-//          - (long)(Math.random() * 500000000) * i);
-//      for (int j = 0; j < 10; j++) {
-//        t = new Trade();
-//        t.setAction(Action.NEW);
-//        t.setBlockTrades(false);
-//        t.setRoundedNotionalAmount1(200 * 500);
-//        t.setExecutionTimestamp(d);
-//        trades.add(t);
-//      }
-//    }
-//    trades.get(11).setRoundedNotionalAmount1(0);
-//    addTrades(trades);
-//    clearTrades();
-//    addTrades(trades);
-//    
-//    String a = "Analysis of data.";
-//    
-//    for (int i = 1; i < 5; i++) {
-//    	addAnalysis(a, "Analysis Title " + i);
-//    }
-//    
-//   }
 
 }

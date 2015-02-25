@@ -335,17 +335,17 @@ public class Database {
 			String query = "SELECT * FROM data WHERE "
 					+"tradeType = ? AND "
 					+"assetClass = ? AND ";
-			if (!(s.getAsset().equals("")||s.getAsset()==null)) {
+			if (!(s.getAsset() == null||s.getAsset().equals(""))) {
 				query += " (underlyingAsset1 LIKE ? OR underlyingAsset2 LIKE ?) AND ";
 			}
 			if (!(s.getMinPrice() == s.getMaxPrice())){
 				query += " roundedNotionalAmount1 >= ? AND "
 						+" roundedNotionalAmount1 <= ? AND ";
 			}
-			if (!(s.getCurrency().equals("")||s.getCurrency()==null)) {
+			if (!(s.getCurrency() == null || s.getCurrency().equals(""))) {
 				query += " (notionalCurrency1 LIKE ? OR notionalCurrency2 LIKE ? ) AND ";
 			}
-			if (!(s.getUPI().equals("") || s.getUPI() == null)){
+			if (!(s.getUPI() == null || s.getUPI().equals(""))){
 				query += " taxonomy LIKE ? AND ";
 			}
 			query += " executionTime >= ? AND "
@@ -358,7 +358,7 @@ public class Database {
 			ps.setShort(i, s.getTradeType().getValue()); i++;
 			ps.setShort(i, s.getAssetClass().getValue()); i++;
 
-			if (!(s.getAsset().equals("") || s.getAsset()==null)) {
+			if (!(s.getAsset() == null||s.getAsset().equals(""))) {
 				ps.setString(i, "%"+s.getAsset()+"%"); i++;
 				ps.setString(i, "%"+s.getAsset()+"%"); i++;
 			}
@@ -368,12 +368,12 @@ public class Database {
 				ps.setFloat(i, s.getMaxPrice()); i++;
 			}
 			
-			if (!(s.getCurrency().equals("") || s.getCurrency()==null)) {
+			if (!(s.getCurrency() == null || s.getCurrency().equals(""))) {
 				ps.setString(i, "%"+s.getCurrency()+"%"); i++;
 				ps.setString(i, "%"+s.getCurrency()+"%"); i++;
 			}
 			
-			if (!(s.getUPI().equals("") || s.getUPI() == null)){			
+			if (!(s.getUPI() == null || s.getUPI().equals(""))){		
 				ps.setString(i, "%" + s.getUPI() + "%"); i++; 
 			}
 
@@ -436,7 +436,7 @@ public class Database {
 	 * @return The 10 most recently saved previously saved searches
 	 */
 	public Map<String, Search> getSavedSearches() {
-		Map<String, Search> savedSearches = new LinkedHashMap<>();
+		Map<String, Search> savedSearches = new LinkedHashMap<String, Search>();
 		
 		String query = "SELECT * FROM savedSearches ORDER BY id DESC LIMIT 10";
 		try {
