@@ -51,10 +51,10 @@ public class CommunicationLayer {
 		s.setAsset(SearchWindow.getInstance().UnderLyingAsset.getText());
 		
 		try {
-			s.setMinPrice(Math.max(0,
-					(int) SearchWindow.getInstance().minValue.getValue()));
-			s.setMaxPrice(Math.max(0,
-					(int) SearchWindow.getInstance().maxValue.getValue()));
+			s.setMinPrice(Math.max(0L,
+					(long) SearchWindow.getInstance().minValue.getValue()));
+			s.setMaxPrice(Math.max(0L,
+					(long) SearchWindow.getInstance().maxValue.getValue()));
 		} catch (NumberFormatException e) {
 			StatusBar.setMessage("Error: Price fields must contain integers", 1);
 		}
@@ -146,7 +146,11 @@ public class CommunicationLayer {
 	/*
 	 * Takes a Search and loads its values into the GUI for the user.
 	 */
-	public static void loadSearch(Search s) {
+	public static void loadSearch(String name) {
+		Search s = Database.getSavedSearch(name);
+		
+		System.out.println(s.getAsset());
+		
 		// Set the trade type
 		if (s.getTradeType() == TradeType.SWAP) {
 			SearchWindow.getInstance().TradeType.setSelectedItem("Swap");
@@ -201,6 +205,8 @@ public class CommunicationLayer {
 		//TODO Set the base product
 		
 		//TODO Set the sub-product
+		
+		StatusBar.setMessage("Successfully loaded search '" + name + "'", 1);
 	}
 	
 	/*
@@ -223,7 +229,10 @@ public class CommunicationLayer {
 		
 		if (!success) {
 			StatusBar.setMessage("Error: could not save search", 1);
+			return;
 		}
+		
+		StatusBar.setMessage("Successfully saved search '" + name + "'", 1);
 	}
 	
 	/*

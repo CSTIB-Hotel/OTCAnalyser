@@ -12,8 +12,8 @@ import javax.swing.border.EtchedBorder;
 public class SaveWindow extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
-	private CenteredJLabel SaveLabel =  new CenteredJLabel("Save a trade");
-	private CenteredJLabel LoadLabel = new CenteredJLabel("Load a trade");
+	private CenteredJLabel SaveLabel =  new CenteredJLabel("Save a search");
+	private CenteredJLabel LoadLabel = new CenteredJLabel("Load a search");
 	private CenteredJLabel SaveboxLabel= new CenteredJLabel("Name");
 	public JTextField Savebox = new JTextField();
 	public CenteredJLabel LoadboxLabel = new CenteredJLabel("Name");
@@ -21,7 +21,7 @@ public class SaveWindow extends JPanel {
 	public JButton SaveButton = new JButton("Save");
 	public JButton LoadButton = new JButton("Load");
 	private SaveListener saveListener = new SaveListener();
-	private LoadListener loadListener;
+	private LoadListener loadListener = new LoadListener();
 	
 	private static SaveWindow instance;
 	
