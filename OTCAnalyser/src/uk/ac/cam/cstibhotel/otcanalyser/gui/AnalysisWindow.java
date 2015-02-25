@@ -97,6 +97,7 @@ public class AnalysisWindow extends CurrencyToolbarWindow {
 	    	pnl.remove(currentPanel);
 	    	currentPanel = contentPanel.get(currencies.indexOf(e.getActionCommand()));
 	    	pnl.add(currentPanel);
+	    	pnl.repaint();
 	    	repaint();
 	    }
 	  }
