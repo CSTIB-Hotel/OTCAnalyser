@@ -11,9 +11,11 @@ public class NetworkLayer {
     static final String splitter = "\",\"";
     static final String secondarySplitter = ",";
     
+    public static Thread updater;
+    
     public static void initialUpdate() { //called at startup and every day afterwards
     	
-    	Thread updater = new InitialUpdateWorker();
+    	updater = new InitialUpdateWorker();
 
     	updater.start();
     }

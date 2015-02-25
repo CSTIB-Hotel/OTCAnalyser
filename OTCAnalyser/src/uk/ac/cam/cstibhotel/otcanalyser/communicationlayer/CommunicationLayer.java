@@ -52,9 +52,9 @@ public class CommunicationLayer {
 		
 		try {
 			s.setMinPrice(Math.max(0L,
-					(long) SearchWindow.getInstance().minValue.getValue()));
+					((Integer) SearchWindow.getInstance().minValue.getValue()).longValue()));
 			s.setMaxPrice(Math.max(0L,
-					(long) SearchWindow.getInstance().maxValue.getValue()));
+					((Integer) SearchWindow.getInstance().maxValue.getValue()).longValue()));
 		} catch (NumberFormatException e) {
 			StatusBar.setMessage("Error: Price fields must contain integers", 1);
 		}

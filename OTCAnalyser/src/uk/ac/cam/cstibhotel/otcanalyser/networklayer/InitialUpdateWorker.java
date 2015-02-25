@@ -12,9 +12,12 @@ import uk.ac.cam.cstibhotel.otcanalyser.gui.StatusBar;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 
 public class InitialUpdateWorker extends Thread {
+	private boolean running;
+	
 	@Override
 	public void run() {
     	System.out.println("NetworkLayer: initial update requested");
+    	running = true;
         synchronized(NetworkLayer.targetUpdateDate) {
         	initialUpdate();
         	sliceUpdate();
@@ -33,9 +36,10 @@ public class InitialUpdateWorker extends Thread {
     	lastUpdate.setTime(Database.getDB().getLastUpdateTime());
     	lastUpdate.add(Calendar.DATE, -1);
     	
-    	while (target.get(Calendar.YEAR) != lastUpdate.get(Calendar.YEAR) ||
+    	while ((target.get(Calendar.YEAR) != lastUpdate.get(Calendar.YEAR) ||
     			target.get(Calendar.MONTH) + 1 != lastUpdate.get(Calendar.MONTH) + 1 ||
-    			target.get(Calendar.DAY_OF_MONTH) != lastUpdate.get(Calendar.DAY_OF_MONTH)) {
+    			target.get(Calendar.DAY_OF_MONTH) != lastUpdate.get(Calendar.DAY_OF_MONTH)) 
+    			&& running) {
     		
     		lastUpdate.add(Calendar.DATE, 1);
     		        		
@@ -145,12 +149,23 @@ public class InitialUpdateWorker extends Thread {
     			
     			if (!gotAnything)
     				try {
-						Thread.sleep(10000);
+						Thread.sleep(1000);
 					}
 					catch (InterruptedException ie) {
 						
 					}
+    			if (!running) {
+            		return;
+            	}
         	}
     	}
     }
+
+	public boolean isRunning() {
+		return running;
+	}
+
+	public void setRunning(boolean running) {
+		this.running = running;
+	}
 }
