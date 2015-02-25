@@ -38,7 +38,7 @@ public class Analyser {
     	  avg.add(new AnalysisItem(null, curr, DBAnalysis.getAvgPrice(s, conn), null));
     	  //pass lists to graph:
     	  DataViewer.addGraphPoints(maxes, mins, avgs, curr);
-    	  System.out.println(curr);
+    	//  System.out.println(curr);
   	  }
   	  //pass analysis to GUI
   	  GUI.getInstance().addAnalyses(max, min, avg, stddev);
