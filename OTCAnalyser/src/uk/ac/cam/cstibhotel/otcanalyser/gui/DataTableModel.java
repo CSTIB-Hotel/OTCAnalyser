@@ -87,7 +87,9 @@ class DataTableModel extends AbstractTableModel{
   public Class<?> getColumnClass(int columnIndex) {
   	if (!data.isEmpty() && data.get(0)[columnIndex] instanceof Date) {
   	  return Date.class;
-  	} else { 
+  	} else if (columnIndex == 27 || columnIndex == 28) { 
+  		return Long.class;
+  	} else {
   		return super.getColumnClass(columnIndex);
   	}
   }
