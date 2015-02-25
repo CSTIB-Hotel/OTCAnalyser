@@ -418,14 +418,52 @@ public class Database {
 	 *
 	 * @param s the search to save
 	 * @param searchName the name of this search
-	 * @return true if the search was successfully saved; false otherwise (including for name conflict)
+	 * @return true if the search was successfully saved; false otherwise
 	 */
 	public boolean saveSearch(Search s, String searchName) {
-		String saveQuery = "INSERT INTO savedSearches (searchName, tradeType, assetClass, "
-				+ "asset, minPrice, maxPrice, currency, startTime, endTime, upi) VALUES "
-				+ "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try{
-			PreparedStatement ps = connection.prepareStatement(saveQuery);
+			String searchAlreadyExistsQuery = "SELECT COUNT(1) FROM savedSearches WHERE searchName = ?";
+			
+			PreparedStatement sae = connection.prepareStatement(searchAlreadyExistsQuery);
+			sae.setString(1, searchName);
+			
+			ResultSet saer = sae.executeQuery();
+			
+			String saveQuery;
+			
+			if(saer.next()){
+				if(saer.getInt(1) == 0){
+					saveQuery = "INSERT INTO savedSearches (searchName, tradeType, assetClass, "
+							+ "asset, minPrice, maxPrice, currency, startTime, endTime, upi) VALUES "
+							+ "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				} else {
+					saveQuery = "UPDATE savedSearches SET searchName = ?, tradeType = ?, "
+							+ "assetClass = ?, asset = ?, minPrice = ?, maxPrice = ?, "
+							+ "currency = ?, startTime = ?, endTime = ?, upi = ? "
+							+ "WHERE searchName = ?";
+				}
+			} else {
+				return false;
+			}
+			
+		/* String saveQuery = "MERGE INTO savedSearches USING (VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)) "
+				+ "AS I(a, b, c, d, e, f, g, h, i, j) ON savedSearches.searchName = I.a "
+				
+				+ "WHEN MATCHED THEN UPDATE SET savedSearches.tradeType = I.b, "
+				+ "savedSearches.assetClass = I.c, savedSearches.asset = I.d, "
+				+ "savedSearches.minPrice = I.e, savedSearches.maxPrice = I.f, "
+				+ "savedSearches.currency = I.g, savedSearches.startTime = I.h, "
+				+ "savedSearches.endTime = I.i, savedSearches.upi = I.j "
+				 
+				+ "WHEN NOT MATCHED THEN INSERT (searchName, tradeType, assetClass, "
+				+ "asset, minPrice, maxPrice, currency, startTime, endTime, upi) "
+				+ "VALUES (I.a, I.b, I.c, I.d, I.e, I.f, I.g, I.h, I.i, I.j)";
+		
+			// So it turns out HSQLDB doesn't support parameterized  MERGE statements 
+		*/
+		
+		
+			PreparedStatement ps = connection.prepareStatement(saveQuery);			
 			ps.setString(1, searchName);
 			ps.setShort(2, s.getTradeType().getValue());
 			ps.setShort(3, s.getAssetClass().getValue());
@@ -436,6 +474,10 @@ public class Database {
 			ps.setTimestamp(8, new Timestamp(s.getStartTime().getTime()));
 			ps.setTimestamp(9, new Timestamp(s.getEndTime().getTime()));
 			ps.setString(10, s.getUPI());
+			
+			if(saer.getInt(1) == 1){ // yes this is silly
+				ps.setString(11, searchName);
+			}
 			
 			ps.execute();
 			 
