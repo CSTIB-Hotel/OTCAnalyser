@@ -171,6 +171,12 @@ public class Database {
 	public boolean addTrade(List<Trade> trades) {
 		boolean success = true;
 		
+		Comparator<Trade> tradeByIdComparator = (Trade o1, Trade o2) -> {
+			return (int) (o1.getDisseminationID() - o2.getDisseminationID());
+		};
+		
+		Collections.sort(trades, tradeByIdComparator);
+		
 		for (Trade trade : trades) {
 
 			HashMap<String, SQLField> DBNameValue = TradeFieldMapping.getMapping(trade);
