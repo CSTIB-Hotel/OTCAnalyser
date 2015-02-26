@@ -7,6 +7,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
 public class SaveWindow extends JPanel {
@@ -32,7 +33,8 @@ public class SaveWindow extends JPanel {
 	
 	private SaveWindow() {
 			setSize(300,80);
-			setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+			setBorder(BorderFactory.createCompoundBorder(
+			    new EmptyBorder(5,5,5,5), BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			
 			this.add(LoadLabel);
