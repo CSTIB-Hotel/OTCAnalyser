@@ -1,5 +1,6 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 
 import javax.swing.BoxLayout;
@@ -45,79 +46,88 @@ public class SearchWindow extends JPanel {
 	}
 	
 	private SearchWindow() {
-			setSize(200,100);
-			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+			setLayout(new BorderLayout());
+			
+			JPanel top = new JPanel();
+			JPanel bottom = new JPanel();
+			
+			top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
+			bottom.setLayout(new BoxLayout(bottom, BoxLayout.Y_AXIS));
+			
 			TaxonomySelectorDescriptor =  new CenteredJLabel("Select a taxonomy");
-
-			this.add(TaxonomySelectorDescriptor);
+			top.add(TaxonomySelectorDescriptor);
 			TaxonomySelectorDescriptor.setVisible(true);
 			tax = TaxonomySelector.getInstance();
-			this.add(tax);
+			top.add(tax);
 			tax.setVisible(true);
 			UnderLyingAssetDescriptor = new CenteredJLabel("Underlying Asset (optional)");
 
-			this.add(UnderLyingAssetDescriptor);
+			top.add(UnderLyingAssetDescriptor);
 			UnderLyingAssetDescriptor.setVisible(true);
 			UnderLyingAsset = new JTextField();
-			this.add(UnderLyingAsset);
+			top.add(UnderLyingAsset);
 			UnderLyingAsset.setVisible(true);
 			TradeTypeDescriptor = new CenteredJLabel("Select trade type");
 
-			this.add(TradeTypeDescriptor);
+			top.add(TradeTypeDescriptor);
 			TradeTypeDescriptor.setVisible(true);
 			TradeType = new JComboBox<String>(TextStrings.TradeType);
-			this.add(TradeType);
+			top.add(TradeType);
 			TradeType.setVisible(true);
 			StartDateDescriptor = new CenteredJLabel("Select start date");
 
-			this.add(StartDateDescriptor);
+			top.add(StartDateDescriptor);
 			StartDateDescriptor.setVisible(true);
 			StartDate = new DateSelector();
-			this.add(StartDate);
+			top.add(StartDate);
 			StartDate.setVisible(true);
 			EndDateDescriptor = new CenteredJLabel("Select end date");
 
-			this.add(EndDateDescriptor);
+			top.add(EndDateDescriptor);
 			EndDateDescriptor.setVisible(true);
 			EndDate = new DateSelector();
-			this.add(EndDate);
+			top.add(EndDate);
 			EndDate.setVisible(true);
 			minValueDescriptor = new CenteredJLabel("Select minimum price (optional)");
-			this.add(minValueDescriptor);
+			top.add(minValueDescriptor);
 			minValueDescriptor.setVisible(true);
 	
 			//Negative values not allowed
 			SpinnerNumberModel minSpinner = new SpinnerNumberModel();
 			minSpinner.setMinimum(0);
 			minValue = new JSpinner(minSpinner);
-			this.add(minValue);
+			top.add(minValue);
 			minValue.setVisible(true);
 			
 			maxValueDescriptor = new CenteredJLabel("Select maximum price (optional)");
-			this.add(maxValueDescriptor);
+			top.add(maxValueDescriptor);
 			maxValueDescriptor.setVisible(true);
 			
 			//Negative values not allowed
 			SpinnerNumberModel maxSpinner = new SpinnerNumberModel();
 			maxSpinner.setMinimum(0);
 			maxValue = new JSpinner(maxSpinner);
-			this.add(maxValue);
+			top.add(maxValue);
 			maxValue.setVisible(true);
 			currencyDescriptor = new CenteredJLabel("Select a currency (optional)");
-			this.add(currencyDescriptor);
+			top.add(currencyDescriptor);
 			currencyDescriptor.setVisible(true);
 			currency = new JTextField();	
 			Configurator.enableAutoCompletion(myList,currency);
-			this.add(currency);
+			top.add(currency);
 			currency.setVisible(true);
 			SearchButton = new JButton("Search");
 			SearchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-			this.add(SearchButton);
+      top.add(SearchButton);
 			SearchButton.setVisible(true);
 			SearchButton.addActionListener(new SearchButtonListener());
+			
 			saveWindow = SaveWindow.getInstance();
-			this.add(saveWindow);
+			bottom.add(saveWindow);
 			saveWindow.setVisible(true);
+			
+			add(top, BorderLayout.NORTH);
+			add(bottom, BorderLayout.SOUTH);
 	}
 	
 }
