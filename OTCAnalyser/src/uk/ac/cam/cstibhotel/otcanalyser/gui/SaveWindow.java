@@ -1,7 +1,6 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import java.awt.Component;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 
 import javax.swing.BorderFactory;
@@ -25,7 +24,7 @@ public class SaveWindow extends JPanel {
 	private CenteredJLabel SaveboxLabel= new CenteredJLabel("Name");
 	public JTextField Savebox = new JTextField();
 	public CenteredJLabel LoadboxLabel = new CenteredJLabel("Name");
-	public JComboBox<String> Loadbox = new JComboBox<String>();
+	public static JComboBox<String> Loadbox = new JComboBox<String>();
 	public JButton SaveButton = new JButton("Save");
 	public JButton LoadButton = new JButton("Load");
 	private SaveListener saveListener = new SaveListener();
@@ -76,14 +75,18 @@ public class SaveWindow extends JPanel {
 			
 	}
 	
-	void updateLoad() {
-		LinkedHashMap<String,Search> savedSearches = (LinkedHashMap<String,Search>) Database.getSavedSearches();
-		HashSet<String> searchKeys = (HashSet<String>) savedSearches.keySet();
-		Object[] strings = searchKeys.toArray();
-		MutableComboBoxModel<String> model = (MutableComboBoxModel<String>) Loadbox.getModel();
-		((DefaultComboBoxModel<String>) model).removeAllElements();
-		for (Object i:strings) {
-			model.addElement((String) i);
+	static void updateLoad() {
+		Object [] strings;
+		try {
+			LinkedHashMap<String,Search> savedSearches = (LinkedHashMap<String,Search>) Database.getSavedSearches();
+			strings = (savedSearches.keySet()).toArray();
+			MutableComboBoxModel<String> model = (MutableComboBoxModel<String>) Loadbox.getModel();
+			((DefaultComboBoxModel<String>) model).removeAllElements();
+			for (Object i:strings) {
+				model.addElement((String) i);
+			}
+		}
+		catch (NullPointerException e) {
 		}
 	}
 	
