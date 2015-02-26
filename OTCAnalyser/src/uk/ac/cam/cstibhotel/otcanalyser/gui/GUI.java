@@ -20,6 +20,7 @@ public class GUI extends JFrame implements SearchListener {
 	DataViewer dataViewer = DataViewer.dataViewer;
 	StatusBar statusBar = StatusBar.getInstance();
 	AnalysisSummary analysis = AnalysisSummary.getInstance();
+	HelpPane help = HelpPane.getInstance();
 	
 	public static GUI getInstance() {
 		if (gui==null) {
@@ -30,25 +31,27 @@ public class GUI extends JFrame implements SearchListener {
 	
 	public GUI() {
 		setTitle("OTC Analyser");
-		setMinimumSize(new Dimension(1250,700));
+		setMinimumSize(new Dimension(1250,800));
 		setLayout(new GridBagLayout());
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowCloseListener());
+		GridBagConstraints helpPaneConstraints = new GridBagConstraints();
+		helpPaneConstraints.fill = GridBagConstraints.HORIZONTAL;
+		add(help,helpPaneConstraints);
 		GridBagConstraints searchWindowConstraints = new GridBagConstraints();
 		searchWindowConstraints.gridx = 0;
-		searchWindowConstraints.gridy = 0;
+		searchWindowConstraints.gridy = 1;
 		searchWindowConstraints.gridheight = 1;
-		searchWindowConstraints.fill = GridBagConstraints.VERTICAL;
 		searchWindowConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
 		add(searchWindow,searchWindowConstraints);
 		GridBagConstraints statusBarConstraints = new GridBagConstraints();
 		statusBarConstraints.gridx = 0;
-		statusBarConstraints.gridy = 2;
+		statusBarConstraints.gridy = 3;
 		statusBarConstraints.gridwidth = 0;
 		add(statusBar,statusBarConstraints);
 		GridBagConstraints analysisSummaryConstraints = new GridBagConstraints();
 		analysisSummaryConstraints.gridx = 0;
-		analysisSummaryConstraints.gridy = 1;
+		analysisSummaryConstraints.gridy = 2;
 		analysisSummaryConstraints.gridwidth = 0;
 		analysisSummaryConstraints.fill = GridBagConstraints.HORIZONTAL;
 		analysisSummaryConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -59,6 +62,7 @@ public class GUI extends JFrame implements SearchListener {
 		dataViewerConstraints.fill = GridBagConstraints.BOTH;
 		dataViewerConstraints.weightx = 1;
 		dataViewerConstraints.weighty = 1;
+		dataViewerConstraints.gridheight = 2;
 		add(dataViewer,dataViewerConstraints);
 		setVisible(true);
 	}
