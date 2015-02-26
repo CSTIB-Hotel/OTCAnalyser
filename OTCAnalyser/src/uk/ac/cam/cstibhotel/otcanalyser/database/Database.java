@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -100,9 +99,11 @@ public class Database {
 		}
 
  		dataTableCreator.append(" UNIQUE (id));");
-
+		
 		try {
 			connection.createStatement().execute(dataTableCreator.toString());
+			connection.createStatement().executeQuery("CREATE INDEX ua1 ON data (underlyingAsset1)");
+			connection.createStatement().executeQuery("CREATE INDEX eTcurr ON data (executionTime, notionalCurrency1)");
 		} catch (SQLException e) {
 			if(e.getErrorCode() != TableAlreadyExistsError && e.getErrorCode() != ObjectNameAlreadyExists){
 				System.err.println(e.getErrorCode());
