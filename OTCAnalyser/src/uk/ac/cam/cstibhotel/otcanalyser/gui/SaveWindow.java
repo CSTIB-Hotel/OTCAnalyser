@@ -1,14 +1,21 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import java.awt.Component;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.border.EtchedBorder;
+
+import uk.ac.cam.cstibhotel.otcanalyser.database.Database;
+import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
 
 public class SaveWindow extends JPanel {
 	
@@ -18,7 +25,7 @@ public class SaveWindow extends JPanel {
 	private CenteredJLabel SaveboxLabel= new CenteredJLabel("Name");
 	public JTextField Savebox = new JTextField();
 	public CenteredJLabel LoadboxLabel = new CenteredJLabel("Name");
-	public JTextField Loadbox = new JTextField();
+	public JComboBox<String> Loadbox = new JComboBox<String>();
 	public JButton SaveButton = new JButton("Save");
 	public JButton LoadButton = new JButton("Load");
 	private SaveListener saveListener = new SaveListener();
@@ -43,6 +50,7 @@ public class SaveWindow extends JPanel {
 			LoadboxLabel.setVisible(true);
 			
 			this.add(Loadbox);
+			updateLoad();
 			Loadbox.setVisible(true);
 			
 			this.add(LoadButton);
@@ -66,6 +74,17 @@ public class SaveWindow extends JPanel {
 			
 			this.setVisible(true);
 			
+	}
+	
+	void updateLoad() {
+		LinkedHashMap<String,Search> savedSearches = (LinkedHashMap<String,Search>) Database.getSavedSearches();
+		HashSet<String> searchKeys = (HashSet<String>) savedSearches.keySet();
+		Object[] strings = searchKeys.toArray();
+		MutableComboBoxModel<String> model = (MutableComboBoxModel<String>) Loadbox.getModel();
+		((DefaultComboBoxModel<String>) model).removeAllElements();
+		for (Object i:strings) {
+			model.addElement((String) i);
+		}
 	}
 	
 }

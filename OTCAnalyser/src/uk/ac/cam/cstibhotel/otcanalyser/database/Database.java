@@ -522,7 +522,7 @@ public class Database {
 	 *
 	 * @return The 5 most recently saved previously saved searches
 	 */
-	public Map<String, Search> getSavedSearches() {
+	public static Map<String, Search> getSavedSearches() {
 		Map<String, Search> savedSearches = new LinkedHashMap<>();
 		
 		String query = "SELECT * FROM savedSearches ORDER BY id DESC LIMIT 5";
