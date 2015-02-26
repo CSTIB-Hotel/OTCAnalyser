@@ -20,7 +20,7 @@ public class InitialUpdateWorker extends Thread {
     	running = true;
         synchronized(NetworkLayer.targetUpdateDate) {
         	initialUpdate();
-        	sliceUpdate();
+        	if (running) sliceUpdate();
         }
     }
 	
