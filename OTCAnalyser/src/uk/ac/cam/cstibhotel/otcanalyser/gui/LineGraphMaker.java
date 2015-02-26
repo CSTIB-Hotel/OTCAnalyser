@@ -69,14 +69,11 @@ public class LineGraphMaker {
 			c.setTime(itm.getTime());
 			int day = c.get(Calendar.DAY_OF_MONTH);
 			int month = c.get(Calendar.MONTH);
-			if (month == 0){
-				month = 12; //strange graphing behaviour
-			}
 			int year = c.get(Calendar.YEAR);
 			if (isMonth) {
-			  dataset.getSeries(series).addOrUpdate(new Month(month, year), itm.getPrice());
+			  dataset.getSeries(series).addOrUpdate(new Month(month + 1, year), itm.getPrice());
 			} else {
-				dataset.getSeries(series).addOrUpdate(new Day(day, month, year), itm.getPrice());
+				dataset.getSeries(series).addOrUpdate(new Day(day, month + 1, year), itm.getPrice());
 			}
 		}
 	}

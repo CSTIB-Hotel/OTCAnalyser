@@ -224,7 +224,7 @@ public class DBAnalysis {
 	  while (rs.next()) {
 		  Calendar c = Calendar.getInstance();
 		  c.setTime(new Date(0));
-		  c.set(Calendar.MONTH, rs.getInt("month"));
+		  c.set(Calendar.MONTH, rs.getInt("month") - 1);
 		  c.set(Calendar.YEAR, rs.getInt("year"));
 		  //for now,  print it:
 		  /*System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
@@ -246,7 +246,7 @@ public class DBAnalysis {
 		  while (rs.next()) {
 			  Calendar c = Calendar.getInstance();
 			  c.setTime(new Date(0));
-			  c.set(Calendar.MONTH, rs.getInt("month"));
+			  c.set(Calendar.MONTH, rs.getInt("month") - 1);
 			  c.set(Calendar.YEAR, rs.getInt("year"));
 			  //for now,  print it:
 			  /*System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
@@ -268,7 +268,7 @@ public class DBAnalysis {
 		  while (rs.next()) {
 			  Calendar c = Calendar.getInstance();
 			  c.setTime(new Date(0));
-			  c.set(Calendar.MONTH, rs.getInt("month"));
+			  c.set(Calendar.MONTH, rs.getInt("month") - 1);
 			  c.set(Calendar.YEAR, rs.getInt("year"));
 			  //for now,  print it:
 			  /*System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
@@ -290,7 +290,7 @@ public class DBAnalysis {
 		  while (rs.next()) {
 			  Calendar c = Calendar.getInstance();
 			  c.setTime(new Date(0));
-			  c.set(Calendar.MONTH, rs.getInt("month"));
+			  c.set(Calendar.MONTH, rs.getInt("month") - 1);
 			  c.set(Calendar.YEAR, rs.getInt("year"));
 			  //for now, print it:
 			  /*System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
@@ -313,7 +313,7 @@ public class DBAnalysis {
 			  Calendar c = Calendar.getInstance();
 			  c.setTime(new Date(0));
 			  c.set(Calendar.DAY_OF_MONTH, rs.getInt("day"));
-			  c.set(Calendar.MONTH, rs.getInt("month"));
+			  c.set(Calendar.MONTH, rs.getInt("month") - 1);
 			  c.set(Calendar.YEAR, rs.getInt("year"));
 			  //for now,  print it:
 			  /*System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
@@ -336,7 +336,7 @@ public class DBAnalysis {
 				  Calendar c = Calendar.getInstance();
 				  c.setTime(new Date(0));
 				  c.set(Calendar.DAY_OF_MONTH, rs.getInt("day"));
-				  c.set(Calendar.MONTH, rs.getInt("month"));
+				  c.set(Calendar.MONTH, rs.getInt("month") - 1);
 				  c.set(Calendar.YEAR, rs.getInt("year"));
 				  //for now,  print it:
 				  /*System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
@@ -359,7 +359,7 @@ public class DBAnalysis {
 				  Calendar c = Calendar.getInstance();
 				  c.setTime(new Date(0));
 				  c.set(Calendar.DAY_OF_MONTH, rs.getInt("day"));
-				  c.set(Calendar.MONTH, rs.getInt("month"));
+				  c.set(Calendar.MONTH, rs.getInt("month") - 1);
 				  c.set(Calendar.YEAR, rs.getInt("year"));
 				  //for now,  print it:
 				  /*System.out.println((c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.YEAR) + ": "
