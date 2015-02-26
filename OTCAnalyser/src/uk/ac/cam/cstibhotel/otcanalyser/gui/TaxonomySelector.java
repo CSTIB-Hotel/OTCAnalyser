@@ -1,6 +1,8 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -25,6 +27,7 @@ public class TaxonomySelector extends JPanel {
 		baseClassflag = true;
 		setSize(300,50);
 		setLocation(100,200);
+		setLayout(new GridLayout(4,0));
 		assetChange = new AssetChange(this);
 		Asset = new JComboBox<String>(TextStrings.Assets);
 		Asset.addActionListener(assetChange);
@@ -38,9 +41,9 @@ public class TaxonomySelector extends JPanel {
 		Asset.setVisible(true);
 		BaseClass.setVisible(true);
 		SubClass.setVisible(true);;
-		this.add(Asset,BorderLayout.WEST);
+		this.add(Asset);
 		this.add(BaseClass);
-		this.add(SubClass,BorderLayout.EAST);
+		this.add(SubClass);
 		this.add(settlementType);
 	}
 
