@@ -39,7 +39,7 @@ public class AnalysisSummary extends JPanel {
 	}
 	
 	AnalysisSummary() {
-		this.setBorder(BorderFactory.createEtchedBorder());
+		this.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(0,5,0,5), BorderFactory.createEtchedBorder()));
 		GridLayout layout = new GridLayout(1,2);
 		layout.minimumLayoutSize(this);
 		this.setLayout(layout);

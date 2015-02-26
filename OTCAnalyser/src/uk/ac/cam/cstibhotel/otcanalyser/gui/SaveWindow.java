@@ -33,8 +33,7 @@ public class SaveWindow extends JPanel {
 	
 	private SaveWindow() {
 			setSize(300,80);
-			setBorder(BorderFactory.createCompoundBorder(
-			    new EmptyBorder(5,5,5,5), BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
+			setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			
 			this.add(LoadLabel);

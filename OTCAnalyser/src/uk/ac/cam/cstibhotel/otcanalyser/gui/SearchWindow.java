@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.EmptyBorder;
 
 import org.jdesktop.swingx.autocomplete.*;
 
@@ -52,7 +53,9 @@ public class SearchWindow extends JPanel {
 			JPanel bottom = new JPanel();
 			
 			top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
+			top.setBorder(new EmptyBorder(5,5,5,5));
 			bottom.setLayout(new BoxLayout(bottom, BoxLayout.Y_AXIS));
+			bottom.setBorder(new EmptyBorder(5,5,10,5));
 			
 			TaxonomySelectorDescriptor =  new CenteredJLabel("Select a taxonomy");
 			top.add(TaxonomySelectorDescriptor);
