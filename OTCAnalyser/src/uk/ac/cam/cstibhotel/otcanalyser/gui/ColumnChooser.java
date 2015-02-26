@@ -24,11 +24,10 @@ public class ColumnChooser extends JDialog{
       panel.add(boxes[i]);
     }
     //some default settings
-    boxes[2].setSelected(true);
     boxes[3].setSelected(true);
-    boxes[9].setSelected(true);
-    boxes[10].setSelected(true);
-    boxes[16].setSelected(true);
+    boxes[4].setSelected(true);
+    boxes[25].setSelected(true);
+    boxes[27].setSelected(true);
     pack();
   }
   
