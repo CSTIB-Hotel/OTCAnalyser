@@ -6,6 +6,7 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 
 import java.awt.Dimension;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -79,10 +80,11 @@ public class DataViewer extends JTabbedPane {
 	  	  if (curr.isEmpty()) {
 	  		  curr = "Unknown Currency";
 	  	  }
+	  	  DecimalFormat format = new DecimalFormat("#.00");
 	  	  curr += "\n";
-	  	  analysis += "Largest Trade Price: " + maxes.get(i).getPrice() + " " + curr;
-	  	  analysis += "Smallest Trade Price: " + mins.get(i).getPrice() + " " + curr;
-	  	  analysis += "Average Trade Price: " + avgs.get(i).getPrice() + " " + curr;
+	  	  analysis += "Largest Trade Price: " + format.format(maxes.get(i).getPrice()) + " " + curr;
+	  	  analysis += "Smallest Trade Price: " + format.format(mins.get(i).getPrice()) + " " + curr;
+	  	  analysis += "Average Trade Price: " + format.format(avgs.get(i).getPrice()) + " " + curr;
 	  	  addAnalysis(analysis, "Basic Information", curr);
 	    }
 	  }

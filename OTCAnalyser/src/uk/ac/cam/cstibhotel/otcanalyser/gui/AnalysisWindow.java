@@ -76,9 +76,11 @@ public class AnalysisWindow extends CurrencyToolbarWindow {
 	  	}
 	  	int i = currencies.indexOf(currency);
 	  	contentPanel.get(i).add(new AnalysisPanel(analysis, title));
-	  	currentPanel = contentPanel.get(0);
-	  	pnl.add(currentPanel);
-	  	repaint();
+	  	if (pnl.getComponentCount() == 0) {
+	  	  currentPanel = contentPanel.get(0);
+	  	  pnl.add(currentPanel);
+	  	  repaint();
+	  	}
 	  }
 	  
 	  public void clear() {
