@@ -64,10 +64,10 @@ public class Trade implements Comparable<Trade> {
 		// Necessary to avoid a lot of try-catch for NPEs in Database
 		
 		action = Action.NEW;
-		executionTimestamp = new Date();
+		executionTimestamp = new Date(0);
 		collateralization = Collateralization.BLANK;
-		effectiveDate = new Date();
-		endDate = new Date();
+		effectiveDate = new Date(0);
+		endDate = new Date(0);
 		settlementCurrency = "";
 		tradeType = TradeType.OPTION;
 		assetClass = AssetClass.COMMODITY;
@@ -84,8 +84,8 @@ public class Trade implements Comparable<Trade> {
 		notionalCurrency1 = "";
 		notionalCurrency2 = "";
 		optionCurrency = "";
-		optionLockPeriod = new Date();
-		optionExpirationDate = new Date();
+		optionLockPeriod = new Date(0);
+		optionExpirationDate = new Date(0);
 		priceNotation = new Double(0);
 		priceNotation2 = new Double(0);
 		priceNotation3 = new Double(0);
