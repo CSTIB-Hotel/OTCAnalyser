@@ -15,7 +15,7 @@ public abstract class CurrencyToolbarWindow extends CBLPanel implements ActionLi
   protected boolean showToolbar = false;
   protected List<String> currencies = new ArrayList<>();
   
-	public void makeToolBar() {
+public synchronized void makeToolBar() {
   	if (showToolbar) {
   		remove(toolbar);
   	}
