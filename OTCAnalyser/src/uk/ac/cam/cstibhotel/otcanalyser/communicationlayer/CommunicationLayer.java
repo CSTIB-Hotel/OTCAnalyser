@@ -23,6 +23,9 @@ public class CommunicationLayer {
 	// Singleton instance of the communication layer
 	private static CommunicationLayer communicationLayer;
 	
+	//Analyser worker
+	private static Thread analyser;
+	
 	public static CommunicationLayer getInstance() {
 		if (communicationLayer == null) {
 			communicationLayer = new CommunicationLayer();
@@ -258,7 +261,15 @@ public class CommunicationLayer {
 		}
 		
 		//Give search and number of results to analyser
-		Analyser.analyse(s, result.getNumResults());
+		if (analyser != null && analyser.isAlive())
+			try {
+				analyser.join(1);
+			} catch (InterruptedException e) {
+				//safe to ignore
+			}
+		
+		analyser = new Analyser(s, result.getNumResults());
+		analyser.start();
 	}
 	
 }

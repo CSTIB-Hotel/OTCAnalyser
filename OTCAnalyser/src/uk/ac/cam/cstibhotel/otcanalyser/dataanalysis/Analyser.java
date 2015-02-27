@@ -9,10 +9,20 @@ import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
 import uk.ac.cam.cstibhotel.otcanalyser.database.Database;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.DataViewer;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.GUI;
+import uk.ac.cam.cstibhotel.otcanalyser.gui.StatusBar;
+import uk.ac.cam.cstibhotel.otcanalyser.networklayer.NetworkLayer;
 
-public class Analyser {
+public class Analyser extends Thread {
+	private boolean running;
+	private Search s;
+	private int numResults;
+	
+	public Analyser(Search s, int numResults) {
+		this.s = s;
+		this.numResults = numResults;
+	}
 
-	public static void analyse(Search s, int numResults) {
+	public void analyse() {
 		Connection conn = Database.getDB().getConnection();
 
 		//analysis variables
@@ -79,4 +89,12 @@ public class Analyser {
 			//analysis could not be performed; do not pass anything
 		}
 	}
+	
+	@Override
+	public void run() {
+    	running = true;
+    	StatusBar.setMessage("Plotting graph...", 0);
+        analyse();
+        StatusBar.setMessage("Done", 0);
+    }
 }

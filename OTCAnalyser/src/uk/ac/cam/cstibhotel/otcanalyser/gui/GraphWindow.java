@@ -31,13 +31,13 @@ public class GraphWindow extends CurrencyToolbarWindow implements ActionListener
   }
   
   //add trendline points to dataset
-  public void addTrendlinePoints(List<List<PriceTimePair>> ptp) {
+  public synchronized void addTrendlinePoints(List<List<PriceTimePair>> ptp) {
   	for (int i = 0; i < ptp.size(); i++) {
   		LineGraphMaker.addToSeries(ptp.get(i), datasets.get(i), LineGraphMaker.TREND_LINE, false);
   	}
   }
   
-  public void addChartPanel(String currency, boolean byMonth) {
+  public synchronized void addChartPanel(String currency, boolean byMonth) {
   	TimeSeriesCollection dataset = LineGraphMaker.makeDataset();
     datasets.add(dataset);
     String currencyName = currency;
@@ -58,7 +58,7 @@ public class GraphWindow extends CurrencyToolbarWindow implements ActionListener
   }
   
   //add trades to existing datasets
-  public void addTradesToDatasets(List<PriceTimePair> maxes, List<PriceTimePair> mins,
+  public synchronized void addTradesToDatasets(List<PriceTimePair> maxes, List<PriceTimePair> mins,
       List<PriceTimePair> avgs, String currency, boolean byMonth) {
     if (!currencies.contains(currency)) {
     	addChartPanel(currency, byMonth);
@@ -71,11 +71,13 @@ public class GraphWindow extends CurrencyToolbarWindow implements ActionListener
     if (currencies.size() > 1) {
     	makeToolBar();
     }
-    currentChart = chartPanels.get(0);
-    pnl.add(currentChart);
+    if (pnl.getComponentCount() == 0) {
+    	currentChart = chartPanels.get(0);
+    	pnl.add(currentChart);
+    }
   }
   
-  public void clear() {
+  public synchronized void clear() {
   	currencies = new ArrayList<>();
   	datasets = new ArrayList<>();
   	chartPanels = new ArrayList<>();
@@ -87,9 +89,9 @@ public class GraphWindow extends CurrencyToolbarWindow implements ActionListener
   }
   
   @Override
-  public void actionPerformed(ActionEvent e){
+  public synchronized void actionPerformed(ActionEvent e){
     if (currencies.contains(e.getActionCommand())) {
-    	pnl.remove(currentChart);
+    	pnl.removeAll();
     	currentChart = chartPanels.get(currencies.indexOf(e.getActionCommand()));
       pnl.add(currentChart);
       pnl.repaint();
