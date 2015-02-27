@@ -112,6 +112,7 @@ public class SearchWindow extends JPanel {
 			maxValue = new JSpinner(maxSpinner);
 			top.add(maxValue);
 			maxValue.setVisible(true);
+			
 			currencyDescriptor = new CenteredJLabel("Select a currency (optional)");
 			top.add(currencyDescriptor);
 			currencyDescriptor.setVisible(true);
