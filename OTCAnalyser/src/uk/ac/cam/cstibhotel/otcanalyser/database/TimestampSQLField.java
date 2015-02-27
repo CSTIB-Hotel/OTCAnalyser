@@ -13,6 +13,10 @@ public class TimestampSQLField extends SQLField{
 		this.fieldValue = new Timestamp(fieldValue);
 	}
 	
+	public TimestampSQLField(Timestamp t){
+		this.fieldValue = t;
+	}
+	
 	@Override
 	public String getType() {
 		return "TIMESTAMP";
