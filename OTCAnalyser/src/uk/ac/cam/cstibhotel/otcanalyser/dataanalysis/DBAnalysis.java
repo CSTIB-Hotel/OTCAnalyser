@@ -259,7 +259,7 @@ public class DBAnalysis {
 
 			result.getMin().add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("minRNA"), null));
 			result.getMax().add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("maxRNA"), null));
-			result.getAvg().add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("avgRNA"), null));
+			result.getAvg().add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getDouble("avgRNA"), null));
 		}
 		return result;
 	}
