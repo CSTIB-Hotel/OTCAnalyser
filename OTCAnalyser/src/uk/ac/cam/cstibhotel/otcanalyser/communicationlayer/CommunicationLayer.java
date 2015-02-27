@@ -257,7 +257,7 @@ public class CommunicationLayer {
 		//Give search and number of results to analyser
 		if (analyser != null && analyser.isAlive())
 			try {
-				analyser.join();
+				analyser.join(1);
 			} catch (InterruptedException e) {
 				//safe to ignore
 			}
