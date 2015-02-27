@@ -118,7 +118,7 @@ public class DBAnalysisTest {
   	try {
   		SearchResult sr = Database.getDB().search(s);
   		if (sr.getNumResults() > 0) {
-  			list = DBAnalysis.getMaxPricePerMonth(s, connection, DBAnalysis.EXECUTION_TIME);
+  			list = DBAnalysis.getPerMonthStats(s, connection, DBAnalysis.EXECUTION_TIME).getMax();
     	  assertEquals((list.get(0).getPrice()), 9, 0);
     	  assertEquals((list.get(1).getPrice()), 19, 0);
   		} else {
@@ -147,7 +147,7 @@ public class DBAnalysisTest {
   	try {
   		SearchResult sr = Database.getDB().search(s);
   		if (sr.getNumResults() > 0) {
-  		  list = DBAnalysis.getAvgPricePerMonth(s, connection, DBAnalysis.EXECUTION_TIME);
+  		  list = DBAnalysis.getPerMonthStats(s, connection, DBAnalysis.EXECUTION_TIME).getAvg();
     	  assertEquals((list.get(0).getPrice()), 4.5, 0);
   		} else {
   			System.out.println("Empty");

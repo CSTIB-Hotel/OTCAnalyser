@@ -195,7 +195,7 @@ public class DBAnalysis {
 
 	//gets avg Rounded Notional Amount 1
 	public static double getAvgPrice(Search s, Connection conn) throws SQLException {
-		PreparedStatement ps = statementPreparer(s, "avg(roundedNotionalAmount1) AS avgRNA", "", "", conn);
+		PreparedStatement ps = statementPreparer(s, "avg(CAST(roundedNotionalAmount1 AS DOUBLE)) AS avgRNA", "", "", conn);
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()) {
 			return rs.getDouble("avgRNA");
@@ -220,7 +220,7 @@ public class DBAnalysis {
 		
 		PreparedStatement ps = statementPreparer(s,
 				"max(roundedNotionalAmount1) AS maxRNA, min(roundedNotionalAmount1) AS minRNA, "
-				+"avg(roundedNotionalAmount1) AS avgRNA, STDDEV_POP(roundedNotionalAmount1) AS stddev, "
+				+"avg(CAST(roundedNotionalAmount1 AS DOUBLE)) AS avgRNA, STDDEV_POP(CAST(roundedNotionalAmount1 AS DOUBLE)) AS stddev, "
 				+"MONTH(" + date + ") AS month, YEAR(" + date + ") AS year, notionalCurrency1 AS curr",
 				"", "GROUP BY month, year, curr", conn);
 		ResultSet rs = ps.executeQuery();
@@ -233,8 +233,8 @@ public class DBAnalysis {
 
 			result.getMax().add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("maxRNA"), null));
 			result.getMin().add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("minRNA"), null));
-			result.getAvg().add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("avgRNA"), null));
-			result.getStddev().add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("stddev"), null));
+			result.getAvg().add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getDouble("avgRNA"), null));
+			//result.getStddev().add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getDouble("stddev"), null));
 		}
 		
 		return result;
@@ -245,7 +245,7 @@ public class DBAnalysis {
 
 		PreparedStatement ps = statementPreparer(s,
 				"max(roundedNotionalAmount1) AS maxRNA, min(roundedNotionalAmount1) AS minRNA, "
-				+"avg(roundedNotionalAmount1) AS avgRNA, "
+				+"avg(CAST(roundedNotionalAmount1 AS DOUBLE)) AS avgRNA, "
 				+"DAY("+date+") as day, MONTH("+date+") AS month, YEAR("+date+") AS year, "
 				+"notionalCurrency1 AS curr", "", "GROUP BY day, month, year, curr", conn);
 		ResultSet rs = ps.executeQuery();
