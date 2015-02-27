@@ -159,11 +159,8 @@ public class DBAnalysis {
 			last.setTime(rs.getDate("lastDate"));
 			if (last.get(Calendar.YEAR)-first.get(Calendar.YEAR)>0&&first.get(Calendar.MONTH)-last.get(Calendar.MONTH)<9) {
 				return true;
-
-			} else if (last.get(Calendar.MONTH)-first.get(Calendar.MONTH)>3) {
-				return true;
 			} else {
-				return false;
+				return last.get(Calendar.MONTH)-first.get(Calendar.MONTH)>3;
 			}
 		} else {
 			throw new SQLException();
