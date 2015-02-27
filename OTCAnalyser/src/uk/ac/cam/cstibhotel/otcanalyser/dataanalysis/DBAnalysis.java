@@ -195,7 +195,7 @@ public class DBAnalysis {
 
 	//gets avg Rounded Notional Amount 1
 	public static double getAvgPrice(Search s, Connection conn) throws SQLException {
-		PreparedStatement ps = statementPreparer(s, "avg(CAST(roundedNotionalAmount1 AS DOUBLE)) AS avgRNA", "", "", conn);
+		PreparedStatement ps = statementPreparer(s, "avg(roundedNotionalAmount1) AS avgRNA", "", "", conn);
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()) {
 			return rs.getDouble("avgRNA");
@@ -206,7 +206,7 @@ public class DBAnalysis {
 
 	//gets population std dev of Rounded Notional Amount 1
 	public static double getStdDevPrice(Search s, Connection conn) throws SQLException {
-		PreparedStatement ps = statementPreparer(s, "STDDEV_POP(CAST(roundedNotionalAmount1 AS DOUBLE)) AS stddev", "", "", conn);
+		PreparedStatement ps = statementPreparer(s, "STDDEV_POP(roundedNotionalAmount1) AS stddev", "", "", conn);
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()) {
 			return rs.getDouble("stddev");
@@ -259,7 +259,7 @@ public class DBAnalysis {
 
 	//gets avg Rounded Notional Amount 1 per month
 	public static List<PriceTimePair> getAvgPricePerMonth(Search s, Connection conn, String date) throws SQLException {
-		PreparedStatement ps = statementPreparer(s, "avg(CAST(roundedNotionalAmount1 AS DOUBLE)) AS avgRNA, MONTH("+date+") AS month, YEAR("
+		PreparedStatement ps = statementPreparer(s, "avg(roundedNotionalAmount1) AS avgRNA, MONTH("+date+") AS month, YEAR("
 				+date+") AS year, notionalCurrency1 AS curr", "", "GROUP BY month, year, curr", conn);
 		ResultSet rs = ps.executeQuery();
 		  //info about what's getting printed
@@ -280,7 +280,7 @@ public class DBAnalysis {
 
 	//gets the population stdev of Rounded Notional Amount1 per month grouped by Notional Currency
 	public static List<PriceTimePair> getPriceStdDevPerMonth(Search s, Connection conn, String date) throws SQLException {
-		PreparedStatement ps = statementPreparer(s, "STDDEV_POP(CAST(roundedNotionalAmount1 AS DOUBLE)) AS stddev, MONTH("+date+") AS month, YEAR("
+		PreparedStatement ps = statementPreparer(s, "STDDEV_POP(roundedNotionalAmount1) AS stddev, MONTH("+date+") AS month, YEAR("
 				+date+") AS year, notionalCurrency1 AS curr", "", "GROUP BY month, year, curr", conn);
 		ResultSet rs = ps.executeQuery();
 		  //info about what's getting printed
