@@ -54,12 +54,12 @@ public class LineGraphMaker {
 		TimeSeries max = new TimeSeries("Maximum");
 		TimeSeries min = new TimeSeries("Minimum");
 		TimeSeries avg = new TimeSeries("Average");
-		TimeSeries trendLine = new TimeSeries("Trend Line");
+		//TimeSeries trendLine = new TimeSeries("Trend Line");
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
 		dataset.addSeries(max);
 		dataset.addSeries(min);
 		dataset.addSeries(avg);
-		dataset.addSeries(trendLine);
+		//dataset.addSeries(trendLine);
 		return dataset;
 	}
 	
