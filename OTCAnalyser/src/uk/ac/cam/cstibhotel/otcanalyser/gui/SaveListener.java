@@ -11,6 +11,7 @@ public class SaveListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		try {
 			CommunicationLayer.saveSearch(SaveWindow.getInstance().Savebox.getText());
+			SaveWindow.updateLoad();
 		} catch (ParseException e1) {
 			StatusBar.setMessage("There was an error parsing the search parameters", 1);
 		}
