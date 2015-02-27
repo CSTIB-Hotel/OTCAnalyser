@@ -104,6 +104,7 @@ public class Database {
 			connection.createStatement().execute(dataTableCreator.toString());
 			connection.createStatement().executeQuery("CREATE INDEX ua1 ON data (underlyingAsset1)");
 			connection.createStatement().executeQuery("CREATE INDEX eTcurr ON data (executionTime, notionalCurrency1)");
+			connection.createStatement().executeQuery("CREATE INDEX rna1 ON data (roundedNotionalAmount1)");
 		} catch (SQLException e) {
 			if(e.getErrorCode() != TableAlreadyExistsError && e.getErrorCode() != ObjectNameAlreadyExists){
 				System.err.println(e.getErrorCode());

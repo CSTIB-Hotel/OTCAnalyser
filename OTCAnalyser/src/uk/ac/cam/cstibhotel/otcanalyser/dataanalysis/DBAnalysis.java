@@ -166,20 +166,14 @@ public class DBAnalysis {
 			throw new SQLException();
 		}
 	}
-
+	
 	//gets max Rounded Notional Amount 1
 	public static AnalysisItem getMaxPrice(Search s, Connection conn) throws SQLException {
-		PreparedStatement ps = statementPreparer(s, "max(roundedNotionalAmount1) AS maxRNA", "", "", conn);
+		PreparedStatement ps = statementPreparer(s, "notionalCurrency1 AS curr,"
+				+ "underlyingAsset1 as asset, roundedNotionalAmount1 AS maxRNA, "+EXECUTION_TIME, "", 
+				"ORDER by maxRNA DESC, " + EXECUTION_TIME + " DESC LIMIT 1", conn);
 		ResultSet rs = ps.executeQuery();
-		if (rs.next()) {
-			ps = statementPreparer(s,
-					"roundedNotionalAmount1 as maxRNA, notionalCurrency1 AS curr, underlyingAsset1 as asset, "+EXECUTION_TIME,
-					"roundedNotionalAmount1 = "+rs.getLong("maxRNA"), "ORDER BY "+EXECUTION_TIME+" DESC", conn);
-		} else {
-			return null;
-		}
-		rs = ps.executeQuery();
-		if (rs.next()) {
+		if(rs.next()){	
 			return new AnalysisItem(new Date(rs.getTimestamp(EXECUTION_TIME).getTime()), rs.getString("curr"), rs.getLong("maxRNA"), rs.getString("asset"));
 		} else {
 			return null;
@@ -188,18 +182,12 @@ public class DBAnalysis {
 
 	//gets min Rounded Notional Amount 1
 	public static AnalysisItem getMinPrice(Search s, Connection conn) throws SQLException {
-		PreparedStatement ps = statementPreparer(s, "min(roundedNotionalAmount1) AS minRNA", "", "", conn);
+		PreparedStatement ps = statementPreparer(s, "notionalCurrency1 AS curr,"
+				+ "underlyingAsset1 as asset, roundedNotionalAmount1 AS maxRNA, "+EXECUTION_TIME, "", 
+				"ORDER by maxRNA ASC, " + EXECUTION_TIME + " DESC LIMIT 1", conn);
 		ResultSet rs = ps.executeQuery();
-		if (rs.next()) {
-			ps = statementPreparer(s,
-					"roundedNotionalAmount1 as minRNA, notionalCurrency1 AS curr, underlyingAsset1 as asset, "+EXECUTION_TIME,
-					"roundedNotionalAmount1 = "+rs.getLong("minRNA"), "ORDER BY "+EXECUTION_TIME+" DESC", conn);
-		} else {
-			return null;
-		}
-		rs = ps.executeQuery();
-		if (rs.next()) {
-			return new AnalysisItem(new Date(rs.getTimestamp(EXECUTION_TIME).getTime()), rs.getString("curr"), rs.getLong("minRNA"), rs.getString("asset"));
+		if(rs.next()){	
+			return new AnalysisItem(new Date(rs.getTimestamp(EXECUTION_TIME).getTime()), rs.getString("curr"), rs.getLong("maxRNA"), rs.getString("asset"));
 		} else {
 			return null;
 		}
