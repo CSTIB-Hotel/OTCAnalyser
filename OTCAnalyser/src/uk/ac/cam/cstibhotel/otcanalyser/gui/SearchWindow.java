@@ -35,7 +35,7 @@ public class SearchWindow extends JPanel {
 	private JLabel maxValueDescriptor;
 	public JSpinner maxValue;
 	private JLabel currencyDescriptor;
-	public JTextField currency;
+	public JComboBox currency;
 	public JButton SearchButton;
 	public SaveWindow saveWindow;
 	
@@ -115,8 +115,9 @@ public class SearchWindow extends JPanel {
 			currencyDescriptor = new CenteredJLabel("Select a currency (optional)");
 			top.add(currencyDescriptor);
 			currencyDescriptor.setVisible(true);
-			currency = new JTextField();	
-			Configurator.enableAutoCompletion(myList,currency);
+			currency = new JComboBox<String>(TextStrings.Currencies);
+			currency.setEditable(true);
+			Configurator.enableAutoCompletion(currency);
 			top.add(currency);
 			currency.setVisible(true);
 			SearchButton = new JButton("Search");

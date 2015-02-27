@@ -59,7 +59,7 @@ public class CommunicationLayer {
 			StatusBar.setMessage("Error: Price fields must contain integers", 1);
 		}
 
-		s.setCurrency(SearchWindow.getInstance().currency.getText());
+		s.setCurrency((String)SearchWindow.getInstance().currency.getSelectedItem());
 		
 		int day = (int) SearchWindow.getInstance().StartDate.Day.getSelectedItem();
 		String monthString = (String) SearchWindow.getInstance().StartDate.Months.getSelectedItem();
@@ -168,7 +168,7 @@ public class CommunicationLayer {
 		SearchWindow.getInstance().maxValue.setValue(s.getMaxPrice());
 		
 		// Set the currency
-		SearchWindow.getInstance().currency.setText(s.getCurrency());
+		SearchWindow.getInstance().currency.setSelectedItem((s.getCurrency()));
 		
 		// Set the start date and end date
 		Calendar cal = Calendar.getInstance();
