@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,6 +29,7 @@ public class AnalysisSummary extends JPanel {
 
 	private JLabel mostTraded = new JLabel("Most Traded Underlying Asset: N/A");
 	private JLabel numberOfTrades = new JLabel("Number of Trades: 0");
+	public JButton help = new JButton("Help");
 
 	private static AnalysisSummary analysisSummary;
 	
@@ -40,9 +42,14 @@ public class AnalysisSummary extends JPanel {
 	
 	AnalysisSummary() {
 		this.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(0,5,0,5), BorderFactory.createEtchedBorder()));
-		GridLayout layout = new GridLayout(1,2);
+		GridLayout layout = new GridLayout(1,3);
 		layout.minimumLayoutSize(this);
 		this.setLayout(layout);
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+		panel.add(help,BorderLayout.WEST);
+		add(panel);
+		help.addActionListener(new HelpListener());
 		add(mostTraded);
 		add(numberOfTrades);
 		setVisible(true);

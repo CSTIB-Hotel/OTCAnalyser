@@ -505,6 +505,9 @@ public class Database {
 	public static Search getSavedSearch(String name) {
 		String query = "SELECT * FROM savedSearches WHERE searchName = ?";
 		try{
+			if(connection == null){
+				getDB();
+			}
 			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setString(1, name);
 			ResultSet rs = ps.executeQuery();
@@ -533,9 +536,12 @@ public class Database {
 	 *
 	 * @return The 5 most recently saved previously saved searches
 	 */
-	public Map<String, Search> getSavedSearches() {
+	public static Map<String, Search> getSavedSearches() {
 		Map<String, Search> savedSearches = new LinkedHashMap<>();
 		
+		if(connection == null){
+				getDB();
+		}
 		String query = "SELECT * FROM savedSearches ORDER BY id DESC LIMIT 5";
 		try {
 			ResultSet rs = connection.createStatement().executeQuery(query);

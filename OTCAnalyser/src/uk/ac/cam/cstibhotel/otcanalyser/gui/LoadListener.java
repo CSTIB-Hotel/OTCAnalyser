@@ -9,7 +9,7 @@ public class LoadListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		CommunicationLayer.loadSearch(SaveWindow.getInstance().Loadbox.getText());
+		CommunicationLayer.loadSearch((String) SaveWindow.getInstance().Loadbox.getSelectedItem());
 	}
 
 }

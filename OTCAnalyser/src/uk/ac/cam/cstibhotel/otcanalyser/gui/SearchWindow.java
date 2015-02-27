@@ -83,6 +83,7 @@ public class SearchWindow extends JPanel {
 			StartDateDescriptor.setVisible(true);
 			StartDate = new DateSelector();
 			top.add(StartDate);
+			StartDate.Year.setSelectedIndex(2);
 			StartDate.setVisible(true);
 			EndDateDescriptor = new CenteredJLabel("Select end date");
 
@@ -91,8 +92,11 @@ public class SearchWindow extends JPanel {
 			EndDate = new DateSelector();
 			top.add(EndDate);
 			EndDate.setVisible(true);
+			
 			minValueDescriptor = new CenteredJLabel("Select minimum price (optional)");
 			top.add(minValueDescriptor);
+			minValueDescriptor.setToolTipText("Note: if the min and max are equal," +  "\n" +
+			" then their values will be ignored");
 			minValueDescriptor.setVisible(true);
 	
 			//Negative values not allowed
@@ -100,6 +104,7 @@ public class SearchWindow extends JPanel {
 			minSpinner.setMinimum(0);
 			minValue = new JSpinner(minSpinner);
 			top.add(minValue);
+			minValue.setToolTipText("This is bad");
 			minValue.setVisible(true);
 			
 			maxValueDescriptor = new CenteredJLabel("Select maximum price (optional)");
@@ -112,6 +117,7 @@ public class SearchWindow extends JPanel {
 			maxValue = new JSpinner(maxSpinner);
 			top.add(maxValue);
 			maxValue.setVisible(true);
+			
 			currencyDescriptor = new CenteredJLabel("Select a currency (optional)");
 			top.add(currencyDescriptor);
 			currencyDescriptor.setVisible(true);
