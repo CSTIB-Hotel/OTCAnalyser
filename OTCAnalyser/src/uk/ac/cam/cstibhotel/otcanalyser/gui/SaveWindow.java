@@ -7,6 +7,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
 public class SaveWindow extends JPanel {

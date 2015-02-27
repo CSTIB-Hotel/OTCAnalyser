@@ -26,8 +26,8 @@ public class AnalysisSummary extends JPanel {
 	
 	TradeDisplayer analysisInfo = new TradeDisplayer();
 
-	private JLabel mostTraded = new JLabel("test1");
-	private JLabel numberOfTrades = new JLabel("test2");
+	private JLabel mostTraded = new JLabel("Most Traded Underlying Asset: N/A");
+	private JLabel numberOfTrades = new JLabel("Number of Trades: 0");
 
 	private static AnalysisSummary analysisSummary;
 	
@@ -39,11 +39,13 @@ public class AnalysisSummary extends JPanel {
 	}
 	
 	AnalysisSummary() {
-		this.setBorder(BorderFactory.createEtchedBorder());
+		this.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(0,5,0,5), BorderFactory.createEtchedBorder()));
 		GridLayout layout = new GridLayout(1,2);
 		layout.minimumLayoutSize(this);
 		this.setLayout(layout);
-		setVisible(false);
+		add(mostTraded);
+		add(numberOfTrades);
+		setVisible(true);
 	}
 
 	public void UpdateWindow(String mostTradedAsset, int numTrades) {
