@@ -54,6 +54,7 @@ public class Database {
 				db = new Database();
 			} catch (SQLException ex) {
 				System.err.println("There was a fatal database error, class 1");
+				System.err.println(ex.getMessage());
 				System.exit(1);
 			} catch (ClassNotFoundException e) {
 				System.err.println("Error: Could not locate database driver");
@@ -95,7 +96,16 @@ public class Database {
 
 		while (i.hasNext()) {
 			Entry<String, SQLField> mapEntry = i.next();
-			dataTableCreator.append(mapEntry.getKey()).append(" ").append(mapEntry.getValue().getType()).append(", ");
+			if(mapEntry != null && mapEntry.getValue() != null){
+				dataTableCreator.append(mapEntry.getKey()).append(" ").append(mapEntry.getValue().getType()).append(", ");
+			} else {
+				if(mapEntry == null){
+					System.out.println("a");
+				} else {
+					System.out.println("b");
+				}
+			//	dataTableCreator.app
+			}
 		}
 
  		dataTableCreator.append(" UNIQUE (id));");
@@ -205,7 +215,7 @@ public class Database {
 				if(e.getErrorCode() == RowWithUniqueFieldAlreadyExistsError){
 					// ignore, we've just tried to duplicate a row
 				} else {
-					System.err.println(e.getErrorCode());
+					System.err.println(e.getMessage());
 					System.err.println("Failed to insert/update a row");
 					success = false;
 				}
