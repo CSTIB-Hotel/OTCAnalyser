@@ -149,6 +149,11 @@ public class CommunicationLayer {
 	public static void loadSearch(String name) {
 		Search s = Database.getSavedSearch(name);
 		
+		if (s == null) {
+			// Search could not be loaded, so set an error message and return
+			StatusBar.setMessage("Failed to load search '" + name + "', search did not exist", 1);
+		}
+		
 		System.out.println(s.getAsset());
 		
 		// Set the trade type
