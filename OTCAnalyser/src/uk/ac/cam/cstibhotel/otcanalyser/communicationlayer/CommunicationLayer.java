@@ -152,6 +152,7 @@ public class CommunicationLayer {
 		if (s == null) {
 			// Search could not be loaded, so set an error message and return
 			StatusBar.setMessage("Failed to load search '" + name + "', search did not exist", 1);
+			return;
 		}
 		
 		System.out.println(s.getAsset());
