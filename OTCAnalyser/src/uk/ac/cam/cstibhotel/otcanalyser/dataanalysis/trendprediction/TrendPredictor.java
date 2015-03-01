@@ -90,6 +90,7 @@ public class TrendPredictor {
 		}
 		leastMeanSquaresA = meanPrice - (leastMeanSquaresB * meanTime);
 		
+		
 	}
 	
 	public PredictionResult createPredictionResult() {
