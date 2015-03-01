@@ -368,5 +368,22 @@ public class DBAnalysis {
 			  }
 			  return list;
 			}
+			
+		//gets all data points to perform trendline analysis
+			public static List<PriceTimePair> getDataPoints(Search s, Connection conn, String date) throws SQLException {
+				PreparedStatement ps = statementPreparer(s, "roundedNotionalAmount1 as RNA, DAY(" + date + ") as day, MONTH(" + date + ") AS month, YEAR("
+		          + date + ") AS year, notionalCurrency1 AS curr", "","",conn);
+				ResultSet rs = ps.executeQuery();
+				ArrayList<PriceTimePair> list = new ArrayList<>();
+				while(rs.next()){
+					Calendar c = Calendar.getInstance();
+					c.set(Calendar.DAY_OF_MONTH, rs.getInt("day"));
+					c.set(Calendar.MONTH, rs.getInt("month"));
+					c.set(Calendar.YEAR, rs.getInt("year"));
+					list.add(new AnalysisItem(c.getTime(), rs.getString("curr"), rs.getLong("RNA"), null));
+				}
+				return list;
+				
+			}
 		
 }

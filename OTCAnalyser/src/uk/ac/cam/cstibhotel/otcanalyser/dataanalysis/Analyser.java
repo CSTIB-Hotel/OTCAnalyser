@@ -33,6 +33,7 @@ public class Analyser {
   	List<PriceTimePair> maxes; //max data points
   	List<PriceTimePair> mins; //min data points
   	List<PriceTimePair> avgs; //average data points
+  	List<PriceTimePair> dataSet;
   	double changeInAvgCost;
   	String currency = ""; //currency for change in average cost
   	
@@ -72,6 +73,8 @@ public class Analyser {
 	    	    avgs = DBAnalysis.getAvgPricePerDay(s, conn, DBAnalysis.EXECUTION_TIME);
 	  	  	}
 	    	  //pass lists to graph:
+	  	  	//make data points for trendline
+	  	  	dataSet = DBAnalysis.getDataPoints(s, conn, DBAnalysis.EXECUTION_TIME);
 	  	  	
 	  	  	//gettinf the first and last elements for "time coordinate"
 	  	  	  PriceTimePair first = maxes.get(0);
@@ -86,35 +89,37 @@ public class Analyser {
 	  	  	   * Creating trend lines
 	  	  	   * 
 	  	  	   */
+	  	  	  TrendPredictor trendLineP = new TrendPredictor(new PerCurrencyData(dataSet, curr, byMonth));
+	  	  	  PredictionResult trendResult = trendLineP.createPredictionResult();
 	  	  	  PerCurrencyData avgPerCurrency = new PerCurrencyData(avgs, curr, byMonth);
-	  	  	  TrendPredictor avgTrendPredictor = new TrendPredictor(avgPerCurrency);
-	  	  	  TrendPredictor minTrendPredictor = new TrendPredictor(new PerCurrencyData(mins, curr, byMonth));
-	  	  	  TrendPredictor maxTrendPredictor = new TrendPredictor(new PerCurrencyData(maxes, curr, byMonth));
-	  	  	  PredictionResult avgPR = avgTrendPredictor.createPredictionResult();
-	  	  	  PredictionResult minPR = minTrendPredictor.createPredictionResult();
-	  	  	  PredictionResult maxPR = maxTrendPredictor.createPredictionResult();
+//	  	  	  TrendPredictor avgTrendPredictor = new TrendPredictor(avgPerCurrency);
+//	  	  	  TrendPredictor minTrendPredictor = new TrendPredictor(new PerCurrencyData(mins, curr, byMonth));
+//	  	  	  TrendPredictor maxTrendPredictor = new TrendPredictor(new PerCurrencyData(maxes, curr, byMonth));
+//	  	  	  PredictionResult avgPR = avgTrendPredictor.createPredictionResult();
+//	  	  	  PredictionResult minPR = minTrendPredictor.createPredictionResult();
+//	  	  	  PredictionResult maxPR = maxTrendPredictor.createPredictionResult();
 	  	  	  
-	  	  	  System.out.println(avgPR.pmcc+" "+avgPR.regA+" "+avgPR.regB);
+	  	  	  //System.out.println(avgPR.pmcc+" "+avgPR.regA+" "+avgPR.regB);
 	  	  	  
-	  	  	  //AVERAGE trend line
-	  	  	  List<PriceTimePair> avgTrendLine = new ArrayList<PriceTimePair>();
-	  	  	  double avgFirstY = avgPR.regA + firstX*avgPR.regB;
-	  	  	  double avgLastY = avgPR.regA + lastX*avgPR.regB;
+	  	  	  //calculate trendline
+	  	  	  List<PriceTimePair> trendLine = new ArrayList<PriceTimePair>();
+	  	  	  double avgFirstY = trendResult.regA + firstX*trendResult.regB;
+	  	  	  double avgLastY = trendResult.regA + lastX*trendResult.regB;
 	  	  	  
 	  	  	  //System.out.println(avgFirstY);
 	  	  	  //System.out.println(avgLastY);
 	  	  	  
-	  	  	  avgTrendLine.add(new PriceTimePair(new Date(firstX), avgFirstY));
-	  	  	  avgTrendLine.add(new PriceTimePair(new Date(lastX), avgLastY));
+	  	  	  trendLine.add(new PriceTimePair(new Date(firstX), avgFirstY));
+	  	  	  trendLine.add(new PriceTimePair(new Date(lastX), avgLastY));
 	  	  	  
-	  	  	  List<PriceTimePair> maxTrendLine = new ArrayList<PriceTimePair>();
-	  	  	  List<PriceTimePair> minTrendLine = new ArrayList<PriceTimePair>();
+//	  	  	  List<PriceTimePair> maxTrendLine = new ArrayList<PriceTimePair>();
+//	  	  	  List<PriceTimePair> minTrendLine = new ArrayList<PriceTimePair>();
 	  	  	  
-	  	  	  List<List<PriceTimePair>> trendLines = new ArrayList<List<PriceTimePair>>();
+//	  	  	  List<List<PriceTimePair>> trendLines = new ArrayList<List<PriceTimePair>>();
 	  	  	  
-	  	  	  trendLines.add(avgTrendLine);
+//	  	  	  trendLines.add(avgTrendLine);
 	  	  	  
-	  	  	  DataViewer.addGraphPoints(maxes, mins, avgs, trendLines, curr, byMonth);
+	  	  	  DataViewer.addGraphPoints(maxes, mins, avgs, trendLine, curr, byMonth);
 	    	  
 	    	  //add to per currency data list
 	    	  perCurrencyDataList.add(avgPerCurrency);

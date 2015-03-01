@@ -50,6 +50,10 @@ public class TrendPredictor {
 		
 		int n = points.size();
 		
+		if(n == 0){
+			return;
+		}
+		
 		for (int i = 0; i < n; i++) {
 			float currentX = (float) points.get(i).getTime().getTime();
 			float currentY = (float) points.get(i).getPrice();
@@ -64,6 +68,8 @@ public class TrendPredictor {
 		syy = sumYSquare - ((1 / n) * sumY * sumY);
 		sxy = sumXY - ((1 / n) * sumX * sumY);
 		
+		System.out.println("sxx="+sxx+" syy="+syy+" sxy="+syy+" n="+n);
+		
 		// Calculate means
 		meanPrice = sumY / n;
 		meanTime = sumX / n;
@@ -76,8 +82,14 @@ public class TrendPredictor {
 		productMomentCorrelationCoefficient = (float) (sxy / (Math.sqrt(sxx * syy)));
 		
 		// Calculate regression coefficients
-		leastMeanSquaresB = sxy / sxx;
+		if(sxx != 0.0){
+			leastMeanSquaresB = sxy / sxx;
+		}
+		else{
+			leastMeanSquaresB = (float)0.0;
+		}
 		leastMeanSquaresA = meanPrice - (leastMeanSquaresB * meanTime);
+		
 	}
 	
 	public PredictionResult createPredictionResult() {
