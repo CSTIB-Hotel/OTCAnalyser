@@ -103,7 +103,7 @@ public class Analyser {
 	  	  	  
 	  	  	  //calculate trendline
 	  	  	  List<PriceTimePair> trendLine = new ArrayList<PriceTimePair>();
-	  	  	  double avgFirstY = trendResult.regA + firstX*trendResult.regB;
+	  	  	  double avgFirstY = (double)trendResult.regA + (double)firstX*(double)trendResult.regB;
 	  	  	  double avgLastY = trendResult.regA + lastX*trendResult.regB;
 	  	  	  
 	  	  	  //System.out.println(avgFirstY);
