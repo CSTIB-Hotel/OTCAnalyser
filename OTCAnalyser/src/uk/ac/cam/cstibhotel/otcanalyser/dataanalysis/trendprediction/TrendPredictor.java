@@ -76,7 +76,12 @@ public class TrendPredictor {
 		productMomentCorrelationCoefficient = (float) (sxy / (Math.sqrt(sxx * syy)));
 		
 		// Calculate regression coefficients
-		leastMeanSquaresB = sxy / sxx;
+		if(sxx != 0.0){
+			leastMeanSquaresB = sxy / sxx;
+		}
+		else{
+			leastMeanSquaresB = (float)0.0;
+		}
 		leastMeanSquaresA = meanPrice - (leastMeanSquaresB * meanTime);
 	}
 	
