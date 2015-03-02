@@ -441,7 +441,7 @@ public class Database {
 		} catch (SQLException ex) {
 			System.out.println(ex.getMessage());
 			System.err.println("Search failed");
-			return new SearchResult(new LinkedList<>(), 0.0);
+			return new SearchResult(new LinkedList<Trade>(), 0.0);
 		}
 	}
 
