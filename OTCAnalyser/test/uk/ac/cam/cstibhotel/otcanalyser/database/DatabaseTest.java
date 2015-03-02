@@ -6,16 +6,11 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
-
-import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
-import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 
@@ -73,9 +68,7 @@ public class DatabaseTest {
 		assertEquals(true, rs.getBoolean(1));
 	}
 	
-	public void specialAdder() throws SQLException {
-		System.out.println("addTradeInsert");
-		
+	private void specialAdder() throws SQLException {	
 		List<Trade> tradeList = new LinkedList<>();
 		
 		Trade trade = new Trade();
@@ -85,6 +78,14 @@ public class DatabaseTest {
 		
 		tradeList.add(trade);
 				
+		Database instance = Database.getDB();
+		boolean result = instance.addTrade(tradeList);
+		assertTrue(result);
+	}
+	
+	private void specialAdder(Trade t) throws SQLException {
+		List<Trade> tradeList = new LinkedList<>();
+		tradeList.add(t);	
 		Database instance = Database.getDB();
 		boolean result = instance.addTrade(tradeList);
 		assertTrue(result);
@@ -164,65 +165,5 @@ public class DatabaseTest {
 		Date result = instance.getLastUpdateTime();
 		assertTrue((expResult.getTime() - result.getTime()) < 1000); // accept a second of tolerance
 	}
-
-	/**
-	 * Test of search method, of class Database.
-	 */
-	@Ignore @Test
-	public void testSearch() {
-		System.out.println("search");
-		Search s = null;
-		Database instance = null;
-		SearchResult expResult = null;
-		SearchResult result = instance.search(s);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of saveSearch method, of class Database.
-	 */
-	@Ignore @Test
-	public void testSaveSearch() {
-		System.out.println("saveSearch");
-		Search s = null;
-		Database instance = null;
-		boolean expResult = false;
-		boolean result = instance.saveSearch(s, "Sample name");
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of getSavedSearches method, of class Database.
-	 */
-	@Ignore @Test
-	public void testGetSavedSearches() {
-		System.out.println("getSavedSearches");
-		Database instance = null;
-		Map<String, Search> expResult = null;
-		Map<String, Search> result = instance.getSavedSearches();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-	
-	/**
-	 * Test of getSavedSearch method, of class Database.
-	 */
-	@Ignore @Test
-	public void testGetSavedSearch() {
-		System.out.println("getSavedSearch");
-		Database instance = null;
-		Map<String, Search> expResult = null;
-		Map<String, Search> result = instance.getSavedSearches();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-
 	
 }
