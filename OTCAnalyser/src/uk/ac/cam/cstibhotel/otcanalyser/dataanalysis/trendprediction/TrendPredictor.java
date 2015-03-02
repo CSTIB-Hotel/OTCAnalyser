@@ -60,9 +60,9 @@ public class TrendPredictor {
 			sumXY += (currentX * currentY);
 		}
 		
-		sxx = sumXSquare - ((1 / n) * sumX * sumX);
-		syy = sumYSquare - ((1 / n) * sumY * sumY);
-		sxy = sumXY - ((1 / n) * sumX * sumY);
+		sxx = (n * sumXSquare) - (sumX * sumX);
+		syy = (n * sumYSquare) - (sumY * sumY);
+		sxy = (n * sumXY) - (sumX * sumY);
 		
 		// Calculate means
 		meanPrice = sumY / n;
