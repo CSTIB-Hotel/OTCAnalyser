@@ -106,9 +106,9 @@ public class SearchWindow extends JPanel {
 			Long val = 0L;
 			Long min = 0L;
 			Long max = Long.MAX_VALUE;
-			Long step = 0L;
+			Long step = 1L;
 			//Negative values not allowed
-			SpinnerNumberModel minSpinner = new SpinnerNumberModel(	val, min, max , step);
+			SpinnerNumberModel minSpinner = new SpinnerNumberModel(val, min, max ,step);
 			minValue = new JSpinner(minSpinner);
 			top.add(minValue);
 			minValue.setToolTipText("This is bad");
@@ -120,7 +120,6 @@ public class SearchWindow extends JPanel {
 			
 			//Negative values not allowed
 			SpinnerNumberModel maxSpinner = new SpinnerNumberModel(val, min, max , step);
-			maxSpinner.setMinimum(0);
 			maxValue = new JSpinner(maxSpinner);
 			top.add(maxValue);
 			maxValue.setVisible(true);
