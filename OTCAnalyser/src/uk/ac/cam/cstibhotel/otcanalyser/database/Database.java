@@ -28,7 +28,8 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.TradeType;
 
 /**
- *
+ * A database class for storing OTC trades
+ * 
  * @author Wai-Wai Ng
  */
 public class Database {
