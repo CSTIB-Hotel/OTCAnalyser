@@ -13,7 +13,6 @@ import uk.ac.cam.cstibhotel.otcanalyser.database.Database;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.DataViewer;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.GUI;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.StatusBar;
-import uk.ac.cam.cstibhotel.otcanalyser.networklayer.NetworkLayer;
 
 public class Analyser extends Thread {
 	private boolean running;
