@@ -18,7 +18,6 @@ import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.SearchResult;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 /**
  *
@@ -49,12 +48,13 @@ public class DatabaseTest {
 
 	/**
 	 * Test of addTrade method, of class Database. This tests an insertion.
+	 * @throws java.sql.SQLException
 	 */
 	@Test
 	public void testAddTrade() throws SQLException {
 		System.out.println("addTradeInsert");
 		
-		List<Trade> tradeList = new LinkedList<Trade>();
+		List<Trade> tradeList = new LinkedList<>();
 		
 		Trade trade = new Trade();
 		trade.setCleared(Boolean.TRUE);
@@ -76,7 +76,7 @@ public class DatabaseTest {
 	public void specialAdder() throws SQLException {
 		System.out.println("addTradeInsert");
 		
-		List<Trade> tradeList = new LinkedList<Trade>();
+		List<Trade> tradeList = new LinkedList<>();
 		
 		Trade trade = new Trade();
 		trade.setCleared(Boolean.TRUE);
@@ -92,13 +92,14 @@ public class DatabaseTest {
 	
 	/**
 	 * Test of addTrade method, of class Database. This tests the update of an existing row.
+	 * @throws java.sql.SQLException
 	 */
 	@Test
 	public void testUpdateTrade() throws SQLException {
 		System.out.println("addTradeUpdate");
 		specialAdder();
 		
-		List<Trade> tradeList = new LinkedList<Trade>();
+		List<Trade> tradeList = new LinkedList<>();
 		
 		Trade trade = new Trade();
 		trade.setCleared(Boolean.FALSE);
@@ -125,13 +126,14 @@ public class DatabaseTest {
 	
 	/**
 	 * Test of addTrade method, of class Database. This tests a deletion of an existing row.
+	 * @throws java.sql.SQLException
 	 */
 	@Test
 	public void testDeleteTrade() throws SQLException {
 		System.out.println("addTradeDelete");
 		specialAdder();
 		
-		List<Trade> tradeList = new LinkedList<Trade>();
+		List<Trade> tradeList = new LinkedList<>();
 		
 		Trade trade = new Trade();
 		trade.setAction(Action.CANCEL);
@@ -150,6 +152,7 @@ public class DatabaseTest {
 
 	/**
 	 * Test of getLastUpdateTime method, of class Database.
+	 * @throws java.sql.SQLException
 	 */
 	@Test
 	public void testGetLastUpdateTime() throws SQLException {
@@ -205,20 +208,21 @@ public class DatabaseTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
+	
 	/**
-	 * Test of getMatchingUPI method, of class Database.
+	 * Test of getSavedSearch method, of class Database.
 	 */
 	@Ignore @Test
-	public void testGetMatchingUPI() {
-		System.out.println("getMatchingUPI");
-		String s = "";
+	public void testGetSavedSearch() {
+		System.out.println("getSavedSearch");
 		Database instance = null;
-		List<UPI> expResult = null;
-		List<UPI> result = instance.getMatchingUPI(s);
+		Map<String, Search> expResult = null;
+		Map<String, Search> result = instance.getSavedSearches();
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
+
+
 	
 }
