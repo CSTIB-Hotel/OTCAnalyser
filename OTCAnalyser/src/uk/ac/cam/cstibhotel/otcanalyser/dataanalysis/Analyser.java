@@ -3,9 +3,12 @@ package uk.ac.cam.cstibhotel.otcanalyser.dataanalysis;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import uk.ac.cam.cstibhotel.otcanalyser.communicationlayer.Search;
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.trendprediction.PredictionResult;
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.trendprediction.TrendPredictor;
 import uk.ac.cam.cstibhotel.otcanalyser.database.Database;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.DataViewer;
 import uk.ac.cam.cstibhotel.otcanalyser.gui.GUI;
@@ -33,6 +36,7 @@ public class Analyser extends Thread {
 		List<PriceTimePair> maxes; //max data points
 		List<PriceTimePair> mins; //min data points
 		List<PriceTimePair> avgs; //average data points
+		List<PriceTimePair> dataSet;
 
 		try {
 			//do basic non-currency-based analysis
@@ -65,9 +69,34 @@ public class Analyser extends Thread {
 					maxes = data.getMax();
 					mins = data.getMin();
 					avgs = data.getAvg();
+					
+					//getting all data points
+					dataSet = DBAnalysis.getDataPoints(s, conn, DBAnalysis.EXECUTION_TIME);
+					
+					//getting the first and last coordinate of the "time" axis
+					PriceTimePair first = maxes.get(0);
+					PriceTimePair last = maxes.get(maxes.size()-1);
+					
+					//x coordinate values in long
+					long firstX = first.getTime().getTime();
+					long lastX = last.getTime().getTime();
 
+					/*
+					 * Creating trendLine
+					 */
+					
+					TrendPredictor trendLineP = new TrendPredictor(new PerCurrencyData(dataSet, curr, byMonth));
+					PredictionResult trendResult = trendLineP.createPredictionResult();
+					
+					//creating first and last point of the line
+					List<PriceTimePair> trendLine = new ArrayList<PriceTimePair>();
+					double avgFirstY = (double)trendResult.regA + (double)firstX*(double)trendResult.regB;
+					double avgLastY = (double)trendResult.regA + (double)lastX*(double)trendResult.regB;
+					trendLine.add(new PriceTimePair(new Date(firstX), avgFirstY));
+					trendLine.add(new PriceTimePair(new Date(lastX), avgLastY));
+					
 					//pass lists to graph:
-					DataViewer.addGraphPoints(maxes, mins, avgs, curr, byMonth);
+					DataViewer.addGraphPoints(maxes, mins, avgs,trendLine, curr, byMonth);
 
 					//add to per currency data list
 					perCurrencyDataList.add(new PerCurrencyData(avgs, curr, byMonth));

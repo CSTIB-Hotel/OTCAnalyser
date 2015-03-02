@@ -54,8 +54,8 @@ public class DataViewer extends JTabbedPane {
   }
   
   public static void addGraphPoints(List<PriceTimePair> maxes, List<PriceTimePair> mins,
-      List<PriceTimePair> avgs, String currency, boolean byMonth) {
-  	dataViewer.graph.addTradesToDatasets(maxes, mins, avgs, currency, byMonth);
+      List<PriceTimePair> avgs,List<PriceTimePair> trendLine, String currency, boolean byMonth) {
+  	dataViewer.graph.addTradesToDatasets(maxes, mins, avgs,trendLine, currency, byMonth);
   }
   
   //adds trendline points to graphs

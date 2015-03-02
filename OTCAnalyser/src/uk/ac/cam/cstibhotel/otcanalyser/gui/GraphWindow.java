@@ -59,7 +59,7 @@ public class GraphWindow extends CurrencyToolbarWindow implements ActionListener
   
   //add trades to existing datasets
   public synchronized void addTradesToDatasets(List<PriceTimePair> maxes, List<PriceTimePair> mins,
-      List<PriceTimePair> avgs, String currency, boolean byMonth) {
+      List<PriceTimePair> avgs,List<PriceTimePair> trendLine, String currency, boolean byMonth) {
     if (!currencies.contains(currency)) {
     	addChartPanel(currency, byMonth);
     }
@@ -68,6 +68,7 @@ public class GraphWindow extends CurrencyToolbarWindow implements ActionListener
     LineGraphMaker.addToSeries(maxes, dataset, LineGraphMaker.MAX, byMonth);
     LineGraphMaker.addToSeries(mins, dataset, LineGraphMaker.MIN, byMonth);
     LineGraphMaker.addToSeries(avgs, dataset, LineGraphMaker.AVG, byMonth);
+    LineGraphMaker.addToSeries(trendLine, dataset, LineGraphMaker.TREND_LINE, byMonth);
     if (currencies.size() > 1) {
     	makeToolBar();
     }
