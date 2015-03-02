@@ -211,10 +211,6 @@ public class CommunicationLayer {
 			break;
 		}
 		
-		//TODO Set the base product
-		
-		//TODO Set the sub-product
-		
 		StatusBar.setMessage("Successfully loaded search '" + name + "'", 1);
 	}
 	

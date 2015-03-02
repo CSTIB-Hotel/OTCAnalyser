@@ -1,7 +1,5 @@
 package uk.ac.cam.cstibhotel.otcanalyser.dataanalysis;
 
-import java.util.List;
-
 import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.trendprediction.PredictionResult;
 
 public class PerCurrencyResult {
