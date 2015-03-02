@@ -2,12 +2,7 @@ package uk.ac.cam.cstibhotel.otcanalyser.database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.AssetClass;
@@ -20,22 +15,11 @@ import uk.ac.cam.cstibhotel.otcanalyser.trade.TradeType;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 /**
- *
- * @author Wai-Wai Ng"
+ * A mapping between a trade's fields and the relevant database fields
+ * 
+ * @author Wai-Wai Ng
  */
 public class TradeFieldMapping {
-
-	private Timestamp strToTimeStamp(String s) {
-		// this is the ISO 8601 format used by RTDATA.DTCC.COM
-		SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		try {
-			Timestamp t = new Timestamp(d.parse(s).getTime());
-			return t;
-		} catch (ParseException ex) {
-			Logger.getLogger(TradeFieldMapping.class.getName()).log(Level.WARNING, "Failed to parse timestamp", ex);
-			return null;
-		}
-	}
 
 	public static HashMap<String, SQLField> getMapping(Trade t) {
 		HashMap<String, SQLField> DBNameDBType = new HashMap<>();
