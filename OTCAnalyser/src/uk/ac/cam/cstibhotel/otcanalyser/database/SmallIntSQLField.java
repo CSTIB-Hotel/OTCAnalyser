@@ -19,10 +19,11 @@ public class SmallIntSQLField extends SQLField {
 
 	@Override
 	public void addToPreparedStatement(PreparedStatement p) throws SQLException {
-		if (fieldValue == null)
+		if (fieldValue == null) {
 			p.setNull(index, Types.SMALLINT);
-		else
+		} else {
 			p.setShort(index, fieldValue);
+		}
 	}
 	
 }

@@ -24,10 +24,11 @@ public class TimestampSQLField extends SQLField{
 
 	@Override
 	public void addToPreparedStatement(PreparedStatement p) throws SQLException {
-		if (fieldValue == null)
+		if (fieldValue == null) {
 			p.setNull(index, Types.TIMESTAMP);
-		else
+		} else {
 			p.setTimestamp(index, fieldValue);
+		}
 	}
 	
 }

@@ -10,10 +10,11 @@ public class DateSQLField extends SQLField{
 	private final Date fieldValue;
 
 	public DateSQLField(java.util.Date fieldValue) {
-		if (fieldValue == null)
+		if (fieldValue == null) {
 			this.fieldValue = null;
-		else
+		} else {
 			this.fieldValue = new java.sql.Date(fieldValue.getTime());
+		}
 	}
 
 	@Override
@@ -23,10 +24,11 @@ public class DateSQLField extends SQLField{
 
 	@Override
 	public void addToPreparedStatement(PreparedStatement p) throws SQLException {
-		if (fieldValue == null)
+		if (fieldValue == null) {
 			p.setNull(index, Types.DATE);
-		else
+		} else {
 			p.setDate(index, fieldValue);
+		}
 	}
 	
 }

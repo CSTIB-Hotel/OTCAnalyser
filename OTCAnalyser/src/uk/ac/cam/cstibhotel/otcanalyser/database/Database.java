@@ -411,14 +411,13 @@ public class Database {
 				trades.add(TradeFieldMapping.makeObjectFromRecord(rs));
 			}
 
-			// TODO no idea what time is for
 			System.out.println(trades.size());
 
 			return new SearchResult(trades, 0);
 		} catch (SQLException ex) {
 			System.out.println(ex.getMessage());
 			System.err.println("Search failed");
-			return new SearchResult(new LinkedList<Trade>(), 0.0);
+			return new SearchResult(new LinkedList<>(), 0.0);
 		}
 	}
 
