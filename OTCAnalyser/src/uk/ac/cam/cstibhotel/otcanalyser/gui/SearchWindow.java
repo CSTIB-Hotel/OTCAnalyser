@@ -35,7 +35,7 @@ public class SearchWindow extends JPanel {
 	private JLabel maxValueDescriptor;
 	public JSpinner maxValue;
 	private JLabel currencyDescriptor;
-	public JComboBox currency;
+	public JComboBox<String> currency;
 	public JButton SearchButton;
 	public SaveWindow saveWindow;
 	

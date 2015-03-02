@@ -2,6 +2,8 @@ package uk.ac.cam.cstibhotel.otcanalyser.trade;
 
 public class BooleanFieldFormatException extends Exception {
 
+	private static final long serialVersionUID = 1L;
+
 	public BooleanFieldFormatException() {
 		// TODO Auto-generated constructor stub
 	}

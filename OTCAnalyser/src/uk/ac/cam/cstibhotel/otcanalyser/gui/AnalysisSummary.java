@@ -1,35 +1,24 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.AnalysisItem;
 
 public class AnalysisSummary extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	/* returning
-	underlying asset
-	price (rounded notional amount)
-	execution timestamp
-  */	
 	
 	TradeDisplayer analysisInfo = new TradeDisplayer();
 
 	private JLabel mostTraded = new JLabel("Most Traded Underlying Asset: N/A");
 	private JLabel numberOfTrades = new JLabel("Number of Trades: 0");
-	public JButton help = new JButton("Help");
+	public JButton help = new JButton("Help"); //this help button opens the help documentation
 
 	private static AnalysisSummary analysisSummary;
 	

@@ -1,7 +1,6 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 import javax.swing.table.DefaultTableCellRenderer;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.UPI;
 
 public class DataTableCellRenderer extends DefaultTableCellRenderer{
   private static final long serialVersionUID = 1L;

@@ -3,19 +3,13 @@ package uk.ac.cam.cstibhotel.otcanalyser.gui;
 import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.AnalysisItem;
 import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.PriceTimePair;
 import uk.ac.cam.cstibhotel.otcanalyser.trade.Trade;
-import uk.ac.cam.cstibhotel.otcanalyser.trade.Action;
 
 import java.awt.Dimension;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.border.EmptyBorder;
 
 public class DataViewer extends JTabbedPane {
 	
