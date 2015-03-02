@@ -54,24 +54,10 @@ public class CommunicationLayer {
 		s.setAsset(SearchWindow.getInstance().UnderLyingAsset.getText());
 		
 		try {
-			//if(SearchWindow.getInstance().minValue.getValue() instanceof Long){
-				s.setMinPrice(Math.max(0L,
-						((Long) SearchWindow.getInstance().minValue.getValue()).longValue()));	
-//			}
-//			else{
-//				s.setMinPrice(Math.max(0L,
-//						((Integer) SearchWindow.getInstance().minValue.getValue()).longValue()));	
-//			}
-//			
-//			if(SearchWindow.getInstance().maxValue.getValue() instanceof Long){
-				s.setMaxPrice(Math.max(0L,
-						((Long) SearchWindow.getInstance().maxValue.getValue()).longValue()));
-//			}
-//			else{
-//				s.setMaxPrice(Math.max(0L,
-//						((Integer) SearchWindow.getInstance().maxValue.getValue()).longValue()));
-//			
-			//}
+			s.setMinPrice(Math.max(0L,
+					((Long) SearchWindow.getInstance().minValue.getValue()).longValue()));
+			s.setMaxPrice(Math.max(0L,
+					((Long) SearchWindow.getInstance().maxValue.getValue()).longValue()));
 		} catch (NumberFormatException e) {
 			StatusBar.setMessage("Error: Price fields must contain integers", 1);
 		}
