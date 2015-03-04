@@ -1,17 +1,19 @@
 package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
-import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.PriceTimePair;
-
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.editor.ChartEditorManager;
-import org.jfree.data.time.TimeSeriesCollection;
-
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.editor.ChartEditorManager;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.time.TimeSeriesCollection;
+
+import uk.ac.cam.cstibhotel.otcanalyser.dataanalysis.PriceTimePair;
 
 public class GraphWindow extends CurrencyToolbarWindow implements ActionListener{
 	
@@ -45,6 +47,9 @@ public class GraphWindow extends CurrencyToolbarWindow implements ActionListener
     	timePeriod = "Month";
     }
     JFreeChart chart = LineGraphMaker.makeChart("Prices by " + timePeriod, currencyName, dataset, byMonth);
+    chart.setBackgroundPaint(new Color(100,100,100));
+    XYPlot plot = (XYPlot) chart.getPlot();
+    plot.setBackgroundPaint(Color.darkGray);
     ChartPanel panel = new ChartPanel(chart);
     chartPanels.add(panel);
     ChartEditorManager.setChartEditorFactory(new NewDefaultChartEditorFactory());
