@@ -23,6 +23,9 @@ public class GraphWindow extends CurrencyToolbarWindow implements ActionListener
   private List<ChartPanel> chartPanels = new ArrayList<>();
   private ChartPanel currentChart = null;
   
+  public static Color chartColor = new Color(100,100,100);
+  public static Color plotColor = Color.darkGray;
+  
   public GraphWindow() {
     pnl = new ContentPanel();
     add(pnl, BorderLayout.CENTER);
@@ -47,9 +50,9 @@ public class GraphWindow extends CurrencyToolbarWindow implements ActionListener
     	timePeriod = "Month";
     }
     JFreeChart chart = LineGraphMaker.makeChart("Prices by " + timePeriod, currencyName, dataset, byMonth);
-    chart.setBackgroundPaint(new Color(100,100,100));
+    chart.setBackgroundPaint(chartColor);
     XYPlot plot = (XYPlot) chart.getPlot();
-    plot.setBackgroundPaint(Color.darkGray);
+    plot.setBackgroundPaint(plotColor);
     ChartPanel panel = new ChartPanel(chart);
     chartPanels.add(panel);
     ChartEditorManager.setChartEditorFactory(new NewDefaultChartEditorFactory());

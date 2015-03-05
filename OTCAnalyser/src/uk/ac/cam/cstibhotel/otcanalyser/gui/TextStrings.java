@@ -4,6 +4,8 @@ package uk.ac.cam.cstibhotel.otcanalyser.gui;
 
 public class TextStrings {
 	
+	static final String[] colors = {"Default","Light","Hotdog"};
+	
 	static final String[] Currencies = {"", "USD", "JPY", "KRW", "AUD", "BRL", "BBL", "EUR", "CAD", "GBP", "MYR", "CNY", "RUB", "INR", "TWD", "PHP", "CLP", "IDR", "COP", "VND", "PEN", "ARS", "ZMW", "NGN", "DOP", "NZD", "PLN", "MMBTU", "MT", "MXN", "CHF", "THB", "SGD", "ZAR", "HKD", "SEK", "NOK", "DKK", "HUF", "CLF", "TRY", "T", "THERM", "CZK", "MXV", "ILS", "XPD", "XAU", "XAG", "XPT"};
 	
 	static final String[] TradeType = {"Swap","Option"};

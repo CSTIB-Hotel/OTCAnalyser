@@ -37,6 +37,7 @@ public class SearchWindow extends JPanel {
 	private JLabel currencyDescriptor;
 	public JComboBox<String> currency;
 	public JButton SearchButton;
+	public JComboBox<String> colorScheme = new JComboBox<String>(TextStrings.colors);
 	public SaveWindow saveWindow;
 	
 	private static SearchWindow instance;
@@ -134,9 +135,14 @@ public class SearchWindow extends JPanel {
 			currency.setVisible(true);
 			SearchButton = new JButton("Search");
 			SearchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-      top.add(SearchButton);
+			top.add(SearchButton);
 			SearchButton.setVisible(true);
 			SearchButton.addActionListener(new SearchButtonListener());
+			
+			colorScheme.setVisible(true);
+			top.add(colorScheme);
+			ColorChangeListener colListener = new ColorChangeListener(colorScheme);
+			colorScheme.addActionListener(colListener);
 			
 			saveWindow = SaveWindow.getInstance();
 			bottom.add(saveWindow);
